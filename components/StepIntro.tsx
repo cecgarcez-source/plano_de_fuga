@@ -21,7 +21,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         {/* Ambient Background - Made much more transparent/removed to show beach */}
         <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-1">
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-0">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-100 text-teal-800 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
@@ -40,11 +40,16 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             </div>
           </div>
 
-          {/* Headlines - Reduced Size */}
-          <div className="space-y-2 max-w-2xl bg-white/30 backdrop-blur-md p-4 rounded-3xl shadow-sm">
+          {/* Headlines - Reduced Size and Negative Margin */}
+          <div className="-mt-8 space-y-2 max-w-2xl bg-white/30 backdrop-blur-md p-4 rounded-3xl shadow-sm">
             <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight">
               Sua Próxima Aventura <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-blue-700">Começa Aqui.</span>
+              <span
+                onClick={onStart}
+                className="cursor-pointer text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-blue-700 hover:from-teal-600 hover:to-blue-600 underline decoration-teal-500/30 hover:decoration-teal-500/60 transition-all"
+              >
+                Começa Aqui.
+              </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-800 font-medium leading-relaxed">
               Fuja da rotina. Crie roteiros de viagem <span className="font-bold text-teal-900">perfeitos</span> e personalizados em segundos.
@@ -84,7 +89,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- VALUE PROPOSITION (Features) --- */}
-      <section id="features" className="py-24 bg-white relative z-20">
+      <section id="features" className="py-32 mt-12 bg-white relative z-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Por que usar o Plano de Fuga?</h2>
@@ -110,8 +115,8 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             <div className="p-8 rounded-3xl bg-teal-50 border-2 border-teal-500 hover:shadow-2xl hover:scale-105 transition-all duration-300 group relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Novo</div>
               <div className="w-14 h-14 rounded-2xl bg-teal-200 text-teal-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🗺️</div>
-              <h3 className="text-xl font-bold text-teal-900 mb-2">Mapa Interativo</h3>
-              <p className="text-teal-800 text-sm leading-relaxed">Visualize sua rota, salve pins e explore o destino como um local.</p>
+              <h3 className="text-xl font-bold text-teal-900 mb-2">Seu Arquivo de Memórias</h3>
+              <p className="text-teal-800 text-sm leading-relaxed">Um mapa interativo para eternizar e reviver cada lugar incrível que você já visitou no mundo.</p>
             </div>
 
             {/* Feature 4 */}
