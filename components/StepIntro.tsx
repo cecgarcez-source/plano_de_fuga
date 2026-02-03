@@ -32,9 +32,12 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           {/* Logo / Brand */}
           <div className="relative group cursor-default">
             <div className="absolute -inset-8 bg-gradient-to-r from-teal-400/20 to-blue-500/20 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition duration-500"></div>
-            {/* Re-using the logo logic but making it central */}
             <div className="relative transform hover:scale-105 transition-transform duration-500">
-              <span className="text-8xl md:text-9xl drop-shadow-xl filter">✈️</span>
+              <img
+                src="/logo.png"
+                alt="Plano de Fuga Logo"
+                className="w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-xl"
+              />
             </div>
           </div>
 
