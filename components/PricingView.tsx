@@ -8,8 +8,8 @@ interface Props {
 
 // TODO: SUBSTITUA PELOS SEUS PRICE IDs REAIS DO STRIPE DASHBOARD
 const STRIPE_PRICES = {
-    monthly: 'price_1SujYCCf6mAh0X4CqCAdrUzH', // Plano Premium Mensal
-    yearly: 'price_1SujYCCf6mAh0X4ChUAXBRN2',  // Plano Premium Anual
+    monthly: 'price_1SujYCCf6mAh0X4ChUAXBRN2', // Plano Premium Mensal
+    yearly: 'price_1SujYCCf6mAh0X4CqCAdrUzH',  // Plano Premium Anual
 };
 
 export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
