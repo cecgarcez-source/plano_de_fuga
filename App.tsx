@@ -10,6 +10,8 @@ import { ResultView } from './components/ResultView';
 import { CompareView } from './components/CompareView';
 import { UserProfileView } from './components/UserProfileView';
 import { PricingView } from './components/PricingView';
+import { PrivacyView } from './components/PrivacyView';
+import { TermsView } from './components/TermsView';
 import { AppStep, TripPreferences, ItineraryResult, User, SavedPlan, VisitedPlace } from './types';
 import { generateTripItinerary } from './services/geminiService';
 import { plansService } from './services/plansService';
@@ -48,8 +50,17 @@ const App: React.FC = () => {
   const sharedPlanRef = React.useRef(false);
 
   useEffect(() => {
-    // Check for Upgrade Success
+    // Check for Upgrade Success & Routing
+    const path = window.location.pathname;
     const query = new URLSearchParams(window.location.search);
+
+    // Simple Routing
+    if (path === '/politica-de-privacidade') {
+      setStep(AppStep.PRIVACY);
+    } else if (path === '/termos-de-uso') {
+      setStep(AppStep.TERMS);
+    }
+
 
     // Handle Shared Plan
     const planId = query.get('planId');
@@ -550,10 +561,28 @@ const App: React.FC = () => {
           {step === AppStep.PRICING && (
             <PricingView onBack={() => setStep(AppStep.DASHBOARD)} userId={supabaseUser?.id || ''} />
           )}
+
+          {step === AppStep.PRIVACY && (
+            <PrivacyView onBack={() => {
+              window.history.pushState({}, '', '/');
+              setStep(user ? AppStep.DASHBOARD : AppStep.INTRO);
+            }} />
+          )}
+
+          {step === AppStep.TERMS && (
+            <TermsView onBack={() => {
+              window.history.pushState({}, '', '/');
+              setStep(user ? AppStep.DASHBOARD : AppStep.INTRO);
+            }} />
+          )}
         </main>
 
         <footer className="w-full py-6 text-center text-gray-700 text-sm font-medium relative z-20">
-          <p className="bg-white/40 inline-block px-4 py-1 rounded-full">&copy; {new Date().getFullYear()} Plano de Fuga. Feito com 💙 e IA.</p>
+          <p className="bg-white/40 inline-block px-4 py-1 rounded-full mb-2">&copy; {new Date().getFullYear()} Plano de Fuga. Feito com 💙 e IA.</p>
+          <div className="text-xs text-gray-500 space-x-4">
+            <a href="/politica-de-privacidade" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/politica-de-privacidade'); setStep(AppStep.PRIVACY); }} className="hover:text-teal-700 underline">Política de Privacidade</a>
+            <a href="/termos-de-uso" onClick={(e) => { e.preventDefault(); window.history.pushState({}, '', '/termos-de-uso'); setStep(AppStep.TERMS); }} className="hover:text-teal-700 underline">Termos de Uso</a>
+          </div>
         </footer>
       </div>
     </div>
