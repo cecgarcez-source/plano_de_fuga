@@ -17,13 +17,13 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-20 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
+      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-4 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
         {/* Ambient Background - Made much more transparent/removed to show beach */}
         <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-0">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-100 text-teal-800 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up backdrop-blur-md">
+          <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-100 text-teal-800 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
             Novo: IA Gemini 2.0 Integrada
           </div>
