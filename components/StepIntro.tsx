@@ -17,7 +17,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative h-[90vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-20 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
         {/* Ambient Background - Made much more transparent/removed to show beach */}
         <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
