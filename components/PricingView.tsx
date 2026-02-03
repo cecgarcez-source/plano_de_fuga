@@ -27,6 +27,29 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
                 return;
             }
 
+            // Verify Auth Session & Token
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session?.access_token) {
+                alert('Você precisa estar logado para assinar.');
+                setIsLoading(false);
+                return;
+            }
+
+            // JWT Debug (Client-Side Check)
+            try {
+                const payload = JSON.parse(atob(session.access_token.split('.')[1]));
+                const projectRef = 'tsjpxiguxybqikwkrquh';
+                if (!payload.iss || !payload.iss.includes(projectRef)) {
+                    console.error('Token Mismatch:', payload.iss);
+                    alert(`SESSÃO INVÁLIDA DETECTADA\n\nSeu token de login pertence a um projeto antigo.\nToken Issuer: ${payload.iss}\nEsperado: ${projectRef}\n\nSOLUÇÃO: Faça Logout e Login novamente.`);
+                    setIsLoading(false);
+                    return;
+                }
+            } catch (e) {
+                console.error('Error parsing token:', e);
+            }
+
             const { data, error } = await supabase.functions.invoke('create-checkout', {
                 body: {
                     priceId: STRIPE_PRICES[cycle],
