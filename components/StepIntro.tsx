@@ -18,45 +18,44 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
 
       {/* --- HERO SECTION --- */}
       <section className="relative h-[90vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
-        {/* Ambient Background Grid/Gradient */}
-        <div className="absolute inset-0 z-0 bg-white bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-white/50 to-white pointer-events-none"></div>
+        {/* Ambient Background - Made much more transparent/removed to show beach */}
+        <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-8">
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-4">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-700 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up">
-            <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-100 text-teal-800 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
             Novo: IA Gemini 2.0 Integrada
           </div>
 
-          {/* Logo / Brand */}
+          {/* Logo / Brand - Doubled Size */}
           <div className="relative group cursor-default">
             <div className="absolute -inset-8 bg-gradient-to-r from-teal-400/20 to-blue-500/20 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition duration-500"></div>
             <div className="relative transform hover:scale-105 transition-transform duration-500">
               <img
                 src="/logo.png"
                 alt="Plano de Fuga Logo"
-                className="w-48 h-48 md:w-64 md:h-64 object-contain drop-shadow-xl"
+                className="w-96 h-96 md:w-[32rem] md:h-[32rem] object-contain drop-shadow-2xl"
               />
             </div>
           </div>
 
-          {/* Headlines */}
-          <div className="space-y-4 max-w-2xl">
-            <h1 className="text-5xl md:text-7xl font-black tracking-tight text-gray-900 leading-tight">
+          {/* Headlines - Reduced Size */}
+          <div className="space-y-2 max-w-2xl bg-white/30 backdrop-blur-md p-4 rounded-3xl shadow-sm">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight">
               Sua Próxima Aventura <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-blue-600">Começa Aqui.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-blue-700">Começa Aqui.</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 font-light leading-relaxed">
-              Fuja da rotina. Crie roteiros de viagem <span className="font-semibold text-gray-800">perfeitos</span> e personalizados em segundos com Inteligência Artificial.
+            <p className="text-lg md:text-xl text-gray-800 font-medium leading-relaxed">
+              Fuja da rotina. Crie roteiros de viagem <span className="font-bold text-teal-900">perfeitos</span> e personalizados em segundos.
             </p>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-4">
+          {/* CTA Buttons - Compact spacing */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-2">
             <button
               onClick={onStart}
-              className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-gray-900 rounded-full hover:bg-teal-600 hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 overflow-hidden"
+              className="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-white transition-all duration-300 bg-gray-900 rounded-full hover:bg-teal-600 hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 overflow-hidden shadow-xl"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
               <span>Planejar Minha Fuga</span>
@@ -64,7 +63,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             </button>
             <button
               onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-600 transition-all duration-200 bg-white border border-gray-200 rounded-full hover:bg-gray-50 hover:text-gray-900 hover:border-gray-300 focus:outline-none"
+              className="inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-gray-700 transition-all duration-200 bg-white/80 backdrop-blur-md border border-gray-200 rounded-full hover:bg-white hover:text-gray-900 hover:border-gray-300 focus:outline-none shadow-lg"
             >
               Como funciona?
             </button>
