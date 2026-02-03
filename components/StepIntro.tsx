@@ -17,7 +17,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-1 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
+      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-0 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
         {/* Ambient Background - Made much more transparent/removed to show beach */}
         <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
@@ -29,7 +29,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           </div>
 
           {/* Logo / Brand - Doubled Size */}
-          <div className="relative group cursor-default">
+          <div className="relative group cursor-default -mt-12 md:mt-0">
             <div className="absolute -inset-8 bg-gradient-to-r from-teal-400/20 to-blue-500/20 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition duration-500"></div>
             <div className="relative transform hover:scale-105 transition-transform duration-500">
               <img
@@ -89,7 +89,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- VALUE PROPOSITION (Features) --- */}
-      <section id="features" className="py-32 mt-12 bg-white relative z-20">
+      <section id="features" className="py-32 mt-12 bg-white/90 backdrop-blur-sm relative z-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Por que usar o Plano de Fuga?</h2>
@@ -130,7 +130,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- SOCIAL PROOF --- */}
-      <section className="py-24 bg-gray-900 text-white overflow-hidden relative">
+      <section className="py-24 bg-gray-900/90 backdrop-blur-sm text-white overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-full opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
@@ -168,7 +168,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- PRE-FOOTER CTA --- */}
-      <section className="py-24 bg-teal-600 relative overflow-hidden">
+      <section className="py-24 bg-teal-600/90 backdrop-blur-sm relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-teal-500 rounded-full blur-3xl opacity-50"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-50"></div>
 
