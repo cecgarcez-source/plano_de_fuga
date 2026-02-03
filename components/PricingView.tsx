@@ -40,7 +40,7 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
             }
         } catch (error) {
             console.error('Error creating checkout session:', error);
-            alert('Erro ao iniciar pagamento. Verifique se a função create-checkout está deployada e os Price IDs configurados.');
+            alert(`Erro ao iniciar pagamento: ${error.message || JSON.stringify(error)}`);
         } finally {
             setIsLoading(false);
         }
