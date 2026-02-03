@@ -19,8 +19,9 @@ serve(async (req) => {
         const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
         const authHeader = req.headers.get('Authorization');
 
-        console.log(`[Debug] URL: ${supabaseUrl.substring(0, 20)}...`);
-        console.log(`[Debug] Auth Header Present: ${!!authHeader}`);
+        console.log(`[Debug] URL Env: ${supabaseUrl ? 'Set' : 'Missing'}`);
+        console.log(`[Debug] Anon Env: ${supabaseAnonKey ? 'Set' : 'Missing'}`);
+        console.log(`[Debug] Auth Header: ${authHeader ? 'Present (' + authHeader.substring(0, 15) + '...)' : 'Missing'}`);
 
         const supabaseClient = createClient(
             supabaseUrl,
@@ -31,12 +32,16 @@ serve(async (req) => {
         const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
 
         if (userError) {
-            console.error('[Debug] getUser Error:', userError);
+            console.error('[Debug] getUser Error Details:', JSON.stringify(userError));
+            // Log if the token seems malformed (simple check)
+            if (authHeader && !authHeader.startsWith('Bearer ')) {
+                console.error('[Debug] Auth header does not start with Bearer');
+            }
         }
 
         if (!user) {
             console.error('[Debug] User is null. Auth failed.');
-            return new Response("Unauthorized", { status: 401, headers: corsHeaders })
+            return new Response(JSON.stringify({ error: "Unauthorized: User lookup failed", details: userError }), { status: 401, headers: corsHeaders })
         }
 
         const { priceId, returnUrl } = await req.json()
