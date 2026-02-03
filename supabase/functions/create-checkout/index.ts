@@ -15,15 +15,27 @@ serve(async (req) => {
     }
 
     try {
+        const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+        const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+        const authHeader = req.headers.get('Authorization');
+
+        console.log(`[Debug] URL: ${supabaseUrl.substring(0, 20)}...`);
+        console.log(`[Debug] Auth Header Present: ${!!authHeader}`);
+
         const supabaseClient = createClient(
-            Deno.env.get('SUPABASE_URL') ?? '',
-            Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-            { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
+            supabaseUrl,
+            supabaseAnonKey,
+            { global: { headers: { Authorization: authHeader! } } }
         )
 
-        const { data: { user } } = await supabaseClient.auth.getUser()
+        const { data: { user }, error: userError } = await supabaseClient.auth.getUser()
+
+        if (userError) {
+            console.error('[Debug] getUser Error:', userError);
+        }
 
         if (!user) {
+            console.error('[Debug] User is null. Auth failed.');
             return new Response("Unauthorized", { status: 401, headers: corsHeaders })
         }
 
