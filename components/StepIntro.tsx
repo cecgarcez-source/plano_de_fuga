@@ -17,7 +17,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-4 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
+      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-1 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
         {/* Ambient Background - Made much more transparent/removed to show beach */}
         <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
@@ -41,7 +41,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           </div>
 
           {/* Headlines - Reduced Size and Negative Margin */}
-          <div className="-mt-8 space-y-2 max-w-2xl bg-white/30 backdrop-blur-md p-4 rounded-3xl shadow-sm">
+          <div className="-mt-8 space-y-2 max-w-2xl bg-white/20 backdrop-blur-md p-4 rounded-3xl shadow-sm">
             <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight">
               Sua Próxima Aventura <br />
               <span
@@ -60,7 +60,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-2">
             <button
               onClick={onStart}
-              className="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-white transition-all duration-300 bg-gray-900 rounded-full hover:bg-teal-600 hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 overflow-hidden shadow-xl"
+              className="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-white transition-all duration-300 bg-gray-900/90 rounded-full hover:bg-teal-600 hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 overflow-hidden shadow-xl"
             >
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
               <span>Planejar Minha Fuga</span>
@@ -68,7 +68,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             </button>
             <button
               onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-gray-700 transition-all duration-200 bg-white/80 backdrop-blur-md border border-gray-200 rounded-full hover:bg-white hover:text-gray-900 hover:border-gray-300 focus:outline-none shadow-lg"
+              className="inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-gray-700 transition-all duration-200 bg-white/70 backdrop-blur-md border border-gray-200 rounded-full hover:bg-white hover:text-gray-900 hover:border-gray-300 focus:outline-none shadow-lg"
             >
               Como funciona?
             </button>
