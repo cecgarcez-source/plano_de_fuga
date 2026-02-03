@@ -21,7 +21,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         {/* Ambient Background - Made much more transparent/removed to show beach */}
         <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
 
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-4">
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-1">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-100 text-teal-800 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
@@ -70,7 +70,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           </div>
 
           {/* Social Proof (Micro) */}
-          <div className="pt-8 flex items-center gap-4 text-sm text-gray-500">
+          <div className="pt-4 flex items-center gap-4 text-sm text-gray-500">
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map(i => (
                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 overflow-hidden">
@@ -88,29 +88,37 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Por que usar o Plano de Fuga?</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Não perca horas pesquisando. Nossa IA faz o trabalho pesado para você gastar seu tempo vivendo.</p>
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Todas as ferramentas que você precisa para uma viagem inesquecível.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Feature 1 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-teal-200 transition-colors duration-300 group">
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-teal-400 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
               <div className="w-14 h-14 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🚀</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Velocidade Supersônica</h3>
-              <p className="text-gray-600 leading-relaxed">De zero ao roteiro completo em menos de 1 minuto. Digite o destino e pronto.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Roteiros em 30s</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">De zero ao roteiro completo instantaneamente com nossa IA avançada.</p>
             </div>
 
             {/* Feature 2 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-blue-200 transition-colors duration-300 group">
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-blue-400 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
               <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Hiper Personalizado</h3>
-              <p className="text-gray-600 leading-relaxed">Adaptado ao seu orçamento, estilo de viagem e preferências. Nada de roteiros genéricos.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Personalização Total</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">Orçamento, estilo e ritmo de viagem adaptados a você.</p>
             </div>
 
-            {/* Feature 3 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-purple-200 transition-colors duration-300 group">
+            {/* Feature 3 - MAP HIGHLIGHT */}
+            <div className="p-8 rounded-3xl bg-teal-50 border-2 border-teal-500 hover:shadow-2xl hover:scale-105 transition-all duration-300 group relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Novo</div>
+              <div className="w-14 h-14 rounded-2xl bg-teal-200 text-teal-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🗺️</div>
+              <h3 className="text-xl font-bold text-teal-900 mb-2">Mapa Interativo</h3>
+              <p className="text-teal-800 text-sm leading-relaxed">Visualize sua rota, salve pins e explore o destino como um local.</p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-purple-400 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
               <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">💎</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Experiência Premium</h3>
-              <p className="text-gray-600 leading-relaxed">Exporte para PDF, acesse descontos exclusivos e suporte prioritário na nossa comunidade.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Clube Premium</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">PDFs profissionais, descontos exclusivos e comunidade VIP.</p>
             </div>
           </div>
         </div>
