@@ -406,7 +406,7 @@ const App: React.FC = () => {
 
       <div className="relative z-10">
         {/* Navbar */}
-        <header className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-white/20 h-16 flex items-center justify-between px-6 shadow-sm">
+        <header className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-white/20 h-16 flex items-center justify-between px-6 shadow-sm">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => user ? setStep(AppStep.DASHBOARD) : setStep(AppStep.INTRO)}>
             <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
             <span className="font-bold text-xl tracking-tight text-gray-800 hidden md:block">Plano de Fuga</span>

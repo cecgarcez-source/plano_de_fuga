@@ -17,12 +17,20 @@ export const AuthScreen: React.FC = () => {
         return 'Ocorreu um erro. Verifique seus dados e tente novamente.';
     };
 
+    const getRedirectUrl = () => {
+        const origin = window.location.origin;
+        if (!origin || origin === 'null') {
+            return window.location.protocol + '//' + window.location.host;
+        }
+        return origin;
+    };
+
     const handleGoogleLogin = async () => {
         try {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin
+                    redirectTo: getRedirectUrl()
                 }
             });
             if (error) throw error;
@@ -69,7 +77,7 @@ export const AuthScreen: React.FC = () => {
 
 
     return (
-        <div className="w-full max-w-md mx-auto bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 animate-fade-in-up border border-white/50 my-10">
+        <div className="w-full max-w-md mx-auto bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 animate-fade-in-up border border-white/50 my-10">
             <div className="text-center mb-6">
                 <span className="text-4xl mb-2 block">✈️</span>
                 <h2 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-blue-600 mb-2">
