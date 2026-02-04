@@ -18,11 +18,13 @@ export const AuthScreen: React.FC = () => {
     };
 
     const getRedirectUrl = () => {
-        const origin = window.location.origin;
-        if (!origin || origin === 'null') {
-            return window.location.protocol + '//' + window.location.host;
+        const hostname = window.location.hostname;
+        // Check for localhost (IPv4 and IPv6)
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]') {
+            return window.location.origin;
         }
-        return origin;
+        // Force Production URL for everything else
+        return 'https://planodefugai.com.br';
     };
 
     const handleGoogleLogin = async () => {
