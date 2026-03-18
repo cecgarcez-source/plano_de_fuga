@@ -117,8 +117,15 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     
     2. **PremiumTips (Curadoria):** Baseado no perfil do usuário, sugira 1 a 2 guias externos reais ou recomendações de ferramentas essenciais para este destino. (O 'url' pode ser um link de busca/reserva).
 
-    E-BOOK EXCLUSIVO:
-    Crie o conteúdo de um "E-book Exclusivo" em texto formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. Deve conter pelo menos 4 a 5 tópicos (ex: "O Segredo de [Destino]", "3 Comer como um Local", etc). Não use markdown pesado, use formatação em texto limpo com tópicos textuais estruturados. Serão dicas de ouro e hacks locais que não estão no cronograma normal de turistas.
+    E-BOOK EXCLUSIVO (LONGO E DETALHADO - APROX 5 PÁGINAS EM PDF):
+    Crie o conteúdo de um "E-book Exclusivo" BEM EXTENSO em texto limpo informacional formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. 
+    Este E-book DEVE ter profundidade, contendo de 1500 a 2000 palavras, dividido exatamente em 5 grandes Capítulos:
+    - 1. A Essência de [Destino] e o porquê de visitá-lo.
+    - 2. O Segredo dos Locais (Hacks, lugares escondidos).
+    - 3. Gastronomia Autêntica (Onde comer aquilo que só os locais comem, pratos exóticos).
+    - 4. Cultura, Lendas e História Oculta.
+    - 5. Dicas Práticas de Ouro (Segurança, transporte, melhor lado do avião/trem, golpes comuns).
+    Desenvolva CADA tópico como se fosse um livro. Não use markdown pesado, use formatação em texto limpo com tópicos textuais estruturados.
 
     Retorne APENAS JSON.
   `;

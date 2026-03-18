@@ -152,6 +152,7 @@ export const StepDetails: React.FC<Props> = ({ preferences, onUpdate, onNext, on
           <div className="flex gap-2">
             <input
               type="date"
+              min={preferences.startDate || undefined}
               value={preferences.endDate}
               onChange={(e) => onUpdate({ endDate: e.target.value })}
               className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500"
@@ -166,10 +167,19 @@ export const StepDetails: React.FC<Props> = ({ preferences, onUpdate, onNext, on
           {errors.endDate && <p className="text-red-500 text-xs">{errors.endDate}</p>}
         </div>
         
-        {/* Helper text for duration */}
+        {/* Helper text for duration / Visual Range */}
         {(preferences.startDate && preferences.endDate) && (
-           <div className="col-span-1 md:col-span-2 text-center text-sm text-teal-600 font-medium bg-teal-50 py-2 rounded-lg">
-             Duração calculada: {preferences.duration} dias
+           <div className="col-span-1 md:col-span-2 flex flex-col items-center">
+             <div className="w-full flex items-center gap-3 text-sm font-medium text-teal-800 bg-teal-50 px-4 py-3 rounded-xl border border-teal-100">
+               <div className="flex-1 text-right">{new Date(preferences.startDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</div>
+               <div className="flex-[2] relative flex items-center justify-center">
+                 <div className="h-0.5 bg-teal-200 w-full absolute"></div>
+                 <div className="bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-full relative z-10 shadow-sm">
+                   {preferences.duration} dia{preferences.duration > 1 ? 's' : ''}
+                 </div>
+               </div>
+               <div className="flex-1 text-left">{new Date(preferences.endDate + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}</div>
+             </div>
            </div>
         )}
 
