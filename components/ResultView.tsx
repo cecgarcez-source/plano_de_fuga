@@ -720,7 +720,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                 onClick={handleExportExcel}
                 className="px-4 py-2 rounded-lg font-bold text-sm bg-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.3)] text-white border border-[rgba(255,255,255,0.4)] backdrop-blur-md shadow-lg transition-all flex items-center gap-2"
               >
-                📊 Excel
+                📊 Exportar Excel
               </button>
               <button
                 onClick={sharePlan}
@@ -1045,7 +1045,17 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
           {/* Resumo Financeiro ao Final */}
           <div className={`${isExportingPdf ? 'border border-gray-400 rounded-lg p-4 mt-4 break-inside-avoid' : 'bg-[rgba(255,255,255,0.95)] backdrop-blur rounded-xl shadow-lg p-6 md:p-8 border-t-4 border-teal-500'}`}>
-            <h2 className={`text-2xl font-bold mb-6 text-center ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>📊 Resumo Financeiro Detalhado</h2>
+            <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+              <h2 className={`text-2xl font-bold text-center ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>📊 Resumo Financeiro Detalhado</h2>
+              {!isExportingPdf && (
+                <button
+                  onClick={handleExportExcel}
+                  className="mt-4 md:mt-0 px-4 py-2 rounded-lg font-bold text-sm bg-teal-600 hover:bg-teal-700 text-white shadow transition-all flex items-center gap-2"
+                >
+                  📊 Exportar Tabela (Excel)
+                </button>
+              )}
+            </div>
 
             <div className="flex flex-col lg:flex-row gap-8 items-center">
               <div className="w-full lg:w-1/2 space-y-4">
