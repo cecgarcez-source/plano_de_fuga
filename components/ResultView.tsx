@@ -239,6 +239,78 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     }
   };
 
+  const handleDownloadGuide = () => {
+    if (!itinerary.personalizedGuideText) return;
+    
+    try {
+      const blob = new Blob([itinerary.personalizedGuideText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const cleanTitle = itinerary.destinationTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Guia_Personalizado_${cleanTitle}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao baixar o guia.");
+    }
+  };
+
+  const handleExportExcel = () => {
+    if (user?.subscriptionTier !== 'premium') {
+      alert("🔒 Recurso Premium\n\nA exportação para Excel é exclusiva para membros Premium.\nAtualize seu plano para desbloquear!");
+      return;
+    }
+
+    try {
+      // Create CSV content
+      const headers = ['Dia', 'Data', 'Tema', 'Base', 'Acomodação', 'Total Estimado', 'Total Realizado'];
+      const rows = itinerary.days.map(day => {
+        const date = getTripDate(preferences.startDate, day.day - 1);
+        const dateStr = date ? formatDate(date) : '';
+        
+        const activitySum = day.activities.reduce((sum, act) => sum + act.estimatedCost, 0);
+        const estimatedDayTotal = activitySum + avgDailyAccommodation + avgDailyFood + avgDailyTransport;
+        
+        const dayAcc = safeSum(0, day.actualCosts?.accommodation);
+        const dayFood = safeSum(0, day.actualCosts?.food);
+        const dayTrans = safeSum(0, day.actualCosts?.transport);
+        const dayActs = day.activities.reduce((sum, act) => safeSum(sum, act.actualCost), 0);
+        const actualDayTotal = dayAcc + dayFood + dayTrans + dayActs;
+
+        // Escape quotes and wrap fields with commas
+        return [
+          day.day,
+          `"${dateStr}"`,
+          `"${day.theme}"`,
+          `"${day.locationBase}"`,
+          `"${day.accommodation}"`,
+          Math.round(estimatedDayTotal),
+          Math.round(actualDayTotal)
+        ].join(',');
+      });
+
+      const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(','), ...rows].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      
+      const cleanTitle = itinerary.destinationTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      const a = document.createElement('a');
+      a.setAttribute('href', encodedUri);
+      a.setAttribute('download', `Plano_Fuga_${cleanTitle}.csv`);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao exportar para Excel.");
+    }
+  };
+
   const sharePlan = async () => {
     if (user?.subscriptionTier !== 'premium') {
       alert("🔒 Recurso Premium\n\nCompartilhar o roteiro é exclusivo para membros Premium.\nAtualize seu plano para desbloquear!");
@@ -643,6 +715,12 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                 className="px-4 py-2 rounded-lg font-bold text-sm bg-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.3)] text-white border border-[rgba(255,255,255,0.4)] backdrop-blur-md shadow-lg transition-all flex items-center gap-2"
               >
                 {isExportingPdf ? '📄 Gerando...' : '📄 PDF'}
+              </button>
+              <button
+                onClick={handleExportExcel}
+                className="px-4 py-2 rounded-lg font-bold text-sm bg-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.3)] text-white border border-[rgba(255,255,255,0.4)] backdrop-blur-md shadow-lg transition-all flex items-center gap-2"
+              >
+                📊 Excel
               </button>
               <button
                 onClick={sharePlan}
@@ -1087,6 +1165,21 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             </div>
           </div>
         )}
+
+        {/* Personalized Guide Box */}
+        {itinerary.personalizedGuideText && !isExportingPdf && (
+          <div className="mt-8 bg-gradient-to-br from-amber-100 to-orange-50 border border-orange-200 rounded-xl p-6 shadow-sm flex flex-col items-center justify-center text-center animate-fade-in">
+             <div className="text-4xl mb-3">🧭</div>
+             <h3 className="text-xl font-bold text-orange-900 mb-2">Seu Guia Personalizado</h3>
+             <p className="text-sm text-orange-800 mb-6 max-w-lg">Nossa IA criou dicas exclusivas baseadas exatamente no seu perfil e nas escolhas do seu roteiro. Leve com você!</p>
+             <button
+                onClick={handleDownloadGuide}
+                className="px-6 py-3 rounded-full font-bold text-white bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+              >
+                ⬇️ Baixar Guia (TXT)
+              </button>
+          </div>
+        )}
       </div>
 
 
@@ -1101,8 +1194,16 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
         </button>
 
         <button
+          onClick={handleExportExcel}
+          className="flex flex-col items-center justify-center text-teal-600 text-xs w-16"
+        >
+          <span className="text-xl">📊</span>
+          Excel
+        </button>
+
+        <button
           onClick={handleExportPdf}
-          className="flex flex-col items-center justify-center text-red-500 text-xs w-16"
+          className="flex flex-col items-center justify-center text-red-500 text-xs w-16 hidden sm:flex"
         >
           <span className="text-xl">📄</span>
           PDF

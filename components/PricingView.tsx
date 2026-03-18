@@ -128,16 +128,16 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
 
                     <ul className="space-y-4 mb-8 flex-1">
                         <li className="flex items-center gap-3 text-gray-800 font-medium">
-                            <span className="text-teal-500 text-xl">✓</span> 3 Planos Inteligentes
+                            <span className="text-teal-500 text-xl">✓</span> 2 Planos (Vitalício)
                         </li>
                         <li className="flex items-center gap-3 text-gray-600">
                             <span className="text-teal-500 text-xl">✓</span> Acesso ao Mapa
                         </li>
                         <li className="flex items-center gap-3 text-gray-400">
-                            <span className="text-gray-300 text-xl">✕</span> Exportar PDF
+                            <span className="text-gray-300 text-xl">✕</span> Exportar PDF & Excel
                         </li>
                         <li className="flex items-center gap-3 text-gray-400">
-                            <span className="text-gray-300 text-xl">✕</span> Compartilhamento
+                            <span className="text-gray-300 text-xl">✕</span> Guias Personalizados
                         </li>
                     </ul>
 
@@ -164,15 +164,15 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
                     <ul className="space-y-4 mb-8 flex-1">
                         <li className="flex items-center gap-3 text-white">
                             <span className="bg-teal-500 rounded-full p-0.5 text-white text-xs">✓</span>
-                            <span className="font-bold">Planos Ilimitados</span>
+                            <span className="font-bold">Até 30 Planos / Mês</span>
                         </li>
                         <li className="flex items-center gap-3 text-white">
                             <span className="bg-teal-500 rounded-full p-0.5 text-white text-xs">✓</span>
-                            <span>Exportação em <strong>PDF Profissional</strong></span>
+                            <span>Exportação em <strong>PDF e Excel</strong></span>
                         </li>
                         <li className="flex items-center gap-3 text-white">
                             <span className="bg-teal-500 rounded-full p-0.5 text-white text-xs">✓</span>
-                            <span><strong>Compartilhamento</strong> de Link</span>
+                            <span><strong>Guias Personalizados</strong> Automáticos</span>
                         </li>
                         <li className="flex items-center gap-3 text-white">
                             <span className="bg-teal-500 rounded-full p-0.5 text-white text-xs">✓</span>

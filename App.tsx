@@ -229,10 +229,15 @@ const App: React.FC = () => {
   const generatePlan = async () => {
     // 1. Check Usage Limits (if logged in)
     if (supabaseUser) {
-      const canProceed = await userService.checkUsageAvailability(supabaseUser.id);
-      if (!canProceed) {
-        alert("🚨 Limite Gratuito Atingido! 🚨\n\nVocê já criou 2 fugas. Atualize para o plano PREMIUM para criar viagens ilimitadas e exportar PDFs.");
-        // In a real app, we would redirect to payment here.
+      const usageCheck = await userService.checkUsageAvailability(supabaseUser.id);
+      if (!usageCheck.allowed) {
+        if (usageCheck.reason === 'free_limit_reached') {
+            alert("🚨 Limite Gratuito Atingido! 🚨\n\nVocê já criou 2 fugas no total. Atualize para o plano PREMIUM para criar até 30 viagens por mês e exportar planos para Excel.");
+        } else if (usageCheck.reason === 'premium_limit_reached') {
+            alert("🚨 Limite Premium Mensal Atingido! 🚨\n\nVocê atingiu seu limite de 30 criações de planos neste mês. O limite será resetado no próximo mês.");
+        } else {
+             alert("🚨 Erro ao verificar limites de uso. Tente novamente mais tarde.");
+        }
         return;
       }
     }

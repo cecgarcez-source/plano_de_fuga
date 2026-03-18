@@ -108,7 +108,6 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
 
     REGRAS CRÍTICAS DE CUSTOS:
     1. Nunca retorne custo 0 a menos que seja gratuito.
-    2. Calcule média realista para restaurantes.
     3. FORCE a moeda correta no campo 'currency' e nos valores. ${currencyInstruction}
 
     REGRAS DE MONETIZAÇÃO E CURADORIA (CONTEXTUAL):
@@ -120,6 +119,9 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
        - Ex: Se perfil "Cultural" em Brasília -> "E-book: Bússola da Arquitetura".
        - Ex: Se perfil "Gastronômico" -> "Guia Secreto de Vinhos Locais".
        - A sugestão deve parecer um material exclusivo seu (do App).
+
+    GUIA PERSONALIZADO:
+    Crie também um guia "pocket" exclusivo e personalizado em texto (campo 'personalizedGuideText') de 2 a 3 parágrafos. Se for um casal, chame de "Guia Romântico", se for família "Guia Família", ou focado nos perfis citados. Dê dicas de ouro rápidas sobre o destino, voltadas estritamente para esses perfis informados.
 
     Retorne APENAS JSON.
   `;
@@ -223,8 +225,9 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
                 required: ["day", "theme", "locationBase", "accommodation", "activities"],
               },
             },
+            personalizedGuideText: { type: Type.STRING },
           },
-          required: ["destinationTitle", "destinationDescription", "coordinates", "justification", "costBreakdown", "days", "hotelSuggestions", "premiumTips"],
+          required: ["destinationTitle", "destinationDescription", "coordinates", "justification", "costBreakdown", "days", "hotelSuggestions", "premiumTips", "personalizedGuideText"],
         },
       },
     });

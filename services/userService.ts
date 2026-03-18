@@ -49,28 +49,45 @@ export const userService = {
         }
     },
 
-    async checkUsageAvailability(userId: string): Promise<boolean> {
-        // 1. Check Tier
+    async checkUsageAvailability(userId: string): Promise<{ allowed: boolean; reason?: string }> {
+        // 1. Get user profile
         const { data: profile } = await supabase
             .from('user_profiles')
-            .select('subscription_tier')
+            .select('subscription_tier, total_trips_created')
             .eq('id', userId)
             .single();
 
-        if (profile?.subscription_tier === 'premium') return true;
+        const isPremium = profile?.subscription_tier === 'premium';
 
-        // 2. Count ACTUAL plans (More robust than profile counter)
-        const { count, error } = await supabase
-            .from('plans')
-            .select('*', { count: 'exact', head: true })
-            .eq('user_id', userId);
+        if (isPremium) {
+            // Premium Limit: 30 creations per month
+            const startOfMonth = new Date();
+            startOfMonth.setDate(1);
+            startOfMonth.setHours(0, 0, 0, 0);
 
-        if (error) {
-            console.error("Error checking plan limits:", error);
-            return false; // Fail safe
+            const { count, error } = await supabase
+                .from('plans')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', userId)
+                .gte('created_at', startOfMonth.toISOString());
+
+            if (error) {
+                console.error("Error checking premium plan limits:", error);
+                return { allowed: false, reason: "error" };
+            }
+
+            if ((count || 0) >= 30) {
+                return { allowed: false, reason: "premium_limit_reached" };
+            }
+            return { allowed: true };
         }
 
-        // Free limit: 2 (User Request)
-        return (count || 0) < 2;
+        // Free Limit: 2 lifetime (using total_trips_created so deletion doesn't reset)
+        const totalCreated = profile?.total_trips_created || 0;
+        if (totalCreated >= 2) {
+            return { allowed: false, reason: "free_limit_reached" };
+        }
+
+        return { allowed: true };
     }
 };

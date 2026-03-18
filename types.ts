@@ -78,6 +78,7 @@ export interface ItineraryResult {
     description: string;
   }>;
   premiumTips: MarketingTip[]; // High-level monetization tips (E-books, etc)
+  personalizedGuideText?: string;
 }
 
 export interface SavedPlan extends ItineraryResult {
