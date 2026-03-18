@@ -174,7 +174,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             pdf.setFontSize(8);
             pdf.setTextColor(100, 100, 100);
             pdf.setFont("helvetica", "bold");
-            pdf.text("PLANO DE FUGA // CONFIDENTIAL", 10, 12);
+            pdf.text("PLANO DE FUGA // CONFIDENCIAL", 10, 12);
             pdf.setDrawColor(200, 200, 200);
             pdf.line(10, 15, pageWidth - 10, 15);
 
@@ -498,7 +498,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
         {/* PAGE 1: COVER */}
         <div style={{ height: PDF_H, overflow: 'hidden' }} className="flex flex-col items-center justify-center p-12 bg-[#f0f0f0] relative border-b border-gray-100">
-          <div className="absolute top-10 right-10 border-4 border-red-700 text-red-700 font-black text-2xl px-4 py-2 rotate-[-15deg] opacity-80">
+          <div className="absolute top-10 right-10 border-4 border-red-700 text-red-700 font-black text-2xl px-4 py-2 rotate-[-15deg] opacity-80 whitespace-nowrap flex items-center justify-center">
             TOP SECRET
           </div>
           <div className="text-center space-y-8">
@@ -665,7 +665,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
       {isExportingPdf && (
         <div className="w-full h-[290mm] flex flex-col items-center justify-center border-4 border-black mb-8 p-12 bg-[#f0f0f0] relative break-after-page">
           {/* Stamp */}
-          <div className="absolute top-10 right-10 border-4 border-red-700 text-red-700 font-black text-2xl px-4 py-2 rotate-[-15deg] opacity-80">
+          <div className="absolute top-10 right-10 border-4 border-red-700 text-red-700 font-black text-2xl px-4 py-2 rotate-[-15deg] opacity-80 whitespace-nowrap flex items-center justify-center">
             TOP SECRET
           </div>
 
@@ -1189,77 +1189,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
 
 
-        {/* Curadoria Exclusiva (Premium Features) */}
-        {/* Curadoria Exclusiva (Premium Features) */}
-        {!isExportingPdf && (
-          <div className="mt-12 relative rounded-2xl overflow-hidden shadow-2xl border border-teal-100">
-            {/* Background Image */}
-            <div 
-              className="absolute inset-0 z-0 bg-cover bg-center opacity-90"
-              style={{ backgroundImage: "url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop')" }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/80 to-teal-900/40 backdrop-blur-[2px]"></div>
-            </div>
-
-            <div className="relative z-10 p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-2xl">✨</span>
-                <h3 className="text-teal-900 text-lg font-black tracking-widest uppercase">Curadoria Exclusiva & E-book</h3>
-              </div>
-              
-              <div className="flex flex-col md:flex-row gap-6 items-stretch">
-                
-                {/* E-book Card */}
-                {itinerary.personalizedGuideText && (
-                  <div className="flex-1 bg-white/90 backdrop-blur-md border border-white/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all relative overflow-hidden flex flex-col justify-between group">
-                    <div className="absolute -top-6 -right-6 p-4 opacity-[0.05] text-9xl pointer-events-none transition-transform group-hover:scale-110 group-hover:rotate-6">📖</div>
-                    <div>
-                      <div className="inline-block px-3 py-1 bg-teal-100 text-teal-800 text-[10px] font-black uppercase rounded-full mb-3 shadow-sm">
-                        Conteúdo 100% Personalizado
-                      </div>
-                      <h4 className="font-extrabold text-xl text-slate-800 mb-3 leading-tight">E-book Exclusivo da Fuga</h4>
-                      <p className="text-sm text-slate-600 mb-6 font-medium leading-relaxed">Nossa IA compilou os segredos de {itinerary.destinationTitle} num livro digital feito sob medida para você.</p>
-                    </div>
-                    
-                    <button
-                      onClick={() => {
-                        if (user?.subscriptionTier !== 'premium') {
-                          alert("🔒 Recurso Premium\n\nO E-book exclusivo é gerado e acessível apenas para membros Premium. Atualize seu plano para baixar!");
-                        } else {
-                          handleDownloadEbook();
-                        }
-                      }}
-                      className={`w-full font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 group-hover:shadow-lg ${user?.subscriptionTier === 'premium' ? 'bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white shadow-md' : 'bg-slate-100 text-slate-500 border border-slate-300'}`}
-                    >
-                      {user?.subscriptionTier === 'premium' ? '⬇️ Baixar E-book (PDF)' : '🔒 Premium: Adquira agora'}
-                    </button>
-                  </div>
-                )}
-
-                {/* Other Premium Tips from AI */}
-                {itinerary.premiumTips?.map((tip, idx) => (
-                  <div key={idx} className="flex-1 bg-white/95 backdrop-blur-md border border-white/50 rounded-2xl p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all flex flex-col justify-between group">
-                    <div>
-                      <div className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-[10px] font-black uppercase rounded-full mb-3 shadow-sm flex items-center gap-1 w-max">
-                        <span className="text-indigo-600 text-xs">{tip.type === 'infoproduct' ? '📚' : (tip.type === 'tour_affiliate' ? '🎟️' : '🏨')}</span> Recomendação Curada
-                      </div>
-                      <h4 className="font-extrabold text-xl text-slate-800 mb-3 leading-tight">{tip.title}</h4>
-                      <p className="text-sm text-slate-600 mb-6 font-medium leading-relaxed">{tip.description}</p>
-                    </div>
-                    <a
-                      href={tip.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block w-full text-center bg-transparent text-slate-700 border-2 border-slate-200 font-bold py-3 rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all group-hover:shadow-sm"
-                    >
-                      {tip.ctaText}
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Fim do roteiro e resumo financeiro */}
       </div>
 
 
