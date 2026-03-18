@@ -232,7 +232,7 @@ const App: React.FC = () => {
       const usageCheck = await userService.checkUsageAvailability(supabaseUser.id);
       if (!usageCheck.allowed) {
         if (usageCheck.reason === 'free_limit_reached') {
-            alert("🚨 Limite Gratuito Atingido! 🚨\n\nVocê já criou 2 fugas no total. Atualize para o plano PREMIUM para criar até 30 viagens por mês e exportar planos para Excel.");
+            alert("🚨 Limite Gratuito Atingido! 🚨\n\nVocê atingiu seu limite de 10 tentativas gratuitas de geração. Atualize para o plano PREMIUM para criar até 30 viagens por mês.");
         } else if (usageCheck.reason === 'premium_limit_reached') {
             alert("🚨 Limite Premium Mensal Atingido! 🚨\n\nVocê atingiu seu limite de 30 criações de planos neste mês. O limite será resetado no próximo mês.");
         } else {
@@ -270,7 +270,14 @@ const App: React.FC = () => {
   };
 
   const saveCurrentPlan = async (updatedPlan: ItineraryResult) => {
+    const isNewPlan = !('id' in updatedPlan) && !('id' in (currentItinerary || {}));
+
     if (!user || !supabaseUser) {
+      if (isNewPlan && savedPlans.length >= 3) {
+        alert("🔒 Limite Local Atingido!\n\nVocê atingiu o limite de 3 planos salvos no dispositivo.\nFaça login para salvar na nuvem ou exclua um plano existente.");
+        return;
+      }
+
       // Fallback for guest (Local Storage)
       const newPlan: SavedPlan = {
         ...(currentItinerary as SavedPlan), // Preserve ID if exists
@@ -286,6 +293,14 @@ const App: React.FC = () => {
       alert("Plano salvo localmente! Faça login para salvar na nuvem.");
       setStep(AppStep.DASHBOARD);
       return;
+    }
+
+    if (isNewPlan) {
+      const saveCheck = await userService.checkSaveAvailability(supabaseUser.id);
+      if (!saveCheck.allowed && saveCheck.reason === 'free_save_limit_reached') {
+        alert("🔒 Limite de Planos Salvos!\n\nVocê atingiu o limite de 3 planos salvos na sua conta grátis.\nAssine o Premium ou exclua um plano antigo para salvar novos.");
+        return;
+      }
     }
 
     try {

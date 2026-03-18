@@ -128,7 +128,10 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
 
                     <ul className="space-y-4 mb-8 flex-1">
                         <li className="flex items-center gap-3 text-gray-800 font-medium">
-                            <span className="text-teal-500 text-xl">✓</span> 2 Planos (Vitalício)
+                            <span className="text-teal-500 text-xl">✓</span> 10 Tentativas de Geração
+                        </li>
+                        <li className="flex items-center gap-3 text-gray-800 font-medium">
+                            <span className="text-teal-500 text-xl">✓</span> Salvar até 3 Planos
                         </li>
                         <li className="flex items-center gap-3 text-gray-600">
                             <span className="text-teal-500 text-xl">✓</span> Acesso ao Mapa
