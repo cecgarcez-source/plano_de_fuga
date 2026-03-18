@@ -248,20 +248,24 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
       const margin = 20;
       const textWidth = pageWidth - margin * 2;
       
-      // Cover Header
+      // Cover Background (Beautiful Gradient Header)
+      pdf.setFillColor(15, 23, 42); // slate-900 (Dark background for top half)
+      pdf.rect(0, 0, pageWidth, 60, 'F');
+      
+      // Draw a secondary shape for style
       pdf.setFillColor(13, 148, 136); // teal-600
-      pdf.rect(0, 0, pageWidth, 40, 'F');
+      pdf.rect(0, 60, pageWidth, 5, 'F');
       
       pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(22);
+      pdf.setFontSize(28);
       pdf.setFont("helvetica", "bold");
-      pdf.text("E-BOOK EXCLUSIVO", margin, 25);
+      pdf.text("E-BOOK EXCLUSIVO", margin, 30);
       
       // Title
-      pdf.setTextColor(15, 23, 42); // slate-900
-      pdf.setFontSize(18);
-      pdf.setFont("helvetica", "bold");
-      pdf.text(`Guia: ${itinerary.destinationTitle}`, margin, 55);
+      pdf.setFontSize(14);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(203, 213, 225); // slate-300
+      pdf.text(`Curadoria Premium: ${itinerary.destinationTitle}`, margin, 45);
       
       // Body Text
       pdf.setFontSize(11);
@@ -271,7 +275,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
       const splitText = pdf.splitTextToSize(itinerary.personalizedGuideText, textWidth);
       
       // Pagination handling for long e-books
-      let yOffset = 70;
+      let yOffset = 85;
       for (let i = 0; i < splitText.length; i++) {
         if (yOffset > 270) {
           pdf.addPage();
@@ -297,7 +301,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     }
 
     try {
-      // Create CSV content
+      // Create CSV content with semicolon delimiter (Portuguese standard format for Excel)
+      const delimiter = ';';
       const headers = ['Dia', 'Data', 'Tema', 'Base', 'Acomodação', 'Total Estimado', 'Total Realizado'];
       const rows = itinerary.days.map(day => {
         const date = getTripDate(preferences.startDate, day.day - 1);
@@ -312,7 +317,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
         const dayActs = day.activities.reduce((sum, act) => safeSum(sum, act.actualCost), 0);
         const actualDayTotal = dayAcc + dayFood + dayTrans + dayActs;
 
-        // Escape quotes and wrap fields with commas
+        // Escape quotes, format numbers to use comma decimals internally to Excel BR if needed
         return [
           day.day,
           `"${dateStr}"`,
@@ -321,10 +326,11 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
           `"${day.accommodation}"`,
           Math.round(estimatedDayTotal),
           Math.round(actualDayTotal)
-        ].join(',');
+        ].join(delimiter);
       });
 
-      const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(','), ...rows].join('\n');
+      // \uFEFF is the UTF-8 BOM, required for Excel to read accents correctly
+      const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + [headers.join(delimiter), ...rows].join('\n');
       const encodedUri = encodeURI(csvContent);
       
       const cleanTitle = itinerary.destinationTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
