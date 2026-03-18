@@ -1,0 +1,8 @@
+﻿commit 927deaabce6b67ff93c29166607433802ccb8596
+Author: cecgarcez-source <cecgarcez@gmail.com>
+Date:   Tue Mar 17 22:14:55 2026 -0300
+
+    feat: implement ResultView component for displaying, editing, saving, and exporting trip itineraries to PDF, TXT, and CSV.
+
+ components/ResultView.tsx | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
