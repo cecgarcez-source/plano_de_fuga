@@ -239,24 +239,54 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     }
   };
 
-  const handleDownloadGuide = () => {
+  const handleDownloadEbook = () => {
     if (!itinerary.personalizedGuideText) return;
     
     try {
-      const blob = new Blob([itinerary.personalizedGuideText], { type: 'text/plain;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
-      const cleanTitle = itinerary.destinationTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = 210;
+      const margin = 20;
+      const textWidth = pageWidth - margin * 2;
       
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Guia_Personalizado_${cleanTitle}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Cover Header
+      pdf.setFillColor(13, 148, 136); // teal-600
+      pdf.rect(0, 0, pageWidth, 40, 'F');
+      
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFontSize(22);
+      pdf.setFont("helvetica", "bold");
+      pdf.text("E-BOOK EXCLUSIVO", margin, 25);
+      
+      // Title
+      pdf.setTextColor(15, 23, 42); // slate-900
+      pdf.setFontSize(18);
+      pdf.setFont("helvetica", "bold");
+      pdf.text(`Guia: ${itinerary.destinationTitle}`, margin, 55);
+      
+      // Body Text
+      pdf.setFontSize(11);
+      pdf.setFont("helvetica", "normal");
+      pdf.setTextColor(51, 65, 85); // slate-700
+      
+      const splitText = pdf.splitTextToSize(itinerary.personalizedGuideText, textWidth);
+      
+      // Pagination handling for long e-books
+      let yOffset = 70;
+      for (let i = 0; i < splitText.length; i++) {
+        if (yOffset > 270) {
+          pdf.addPage();
+          yOffset = 20;
+        }
+        pdf.text(splitText[i], margin, yOffset);
+        yOffset += 6; // Line height
+      }
+
+      // Footer
+      const cleanTitle = itinerary.destinationTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      pdf.save(`Ebook_Curadoria_${cleanTitle}.pdf`);
     } catch (err) {
       console.error(err);
-      alert("Erro ao baixar o guia.");
+      alert("Erro ao baixar o E-book.");
     }
   };
 
@@ -1153,41 +1183,56 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
 
 
-        {/* Separate Premium Tips to show in PDF if they exist */}
-        {itinerary.premiumTips && itinerary.premiumTips.length > 0 && (
+        {/* Curadoria Exclusiva (Premium Features) */}
+        {!isExportingPdf && (
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-gray-500 text-xs font-bold uppercase mb-2">Curadoria Exclusiva</h3>
-            <div className="space-y-4">
-              {itinerary.premiumTips.map((tip, idx) => (
-                <div key={idx} className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 hover:shadow-md transition-shadow">
-                  <h4 className="font-bold text-sm text-indigo-900 mb-1">{tip.title}</h4>
-                  <p className="text-xs text-gray-600 mb-2 line-clamp-2">{tip.description}</p>
+            <h3 className="text-gray-500 text-xs font-bold uppercase mb-4">Curadoria Exclusiva & E-book</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              
+              {/* E-book Card */}
+              {itinerary.personalizedGuideText && (
+                <div className="bg-gradient-to-br from-teal-50 to-blue-50 border border-teal-200 rounded-xl p-5 hover:shadow-lg transition-all relative overflow-hidden flex flex-col justify-between">
+                  <div className="absolute -top-4 -right-4 p-3 opacity-[0.08] text-8xl pointer-events-none">📖</div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-teal-600 block mb-1">Guia Pocket 100% Personalizado</span>
+                    <h4 className="font-bold text-lg text-teal-900 mb-2">E-book Exclusivo da Fuga</h4>
+                    <p className="text-sm text-teal-700 mb-6">Nossa IA compilou os segredos de {itinerary.destinationTitle} num livro digital feito sob medida para você.</p>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      if (user?.subscriptionTier !== 'premium') {
+                        alert("🔒 Recurso Premium\n\nO E-book exclusivo é gerado e acessível apenas para membros Premium. Atualize seu plano para baixar!");
+                      } else {
+                        handleDownloadEbook();
+                      }
+                    }}
+                    className={`w-full font-bold py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 ${user?.subscriptionTier === 'premium' ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md' : 'bg-[rgba(255,255,255,0.7)] text-gray-500 border border-gray-300'}`}
+                  >
+                    {user?.subscriptionTier === 'premium' ? '⬇️ Baixar E-book (PDF)' : '🔒 Premium: Adquira agora'}
+                  </button>
+                </div>
+              )}
+
+              {/* Other Premium Tips from AI */}
+              {itinerary.premiumTips?.map((tip, idx) => (
+                <div key={idx} className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-lg transition-all flex flex-col justify-between">
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-indigo-500 block mb-1">Recomendação Curada</span>
+                    <h4 className="font-bold text-gray-800 mb-2">{tip.title}</h4>
+                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{tip.description}</p>
+                  </div>
                   <a
                     href={tip.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full text-center bg-indigo-600 text-white text-xs font-bold py-1.5 rounded hover:bg-indigo-700 transition-colors"
+                    className="block w-full text-center bg-gray-50 text-gray-700 border border-gray-300 font-bold py-2 rounded-lg hover:bg-gray-100 transition-colors"
                   >
                     {tip.ctaText}
                   </a>
                 </div>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Personalized Guide Box */}
-        {itinerary.personalizedGuideText && !isExportingPdf && (
-          <div className="mt-8 bg-gradient-to-br from-amber-100 to-orange-50 border border-orange-200 rounded-xl p-6 shadow-sm flex flex-col items-center justify-center text-center animate-fade-in">
-             <div className="text-4xl mb-3">🧭</div>
-             <h3 className="text-xl font-bold text-orange-900 mb-2">Seu Guia Personalizado</h3>
-             <p className="text-sm text-orange-800 mb-6 max-w-lg">Nossa IA criou dicas exclusivas baseadas exatamente no seu perfil e nas escolhas do seu roteiro. Leve com você!</p>
-             <button
-                onClick={handleDownloadGuide}
-                className="px-6 py-3 rounded-full font-bold text-white bg-gradient-to-r from-orange-500 to-orange-600 shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
-              >
-                ⬇️ Baixar Guia (TXT)
-              </button>
           </div>
         )}
       </div>

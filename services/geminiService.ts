@@ -115,13 +115,10 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     
     1. **MarketingTip (Logística):** Nos dias onde a logística é complexa, sugira um hotel estratégico ou aluguel de carro. Use linguagem consultiva: "Para otimizar seu tempo...". O 'url' deve ser um placeholder genérico de afiliado (ex: "https://booking.com/example").
     
-    2. **PremiumTips (Infoprodutos/Guias):** Baseado no perfil do usuário, sugira infoprodutos (e-books, guias técnicos) que aprofundem a experiência.
-       - Ex: Se perfil "Cultural" em Brasília -> "E-book: Bússola da Arquitetura".
-       - Ex: Se perfil "Gastronômico" -> "Guia Secreto de Vinhos Locais".
-       - A sugestão deve parecer um material exclusivo seu (do App).
+    2. **PremiumTips (Curadoria):** Baseado no perfil do usuário, sugira 1 a 2 guias externos reais ou recomendações de ferramentas essenciais para este destino. (O 'url' pode ser um link de busca/reserva).
 
-    GUIA PERSONALIZADO:
-    Crie também um guia "pocket" exclusivo e personalizado em texto (campo 'personalizedGuideText') de 2 a 3 parágrafos. Se for um casal, chame de "Guia Romântico", se for família "Guia Família", ou focado nos perfis citados. Dê dicas de ouro rápidas sobre o destino, voltadas estritamente para esses perfis informados.
+    E-BOOK EXCLUSIVO:
+    Crie o conteúdo de um "E-book Exclusivo" em texto formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. Deve conter pelo menos 4 a 5 tópicos (ex: "O Segredo de [Destino]", "3 Comer como um Local", etc). Não use markdown pesado, use formatação em texto limpo com tópicos textuais estruturados. Serão dicas de ouro e hacks locais que não estão no cronograma normal de turistas.
 
     Retorne APENAS JSON.
   `;
