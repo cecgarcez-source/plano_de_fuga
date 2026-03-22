@@ -642,6 +642,11 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                 <div>
                   <h4 className="font-bold text-gray-900">{h.name}</h4>
                   <p className="text-sm text-gray-600">{h.description}</p>
+                  {h.link && (
+                    <a href={h.link} target="_blank" rel="noopener noreferrer" className="text-xs text-teal-700 underline mt-1 inline-block">
+                      {h.link}
+                    </a>
+                  )}
                 </div>
                 <div className="text-right">
                   <span className="bg-gray-100 text-xs px-2 py-1 rounded border border-gray-300 block mb-1">{h.category}</span>
@@ -1067,13 +1072,27 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             <h3 className={`font-bold mb-4 text-lg ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>🏨 Sugestões Gerais</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {itinerary.hotelSuggestions.map((hotel, idx) => (
-                <div key={idx} className={`border rounded-lg p-4 transition-colors ${isExportingPdf ? 'border-gray-400' : 'border-gray-200 hover:border-teal-300'}`}>
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className={`font-bold ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>{hotel.name}</h4>
-                    <span className={`text-xs px-2 py-1 rounded ${isExportingPdf ? 'bg-gray-200 text-black border border-gray-400' : 'bg-gray-100'}`}>{hotel.category}</span>
+                <div key={idx} className={`border rounded-lg p-4 transition-colors flex flex-col justify-between ${isExportingPdf ? 'border-gray-400' : 'border-gray-200 hover:border-teal-300'}`}>
+                  <div>
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className={`font-bold ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>{hotel.name}</h4>
+                      <span className={`text-xs px-2 py-1 rounded ${isExportingPdf ? 'bg-gray-200 text-black border border-gray-400' : 'bg-gray-100'}`}>{hotel.category}</span>
+                    </div>
+                    <p className={`text-sm mb-2 ${isExportingPdf ? 'text-black' : 'text-gray-500'}`}>{hotel.description}</p>
                   </div>
-                  <p className={`text-sm mb-2 ${isExportingPdf ? 'text-black' : 'text-gray-500'}`}>{hotel.description}</p>
-                  <p className={`text-sm font-medium ${isExportingPdf ? 'text-black' : 'text-teal-600'}`}>{hotel.priceRange}</p>
+                  <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
+                    <span className={`text-sm font-medium ${isExportingPdf ? 'text-black' : 'text-teal-600'}`}>{hotel.priceRange}</span>
+                    {hotel.link && !isExportingPdf && (
+                      <a href={hotel.link} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 px-3 py-1.5 rounded transition-colors inline-block text-center">
+                        Ver Oferta
+                      </a>
+                    )}
+                    {hotel.link && isExportingPdf && (
+                      <a href={hotel.link} target="_blank" rel="noopener noreferrer" className="text-xs text-teal-700 underline">
+                        Acessar Link
+                      </a>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

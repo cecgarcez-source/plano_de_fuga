@@ -482,10 +482,10 @@ const App: React.FC = () => {
 
                 <button
                   onClick={() => setStep(AppStep.USER_PROFILE)}
-                  className="hidden md:flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white px-4 py-1.5 rounded-full font-bold text-sm shadow-md hover:shadow-lg hover:from-teal-600 hover:to-teal-700 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                  className="flex items-center gap-1 md:gap-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white px-3 md:px-4 py-1.5 rounded-full font-bold text-xs md:text-sm shadow-md hover:shadow-lg hover:from-teal-600 hover:to-teal-700 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
                 >
                   <span>👤</span>
-                  <span>Configurar Perfil</span>
+                  <span className="hidden sm:inline">Configurar Perfil</span>
                 </button>
               </div>
             )}

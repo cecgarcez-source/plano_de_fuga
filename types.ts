@@ -76,6 +76,7 @@ export interface ItineraryResult {
     category: string;
     priceRange: string;
     description: string;
+    link?: string;
   }>;
   premiumTips: MarketingTip[]; // High-level monetization tips (E-books, etc)
   personalizedGuideText?: string;

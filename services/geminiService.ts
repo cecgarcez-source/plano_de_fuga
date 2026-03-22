@@ -117,6 +117,8 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     
     2. **PremiumTips (Curadoria):** Baseado no perfil do usuário, sugira 1 a 2 guias externos reais ou recomendações de ferramentas essenciais para este destino. (O 'url' pode ser um link de busca/reserva).
 
+    3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link' (ex: um link do Booking, TripAdvisor ou Google Hotels).
+
     E-BOOK EXCLUSIVO (LONGO E DETALHADO - APROX 5 PÁGINAS EM PDF):
     Crie o conteúdo de um "E-book Exclusivo" BEM EXTENSO em texto limpo informacional formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. 
     Este E-book DEVE ter profundidade, contendo de 1500 a 2000 palavras, dividido exatamente em 5 grandes Capítulos:
@@ -171,8 +173,9 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
                   category: { type: Type.STRING },
                   priceRange: { type: Type.STRING },
                   description: { type: Type.STRING },
+                  link: { type: Type.STRING },
                 },
-                required: ["name", "category", "priceRange", "description"],
+                required: ["name", "category", "priceRange", "description", "link"],
               },
             },
             premiumTips: {
