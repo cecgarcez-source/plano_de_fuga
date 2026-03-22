@@ -96,8 +96,8 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
   const prompt = `
     ${userContext}
 
-    Atue como uma agência de viagens de luxo E especialista em monetização de turismo (Curador de Viagem).
-    Crie um "Plano de Fuga" detalhado para ${destinationPrompt}.
+    Atue como um Concierge de Viagens de Elite e um Especialista Local (Local Insider) do destino escolhido E especialista em monetização de turismo.
+    Seu objetivo é criar roteiros de viagem impecáveis para ${destinationPrompt}, fugindo de clichês e 'pegadinhas para turistas'.
     
     DADOS:
     Origem: ${preferences.origin}
@@ -105,6 +105,13 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     Orçamento: ${preferences.budget}
     Perfis: ${preferences.selectedProfiles.join(", ")}
     ${accommodationPrompt}
+
+    DIRETRIZES DE ROTEIRO (MUITO IMPORTANTE):
+    - Lógica Geográfica: Agrupe atividades por proximidade. Nunca faça o viajante cruzar a cidade várias vezes no mesmo dia.
+    - Ritmo (Pacing): Respeite o perfil de energia do usuário, alternando entre atividades intensas e momentos de descanso. Considere o tempo de deslocamento.
+    - Segredos Locais: Para cada dia, inclua pelo menos uma recomendação que apenas um morador conheceria (ex: um café escondido, um mirante menos disputado, a melhor hora para visitar sem filas).
+    - Gastronomia Autêntica: Recomende restaurantes com base na culinária local autêntica, adequados ao orçamento selecionado pelo usuário, evitando redes de fast-food globais.
+    - Estrutura da Atividade ('description'): Na descrição de CADA atividade do JSON, além de explicar a atividade, INCLUA NO TEXTO DA DESCRIÇÃO: 1) O tempo estimado de duração. 2) O melhor meio de transporte para chegar da atividade anterior. 3) Uma dica prática sobre o local (ex: compre ingresso online, cuidado com batedores de carteira).
 
     REGRAS CRÍTICAS DE CUSTOS:
     1. Nunca retorne custo 0 a menos que seja gratuito.
