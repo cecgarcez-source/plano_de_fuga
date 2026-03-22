@@ -113,11 +113,11 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     REGRAS DE MONETIZAÇÃO E CURADORIA (CONTEXTUAL):
     Você deve agir como um consultor que sugere produtos/serviços que AGREGAM valor.
     
-    1. **MarketingTip (Logística):** Nos dias onde a logística é complexa, sugira um hotel estratégico ou aluguel de carro. Use linguagem consultiva: "Para otimizar seu tempo...". O 'url' deve ser um placeholder genérico de afiliado (ex: "https://booking.com/example").
+    1. **MarketingTip (Logística):** Nos dias onde a logística é complexa, sugira um hotel estratégico ou aluguel de carro. Use linguagem consultiva: "Para otimizar seu tempo...". O 'url' deve obrigatoriamente ser um link do Booking ou TripAdvisor do local/serviço sugerido. Se não encontrar o link exato, envie obrigatoriamente um link de pesquisa no Google (ex: "https://www.google.com/search?q=nome+do+local+ou+servico").
     
     2. **PremiumTips (Curadoria):** Baseado no perfil do usuário, sugira 1 a 2 guias externos reais ou recomendações de ferramentas essenciais para este destino. (O 'url' pode ser um link de busca/reserva).
 
-    3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link' (ex: um link do Booking, TripAdvisor ou Google Hotels).
+    3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link'. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel. Em caso de não localização do link exato, informe obrigatoriamente um link para consulta no Google (ex: "https://www.google.com/search?q=nome+do+hotel+cidade").
 
     E-BOOK EXCLUSIVO (LONGO E DETALHADO - APROX 5 PÁGINAS EM PDF):
     Crie o conteúdo de um "E-book Exclusivo" BEM EXTENSO em texto limpo informacional formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. 
