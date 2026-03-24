@@ -346,6 +346,17 @@ export const DashboardView: React.FC<Props> = ({
         </div>
       </div>
 
+      <div className="mb-8 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 p-4 rounded-2xl flex items-start sm:items-center gap-4 shadow-sm animate-fade-in relative overflow-hidden">
+        <div className="absolute -right-4 -top-4 text-7xl opacity-10 pointer-events-none">✨</div>
+        <div className="text-3xl animate-bounce z-10">🥳</div>
+        <div className="z-10">
+          <h4 className="font-bold text-teal-800 mb-1">Dica de Agente Especial!</h4>
+          <p className="text-teal-700 text-sm">
+            Antes de iniciar o planejamento da sua próxima fuga, não esqueça de clicar em <strong>Configurar Perfil</strong> lá no topo! Uma identidade secreta bem preenchida garante viagens ainda mais incríveis e com a sua cara! 🚀✨
+          </p>
+        </div>
+      </div>
+
       {plans.length === 0 && visitedPlaces.length === 0 ? (
         <div className="text-center py-20 bg-white/50 rounded-3xl border-2 border-dashed border-gray-300">
           <span className="text-6xl block mb-4">🗺️</span>
