@@ -781,8 +781,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
         <div className={`p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isExportingPdf ? 'p-0 mt-2' : ''}`}>
           <div>
-            <h3 className={`text-lg font-bold ${isExportingPdf ? 'mb-1' : 'mb-2'} ${isExportingPdf ? 'text-black' : 'text-gray-700'}`}>Por que este destino?</h3>
-            <p className={`${isExportingPdf ? 'text-gray-900' : 'text-gray-600'} italic border-l-4 border-[#14b8a6] pl-4 text-sm md:text-base`}>{itinerary.justification}</p>
+            <h3 className={`text-lg font-bold ${isExportingPdf ? 'mb-1' : 'mb-2'} ${isExportingPdf ? 'text-black' : 'text-white'}`}>Por que este destino?</h3>
+            <p className={`${isExportingPdf ? 'text-gray-900' : 'text-white/90'} italic border-l-4 border-[#14b8a6] pl-4 text-sm md:text-base`}>{itinerary.justification}</p>
           </div>
 
           <div className="hidden md:flex gap-2" data-html2canvas-ignore>
