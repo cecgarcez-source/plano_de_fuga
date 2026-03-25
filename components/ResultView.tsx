@@ -3,6 +3,7 @@ import { ItineraryResult, TripPreferences, SavedPlan, MarketingTip, User } from 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import { PlacePhoto } from './PlacePhoto';
 
 interface Props {
   itinerary: ItineraryResult | SavedPlan;
@@ -774,8 +775,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
       )}
 
       {/* --- HIDDEN CONTAINER: INFOGRAPHIC MAPA DA FUGA EXPORT --- */}
-      <div style={{ position: 'fixed', top: 0, left: '-9999px', width: '1920px', height: '1080px', zIndex: -9999, pointerEvents: 'none' }}>
-        <div ref={infographicRef} style={{ width: '1920px', height: '1080px', backgroundColor: '#fdfbf7', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: 'sans-serif' }}>
+      <div style={{ position: 'fixed', top: 0, left: '-9999px', width: '1920px', zIndex: -9999, pointerEvents: 'none' }}>
+        <div ref={infographicRef} style={{ width: '1920px', minHeight: '1080px', backgroundColor: '#fdfbf7', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: 'sans-serif' }}>
           {/* Header */}
           <div style={{ padding: '60px 80px 30px', textAlign: 'center' }}>
             <h1 style={{ fontSize: '56px', fontWeight: '900', color: '#111827', textTransform: 'uppercase', letterSpacing: '2px' }}>
@@ -784,12 +785,9 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
           </div>
 
           {/* Timeline Nodes */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 80px', position: 'relative' }}>
-            {/* The Connecting Line */}
-            <div style={{ position: 'absolute', top: '40%', left: '140px', right: '140px', height: '16px', backgroundColor: '#0d9488', borderRadius: '10px', transform: 'translateY(-50%)', zIndex: 0 }}></div>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', zIndex: 10 }}>
-              {itinerary.days.slice(0, 5).map((day, idx) => (
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 80px', position: 'relative' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '80px 40px', justifyContent: 'center', width: '100%', zIndex: 10 }}>
+              {itinerary.days.map((day, idx) => (
                 <div key={day.day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '300px', textAlign: 'center' }}>
                   {/* Circle */}
                   <div style={{ width: '220px', height: '220px', borderRadius: '50%', backgroundColor: '#ffffff', border: '16px solid ' + (idx%2===0 ? '#f59e0b' : '#0d9488'), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '90px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', marginBottom: '32px', position: 'relative', overflow: 'hidden', margin: '0 auto 32px' }}>
@@ -1099,6 +1097,15 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                   {isExpanded && (
                     <div className={`relative p-4 md:p-5 bg-white ${!isExportingPdf && 'animate-fade-in'}`}>
                       
+                      {!isExportingPdf && day.locationBase && (
+                         <div className="mb-6 h-48 md:h-64 rounded-xl overflow-hidden shadow-sm border border-gray-100 relative group">
+                           <PlacePhoto 
+                             query={`${day.locationBase}, ${itinerary.destinationTitle.split(',')[0]}`} 
+                             className="w-full h-full" 
+                           />
+                         </div>
+                      )}
+
                       <div className={`transition-all duration-300 ${isBlurred ? 'blur-[8px] opacity-60 select-none grayscale-[30%] pointer-events-none' : ''}`}>
                         {day.logisticsTip && renderTip(day.logisticsTip, 'logistics')}
                       {/* Location & Hotel Section */}
