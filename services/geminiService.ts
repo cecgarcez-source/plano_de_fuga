@@ -174,9 +174,9 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
 
     3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link'. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel. Em caso de não localização do link exato, informe obrigatoriamente um link para consulta no Google (ex: "https://www.google.com/search?q=nome+do+hotel+cidade").
 
-    E-BOOK EXCLUSIVO (LONGO E DETALHADO - APROX 5 PÁGINAS EM PDF):
-    Crie o conteúdo de um "E-book Exclusivo" BEM EXTENSO em texto limpo informacional formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. 
-    Este E-book DEVE ter profundidade, contendo de 1500 a 2000 palavras, dividido exatamente em 5 grandes Capítulos:
+    E-BOOK EXCLUSIVO (EMPOLGANTE E BEM ESTRUTURADO):
+    Crie o conteúdo de um "E-book Exclusivo" em texto limpo informacional formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. 
+    Este E-book deve ter em torno de 500 a 800 palavras (para garantir que a IA não corte a resposta), dividido em 5 grandes Capítulos curtos:
     - 1. A Essência de [Destino] e o porquê de visitá-lo.
     - 2. O Segredo dos Locais (Hacks, lugares escondidos).
     - 3. Gastronomia Autêntica (Onde comer aquilo que só os locais comem, pratos exóticos).
@@ -214,6 +214,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
   try {
     const requestConfig = {
       responseMimeType: "application/json",
+      maxOutputTokens: 8192,
       tools: [{
         functionDeclarations: [
           {
