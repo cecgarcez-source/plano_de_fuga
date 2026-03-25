@@ -73,6 +73,12 @@ export interface ItineraryResult {
   justification: string;
   costBreakdown: CostBreakdown;
   weatherAdvice?: string; // Dica sazonal e sobre a estação ideal da viagem
+  practicalInfo?: {
+    currency: string; // Moeda local e dicas de câmbio
+    documentation: string; // Documentação necessária (Vistos, etc)
+    insurance: string; // Seguro Viagem recomendado
+    souvenirs: string; // Dicas de souvenirs autênticos
+  };
   days: DayPlan[];
   hotelSuggestions: Array<{
     name: string;

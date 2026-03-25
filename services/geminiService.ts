@@ -159,6 +159,12 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
+    
+    DICAS PRÁTICAS (practicalInfo): 
+    - currency: Breve dica sobre a moeda local e se é melhor levar espécie ou cartão.
+    - documentation: Documentação necessária e exigências de visto.
+    - insurance: Destaque a importância ou exigência de contratar um Seguro Viagem para este destino.
+    - souvenirs: Sugira qual lembrança/souvenir autêntico o viajante não deve deixar de comprar no local.
 
     REGRAS CRÍTICAS DE CUSTOS (FINANCEIRO REAL):
     1. Baseado no grupo de ${preferences.travelers} viajante(s), calcule mentalmente todos os custos de hospedagem, refeição e passeios para O GRUPO INTEIRO (total projetado, não apenas o cálculo individual).
@@ -182,6 +188,12 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       "justification": "Por que é perfeito",
       "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "total": 0, "currency": "BRL" },
       "weatherAdvice": "Análise sazonal e melhor época sugerida.",
+      "practicalInfo": {
+        "currency": "Dicas de moeda...",
+        "documentation": "Vistos etc...",
+        "insurance": "Seguro viagem...",
+        "souvenirs": "Lembrancinhas locais..."
+      },
       "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url" } ],
       "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
       "days": [ 

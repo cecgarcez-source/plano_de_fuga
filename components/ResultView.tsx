@@ -935,6 +935,30 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                 <p className="text-blue-700 text-sm md:text-base leading-relaxed">{itinerary.weatherAdvice}</p>
               </div>
             )}
+
+            {itinerary.practicalInfo && (
+              <div className="mt-4 bg-purple-50/90 backdrop-blur-sm border border-purple-200 p-4 rounded-xl shadow-sm">
+                <h4 className="text-purple-800 font-bold text-sm mb-3 flex items-center gap-2">🎒 Dicas Práticas do Agente</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="bg-white/60 p-2 rounded border border-purple-100">
+                    <span className="block text-[10px] font-bold text-purple-700 uppercase mb-1">💱 Moeda Local</span>
+                    <p className="text-purple-900 text-xs">{itinerary.practicalInfo.currency}</p>
+                  </div>
+                  <div className="bg-white/60 p-2 rounded border border-purple-100">
+                    <span className="block text-[10px] font-bold text-purple-700 uppercase mb-1">🛂 Documentação</span>
+                    <p className="text-purple-900 text-xs">{itinerary.practicalInfo.documentation}</p>
+                  </div>
+                  <div className="bg-white/60 p-2 rounded border border-purple-100">
+                    <span className="block text-[10px] font-bold text-purple-700 uppercase mb-1">🏥 Seguro Viagem</span>
+                    <p className="text-purple-900 text-xs">{itinerary.practicalInfo.insurance}</p>
+                  </div>
+                  <div className="bg-white/60 p-2 rounded border border-purple-100">
+                    <span className="block text-[10px] font-bold text-purple-700 uppercase mb-1">🎁 Souvenirs</span>
+                    <p className="text-purple-900 text-xs">{itinerary.practicalInfo.souvenirs}</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="hidden md:flex gap-2" data-html2canvas-ignore>

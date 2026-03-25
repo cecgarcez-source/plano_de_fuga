@@ -348,7 +348,7 @@ export const DashboardView: React.FC<Props> = ({
 
       <div className="mb-8 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 p-4 rounded-2xl flex items-start sm:items-center gap-4 shadow-sm animate-fade-in relative overflow-hidden">
         <div className="absolute -right-4 -top-4 text-7xl opacity-10 pointer-events-none">✨</div>
-        <div className="text-3xl animate-bounce z-10">🥳</div>
+        <div className="text-3xl animate-bounce z-10">🕵️‍♂️</div>
         <div className="z-10">
           <h4 className="font-bold text-teal-800 mb-1">Dica de Agente Especial!</h4>
           <p className="text-teal-700 text-sm">

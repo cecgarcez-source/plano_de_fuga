@@ -435,8 +435,8 @@ const App: React.FC = () => {
         {/* Navbar */}
         <header className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 h-auto py-1 md:py-2 flex items-center justify-between px-4 md:px-6 shadow-sm">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => user ? setStep(AppStep.DASHBOARD) : setStep(AppStep.INTRO)}>
-            <img src="/logo.png" alt="Logo" className="w-16 h-16 md:w-32 md:h-32 object-contain transition-all" />
-            <span className="font-bold text-xl tracking-tight text-gray-800 hidden md:block mt-2">Plano de Fuga</span>
+            <img src="/logo.png" alt="Logo" className="w-16 h-16 md:w-20 md:h-20 object-contain transition-all" />
+            <span className="font-bold text-xl tracking-tight text-gray-800 hidden lg:block mt-2">Plano de Fuga</span>
           </div>
           <div className="flex items-center gap-4">
             {user && (
