@@ -149,16 +149,13 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     Perfis: ${preferences.selectedProfiles.join(", ")}
     ${accommodationPrompt}
 
-    DIRETRIZES DE ROTEIRO (MUITO IMPORTANTE):
+    DIRETRIZES DE ROTEIRO (MUITO IMPORTANTE - REGRAS DE CONCISÃO):
     - Duração Exata (CRÍTICO): Gere EXATAMENTE ${preferences.duration} objetos de dia no array 'days', numerados de 1 até ${preferences.duration}. Não encerre o roteiro antes do final do plano!
-    - Limites Geográficos (Geofencing): TODAS as atrações, hotéis e restaurantes sugeridos devem ficar ESTRITAMENTE dentro de ${preferences.destination}. NÃO sugira sob nenhuma hipótese locais de outras cidades, estados ou regiões distantes.
-    - Qualidade Exigida: Selecione e priorize apenas pontos turísticos, hotéis e restaurantes altamente avaliados (acima de 4.5 estrelas no Google/TripAdvisor).
-    - Lógica Geográfica: Agrupe atividades por proximidade. Nunca faça o viajante cruzar a cidade várias vezes no mesmo dia.
-    - Ritmo (Pacing): Respeite o perfil de energia do usuário. Avalie o esforço físico total do dia e defina o 'energyScore' (1 a 5, onde 1 é muito relaxante e 5 é fisicamente intenso).
-    - Segredos Locais: Para cada dia, inclua pelo menos uma recomendação que apenas um morador conheceria.
-    - Gastronomia Autêntica: Recomende restaurantes autênticos e adequados ao orçamento, evitando fast-food global.
-    - Estrutura da Atividade: Na 'description', inclua: 1) Duração. 2) Transporte da atividade anterior. 3) Dica prática de segurança.
-    - Plano B (contingencyPlan): Para atividades ao ar livre ou sujeitas a imprevistos, forneça OBRIGATORIAMENTE uma alternativa excelente (ex: atração coberta).
+    - Volume Limitado (CRÍTICO PARA NÃO CORTAR O JSON): Para cada dia, gere NO MÁXIMO 3 a 4 atividades essenciais (ex: 1 manhã, 1 tarde, 1 noite). NUNCA gere mais que 4 atividades por dia.
+    - Resumo Extremo nas Descrições: Na 'description' das atividades, seja super direto (máximo de 20 palavras). Não escreva textos longos!
+    - Limites Geográficos: TODAS as atrações devem ficar ESTRITAMENTE dentro de ${preferences.destination}. NÃO cruze longas distâncias no mesmo dia.
+    - Qualidade Exigida: Priorize apenas locais altamente avaliados (acima de 4.5 estrelas).
+    - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
 
@@ -199,6 +196,8 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
         } 
       ]
     }
+
+    REGRA FINAL E ABSOLUTA: GARANTA QUE A RESPOSTA SEJA UM ARQUIVO JSON PERFEITAMENTE VÁLIDO E FECHADO NO FINAL (COM AS CHAVES E COLCHETES CORRETOS). E CUMPRA EXATAMENTE ${preferences.duration} DIAS.
   `;
 
   try {
