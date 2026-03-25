@@ -259,7 +259,7 @@ const App: React.FC = () => {
       setStep(AppStep.RESULT);
     } catch (err) {
       console.error(err);
-      setError("Ops! Ocorreu um erro ao planejar sua fuga. Tente novamente.");
+      setError(`Erro: Ops! Ocorreu um erro ao planejar sua fuga. Detalhe: ${err instanceof Error ? err.message : 'Desconhecido'}`);
       setStep(AppStep.PROFILES);
     }
   };

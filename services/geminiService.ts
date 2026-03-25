@@ -179,7 +179,29 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - 5. Dicas Práticas de Ouro (Segurança, transporte, melhor lado do avião/trem, golpes comuns).
     Desenvolva CADA tópico como se fosse um livro. Não use markdown pesado, use formatação em texto limpo com tópicos textuais estruturados.
 
-    Retorne APENAS JSON.
+    Retorne APENAS JSON, estritamente no seguinte formato:
+    {
+      "destinationTitle": "Nome do destino",
+      "destinationDescription": "Descrição atrativa",
+      "coordinates": { "lat": 0.0, "lng": 0.0 },
+      "justification": "Por que este roteiro é perfeito",
+      "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "total": 0, "currency": "BRL" },
+      "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url" } ],
+      "premiumTips": [ { "type": "hotel_affiliate", "title": "Dica Premium", "description": "...", "ctaText": "Comprar", "url": "url", "contextTrigger": "..." } ],
+      "days": [ 
+        { 
+          "day": 1, 
+          "theme": "Chegada", 
+          "locationBase": "Bairro/Região", 
+          "accommodation": "Nome do Hotel", 
+          "activities": [ 
+            { "time": "10:00", "title": "...", "description": "...", "location": "Endereço exato", "estimatedCost": 0 } 
+          ],
+          "logisticsTip": { "type": "tour_affiliate", "title": "...", "description": "...", "ctaText": "...", "url": "...", "contextTrigger": "..." }
+        } 
+      ],
+      "personalizedGuideText": "Conteúdo do E-book de 5 capítulos textuais..."
+    }
   `;
 
   try {
@@ -201,104 +223,6 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
           }
         ]
       }],
-      responseSchema: {
-        type: Type.OBJECT,
-        properties: {
-          destinationTitle: { type: Type.STRING },
-          destinationDescription: { type: Type.STRING },
-          coordinates: {
-            type: Type.OBJECT,
-            properties: {
-              lat: { type: Type.NUMBER },
-              lng: { type: Type.NUMBER },
-            },
-            required: ["lat", "lng"],
-          },
-          justification: { type: Type.STRING },
-          costBreakdown: {
-            type: Type.OBJECT,
-            properties: {
-              accommodation: { type: Type.NUMBER },
-              food: { type: Type.NUMBER },
-              activities: { type: Type.NUMBER },
-              transport: { type: Type.NUMBER },
-              total: { type: Type.NUMBER },
-              currency: { type: Type.STRING },
-            },
-            required: ["accommodation", "food", "activities", "transport", "total", "currency"],
-          },
-          hotelSuggestions: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                name: { type: Type.STRING },
-                category: { type: Type.STRING },
-                priceRange: { type: Type.STRING },
-                description: { type: Type.STRING },
-                link: { type: Type.STRING },
-              },
-              required: ["name", "category", "priceRange", "description", "link"],
-            },
-          },
-          premiumTips: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                type: { type: Type.STRING, enum: ["hotel_affiliate", "infoproduct", "tour_affiliate"] },
-                title: { type: Type.STRING },
-                description: { type: Type.STRING },
-                ctaText: { type: Type.STRING },
-                url: { type: Type.STRING },
-                contextTrigger: { type: Type.STRING },
-              },
-              required: ["type", "title", "description", "ctaText", "url", "contextTrigger"],
-            },
-          },
-          days: {
-            type: Type.ARRAY,
-            items: {
-              type: Type.OBJECT,
-              properties: {
-                day: { type: Type.NUMBER },
-                theme: { type: Type.STRING },
-                locationBase: { type: Type.STRING },
-                accommodation: { type: Type.STRING },
-                activities: {
-                  type: Type.ARRAY,
-                  items: {
-                    type: Type.OBJECT,
-                    properties: {
-                      time: { type: Type.STRING },
-                      title: { type: Type.STRING },
-                      description: { type: Type.STRING },
-                      location: { type: Type.STRING },
-                      estimatedCost: { type: Type.NUMBER },
-                    },
-                    required: ["time", "title", "description", "location", "estimatedCost"],
-                  },
-                },
-                logisticsTip: {
-                  type: Type.OBJECT,
-                  properties: {
-                    type: { type: Type.STRING, enum: ["hotel_affiliate", "infoproduct", "tour_affiliate"] },
-                    title: { type: Type.STRING },
-                    description: { type: Type.STRING },
-                    ctaText: { type: Type.STRING },
-                    url: { type: Type.STRING },
-                    contextTrigger: { type: Type.STRING },
-                  },
-                  required: ["type", "title", "description", "ctaText", "url", "contextTrigger"],
-                }
-              },
-              required: ["day", "theme", "locationBase", "accommodation", "activities"],
-            },
-          },
-          personalizedGuideText: { type: Type.STRING },
-        },
-        required: ["destinationTitle", "destinationDescription", "coordinates", "justification", "costBreakdown", "days", "hotelSuggestions", "premiumTips", "personalizedGuideText"],
-      },
     };
 
     let contents: any[] = [{ role: "user", parts: [{ text: prompt }] }];
