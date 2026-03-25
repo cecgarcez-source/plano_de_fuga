@@ -560,6 +560,7 @@ const App: React.FC = () => {
               onSave={saveCurrentPlan}
               onBackToDashboard={() => setStep(AppStep.DASHBOARD)}
               isSaved={'id' in currentItinerary}
+              onUpgrade={() => setStep(AppStep.PRICING)}
             />
           )}
 

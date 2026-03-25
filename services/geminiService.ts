@@ -45,6 +45,49 @@ export const getCityCoordinates = async (cityName: string): Promise<{ lat: numbe
   }
 };
 
+const searchGooglePlaces = async (query: string, location: string): Promise<any> => {
+  const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+  if (!apiKey) {
+    console.warn("VITE_GOOGLE_PLACES_API_KEY missing! Returning mock data for query:", query);
+    return { error: "Google Places API key is not configured. Please proceed without finding exact real local places data, use your best knowledge instead." };
+  }
+  
+  try {
+    const response = await fetch("https://places.googleapis.com/v1/places:searchText", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": apiKey,
+        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.types"
+      },
+      body: JSON.stringify({
+        textQuery: `${query} em ${location}`,
+        languageCode: "pt-BR"
+      })
+    });
+    
+    if (!response.ok) {
+      console.error("Google Places API Error", await response.text());
+      return { error: "Failed to fetch from Google Places API" };
+    }
+    
+    const data = await response.json();
+    const topPlaces = (data.places || []).slice(0, 5).map((p: any) => ({
+      name: p.displayName?.text,
+      address: p.formattedAddress,
+      rating: p.rating,
+      reviews: p.userRatingCount,
+      priceLevel: p.priceLevel,
+      types: p.types?.slice(0, 3)
+    }));
+    
+    return { results: topPlaces };
+  } catch (err) {
+    console.error("Search API Error:", err);
+    return { error: "An exception occurred during search." };
+  }
+};
+
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
   const modelId = "gemini-2.0-flash";
 
@@ -140,111 +183,170 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: modelId,
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            destinationTitle: { type: Type.STRING },
-            destinationDescription: { type: Type.STRING },
-            coordinates: {
+    const requestConfig = {
+      responseMimeType: "application/json",
+      tools: [{
+        functionDeclarations: [
+          {
+            name: "searchGooglePlaces",
+            description: "Pesquisa locais reais, restaurantes, hotéis e atrações turísticas usando a API do Google Places. Só chame essa função se precisar validar ou encontrar locais específicos na cidade solicitada antes de montar o roteiro.",
+            parameters: {
               type: Type.OBJECT,
               properties: {
-                lat: { type: Type.NUMBER },
-                lng: { type: Type.NUMBER },
+                query: { type: Type.STRING, description: "Termo de busca (ex: 'melhor restaurante italiano', 'atrações históricas')" },
+                location: { type: Type.STRING, description: "A cidade onde a busca deve ser feita" },
               },
-              required: ["lat", "lng"],
+              required: ["query", "location"]
+            }
+          }
+        ]
+      }],
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          destinationTitle: { type: Type.STRING },
+          destinationDescription: { type: Type.STRING },
+          coordinates: {
+            type: Type.OBJECT,
+            properties: {
+              lat: { type: Type.NUMBER },
+              lng: { type: Type.NUMBER },
             },
-            justification: { type: Type.STRING },
-            costBreakdown: {
+            required: ["lat", "lng"],
+          },
+          justification: { type: Type.STRING },
+          costBreakdown: {
+            type: Type.OBJECT,
+            properties: {
+              accommodation: { type: Type.NUMBER },
+              food: { type: Type.NUMBER },
+              activities: { type: Type.NUMBER },
+              transport: { type: Type.NUMBER },
+              total: { type: Type.NUMBER },
+              currency: { type: Type.STRING },
+            },
+            required: ["accommodation", "food", "activities", "transport", "total", "currency"],
+          },
+          hotelSuggestions: {
+            type: Type.ARRAY,
+            items: {
               type: Type.OBJECT,
               properties: {
-                accommodation: { type: Type.NUMBER },
-                food: { type: Type.NUMBER },
-                activities: { type: Type.NUMBER },
-                transport: { type: Type.NUMBER },
-                total: { type: Type.NUMBER },
-                currency: { type: Type.STRING },
+                name: { type: Type.STRING },
+                category: { type: Type.STRING },
+                priceRange: { type: Type.STRING },
+                description: { type: Type.STRING },
+                link: { type: Type.STRING },
               },
-              required: ["accommodation", "food", "activities", "transport", "total", "currency"],
+              required: ["name", "category", "priceRange", "description", "link"],
             },
-            hotelSuggestions: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  name: { type: Type.STRING },
-                  category: { type: Type.STRING },
-                  priceRange: { type: Type.STRING },
-                  description: { type: Type.STRING },
-                  link: { type: Type.STRING },
-                },
-                required: ["name", "category", "priceRange", "description", "link"],
+          },
+          premiumTips: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                type: { type: Type.STRING, enum: ["hotel_affiliate", "infoproduct", "tour_affiliate"] },
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+                ctaText: { type: Type.STRING },
+                url: { type: Type.STRING },
+                contextTrigger: { type: Type.STRING },
               },
+              required: ["type", "title", "description", "ctaText", "url", "contextTrigger"],
             },
-            premiumTips: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  type: { type: Type.STRING, enum: ["hotel_affiliate", "infoproduct", "tour_affiliate"] },
-                  title: { type: Type.STRING },
-                  description: { type: Type.STRING },
-                  ctaText: { type: Type.STRING },
-                  url: { type: Type.STRING },
-                  contextTrigger: { type: Type.STRING },
-                },
-                required: ["type", "title", "description", "ctaText", "url", "contextTrigger"],
-              },
-            },
-            days: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  day: { type: Type.NUMBER },
-                  theme: { type: Type.STRING },
-                  locationBase: { type: Type.STRING },
-                  accommodation: { type: Type.STRING },
-                  activities: {
-                    type: Type.ARRAY,
-                    items: {
-                      type: Type.OBJECT,
-                      properties: {
-                        time: { type: Type.STRING },
-                        title: { type: Type.STRING },
-                        description: { type: Type.STRING },
-                        location: { type: Type.STRING },
-                        estimatedCost: { type: Type.NUMBER },
-                      },
-                      required: ["time", "title", "description", "location", "estimatedCost"],
-                    },
-                  },
-                  logisticsTip: {
+          },
+          days: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                day: { type: Type.NUMBER },
+                theme: { type: Type.STRING },
+                locationBase: { type: Type.STRING },
+                accommodation: { type: Type.STRING },
+                activities: {
+                  type: Type.ARRAY,
+                  items: {
                     type: Type.OBJECT,
                     properties: {
-                      type: { type: Type.STRING, enum: ["hotel_affiliate", "infoproduct", "tour_affiliate"] },
+                      time: { type: Type.STRING },
                       title: { type: Type.STRING },
                       description: { type: Type.STRING },
-                      ctaText: { type: Type.STRING },
-                      url: { type: Type.STRING },
-                      contextTrigger: { type: Type.STRING },
+                      location: { type: Type.STRING },
+                      estimatedCost: { type: Type.NUMBER },
                     },
-                    required: ["type", "title", "description", "ctaText", "url", "contextTrigger"],
-                  }
+                    required: ["time", "title", "description", "location", "estimatedCost"],
+                  },
                 },
-                required: ["day", "theme", "locationBase", "accommodation", "activities"],
+                logisticsTip: {
+                  type: Type.OBJECT,
+                  properties: {
+                    type: { type: Type.STRING, enum: ["hotel_affiliate", "infoproduct", "tour_affiliate"] },
+                    title: { type: Type.STRING },
+                    description: { type: Type.STRING },
+                    ctaText: { type: Type.STRING },
+                    url: { type: Type.STRING },
+                    contextTrigger: { type: Type.STRING },
+                  },
+                  required: ["type", "title", "description", "ctaText", "url", "contextTrigger"],
+                }
               },
+              required: ["day", "theme", "locationBase", "accommodation", "activities"],
             },
-            personalizedGuideText: { type: Type.STRING },
           },
-          required: ["destinationTitle", "destinationDescription", "coordinates", "justification", "costBreakdown", "days", "hotelSuggestions", "premiumTips", "personalizedGuideText"],
+          personalizedGuideText: { type: Type.STRING },
         },
+        required: ["destinationTitle", "destinationDescription", "coordinates", "justification", "costBreakdown", "days", "hotelSuggestions", "premiumTips", "personalizedGuideText"],
       },
+    };
+
+    let contents: any[] = [{ role: "user", parts: [{ text: prompt }] }];
+    let response = await ai.models.generateContent({
+      model: modelId,
+      contents,
+      // @ts-ignore - The types for genai might be slightly outdated globally but runtime supports this
+      config: requestConfig,
     });
+
+    // Handle Tool Calling Interception
+    const MAX_TOOL_LOOPS = 3;
+    let loops = 0;
+    
+    while (response.functionCalls && response.functionCalls.length > 0 && loops < MAX_TOOL_LOOPS) {
+      loops++;
+      const call = response.functionCalls[0];
+      console.log(`[Gemini Tool Call] Func: ${call.name} | Args:`, call.args);
+      
+      let apiResult: any = {};
+      if (call.name === "searchGooglePlaces") {
+         const args = call.args as { query: string, location: string };
+         apiResult = await searchGooglePlaces(args.query, args.location);
+      }
+      
+      // Append model's tool call response
+      contents.push(response.candidates?.[0]?.content);
+      
+      // Append the tool execution response back to user
+      contents.push({
+        role: "user",
+        parts: [{
+          functionResponse: {
+            name: call.name,
+            response: apiResult
+          }
+        }]
+      });
+      
+      console.log(`[Gemini Tool Return] Fed data back to AI.`);
+      // Run generation again
+      response = await ai.models.generateContent({
+        model: modelId,
+        contents,
+        // @ts-ignore
+        config: requestConfig,
+      });
+    }
 
     if (response.text) {
       return JSON.parse(response.text);

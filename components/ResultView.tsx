@@ -11,16 +11,42 @@ interface Props {
   onSave: (itinerary: ItineraryResult) => void;
   onBackToDashboard: () => void;
   isSaved?: boolean;
+  onUpgrade?: () => void;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, preferences, user, onSave, onBackToDashboard, isSaved }) => {
+export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, preferences, user, onSave, onBackToDashboard, isSaved, onUpgrade }) => {
   const [activeDay, setActiveDay] = useState<number | null>(1);
   const [isEditing, setIsEditing] = useState(false);
   const [trackMode, setTrackMode] = useState(false); // Mode to input actual costs
   const [itinerary, setItinerary] = useState(initialItinerary);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  const getGoogleMapUrl = (day: typeof itinerary.days[0]) => {
+    const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+    if (!apiKey) return null;
+
+    if (!day.activities || day.activities.length === 0) {
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(day.locationBase + ' ' + itinerary.destinationTitle)}`;
+    }
+    
+    if (day.activities.length === 1) {
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(day.activities[0].location + ' ' + itinerary.destinationTitle)}`;
+    }
+
+    const origin = encodeURIComponent(day.activities[0].location + ' ' + itinerary.destinationTitle);
+    const destination = encodeURIComponent(day.activities[day.activities.length - 1].location + ' ' + itinerary.destinationTitle);
+    
+    let url = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}`;
+    
+    if (day.activities.length > 2) {
+      const waypoints = day.activities.slice(1, -1).map(act => encodeURIComponent(act.location + ' ' + itinerary.destinationTitle)).join('|');
+      url += `&waypoints=${waypoints}`;
+    }
+    
+    return url;
+  };
 
   // Ref for PDF capture
   const contentRef = useRef<HTMLDivElement>(null);
@@ -900,6 +926,9 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             {itinerary.days.map((day, dayIndex) => {
               const date = getTripDate(preferences.startDate, day.day - 1);
               const isExpanded = isExportingPdf ? true : activeDay === day.day;
+              const isPremium = user?.subscriptionTier === 'premium';
+              const isBlurred = !isPremium && day.day > 1 && !isExportingPdf;
+              const mapUrl = getGoogleMapUrl(day);
 
               const dayCardClass = isExportingPdf
                 ? "border border-[#9ca3af] rounded-lg mb-4 bg-white break-inside-avoid shadow-none"
@@ -934,8 +963,10 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                   </button>
 
                   {isExpanded && (
-                    <div className={`p-4 md:p-5 border-t border-gray-100 bg-white ${!isExportingPdf && 'animate-fade-in'}`}>
-                      {day.logisticsTip && renderTip(day.logisticsTip, 'logistics')}
+                    <div className={`relative p-4 md:p-5 border-t border-gray-100 bg-white ${!isExportingPdf && 'animate-fade-in'}`}>
+                      
+                      <div className={`transition-all duration-300 ${isBlurred ? 'blur-[8px] opacity-60 select-none grayscale-[30%] pointer-events-none' : ''}`}>
+                        {day.logisticsTip && renderTip(day.logisticsTip, 'logistics')}
                       {/* Location & Hotel Section */}
                       <div className={`mb-6 p-3 md:p-4 rounded-lg border ${isExportingPdf ? 'bg-gray-50 border-gray-300' : 'bg-blue-50 border-blue-100'}`}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
@@ -1000,7 +1031,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                         )}
                       </div>
 
-                      <div className="relative border-l-2 border-teal-200 ml-3 space-y-6 pl-6 py-2">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                        <div className="relative border-l-2 border-teal-200 ml-3 space-y-6 pl-6 py-2">
                         {day.activities.map((act, idx) => (
                           <div key={idx} className="relative group break-inside-avoid">
                             <div className="absolute -left-[31px] bg-teal-500 h-4 w-4 rounded-full border-2 border-white"></div>
@@ -1059,8 +1091,42 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                             )}
                           </div>
                         ))}
+                        </div>
+                        
+                        {!isExportingPdf && mapUrl && (
+                          <div className="rounded-xl overflow-hidden shadow-sm border border-gray-200 h-[300px] lg:h-[400px] sticky top-4">
+                            <iframe
+                              width="100%"
+                              height="100%"
+                              frameBorder="0"
+                              style={{ border: 0 }}
+                              referrerPolicy="no-referrer-when-downgrade"
+                              src={mapUrl}
+                              allowFullScreen
+                              className="grayscale-[10%] hover:grayscale-0 transition-all duration-500"
+                              title={`Mapa do Dia ${day.day}`}
+                            ></iframe>
+                          </div>
+                        )}
                       </div>
 
+                    </div>
+                    {/* FOMO Premium Blur Overlay */}
+                    {isBlurred && (
+                      <div className="absolute inset-x-0 bottom-0 top-[80px] z-10 flex flex-col items-center justify-center bg-white/30 backdrop-blur-[2px] rounded-b-xl">
+                        <div className="bg-gradient-to-r from-amber-500 to-amber-600 p-6 md:p-8 rounded-2xl shadow-2xl text-center max-w-sm mx-4 border border-amber-300 transform transition-transform hover:scale-105">
+                          <span className="text-4xl block mb-3 drop-shadow-md">🔒</span>
+                          <h3 className="font-black text-white text-xl md:text-2xl mb-2 drop-shadow-md">Dia {day.day} Protegido</h3>
+                          <p className="text-amber-50 text-sm md:text-base font-medium mb-6 drop-shadow-sm">A partir do Dia 2, o detalhamento do roteiro é exclusivo para membros Premium. Assine agora para ver o planejamento completo!</p>
+                          <button 
+                            onClick={() => onUpgrade && onUpgrade()}
+                            className="w-full bg-white text-amber-800 font-black text-sm uppercase tracking-wide px-6 py-3.5 rounded-full shadow-lg hover:shadow-xl hover:bg-amber-50 transition-all"
+                          >
+                            ⭐ Desbloquear Roteiro
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     </div>
                   )}
                 </div>
