@@ -150,6 +150,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     ${accommodationPrompt}
 
     DIRETRIZES DE ROTEIRO (MUITO IMPORTANTE):
+    - Duração Exata (CRÍTICO): Gere EXATAMENTE ${preferences.duration} objetos de dia no array 'days', numerados de 1 até ${preferences.duration}. Não encerre o roteiro antes do final do plano!
     - Limites Geográficos (Geofencing): TODAS as atrações, hotéis e restaurantes sugeridos devem ficar ESTRITAMENTE dentro de ${preferences.destination}. NÃO sugira sob nenhuma hipótese locais de outras cidades, estados ou regiões distantes.
     - Qualidade Exigida: Selecione e priorize apenas pontos turísticos, hotéis e restaurantes altamente avaliados (acima de 4.5 estrelas no Google/TripAdvisor).
     - Lógica Geográfica: Agrupe atividades por proximidade. Nunca faça o viajante cruzar a cidade várias vezes no mesmo dia.
