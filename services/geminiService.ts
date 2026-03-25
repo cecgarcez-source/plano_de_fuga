@@ -68,7 +68,7 @@ const searchGooglePlaces = async (query: string, location: string): Promise<any>
     
     if (!response.ok) {
       console.error("Google Places API Error", await response.text());
-      return { error: "Failed to fetch from Google Places API" };
+      return { error: "Google API error. Do NOT call this tool again. Please proceed using your internal knowledge to finish the itinerary." };
     }
     
     const data = await response.json();
@@ -193,7 +193,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
             parameters: {
               type: Type.OBJECT,
               properties: {
-                query: { type: Type.STRING, description: "Termo de busca (ex: 'melhor restaurante italiano', 'atrações históricas')" },
+                query: { type: Type.STRING, description: "Termo amplo (ex: 'pontos turísticos', 'restaurantes populares')" },
                 location: { type: Type.STRING, description: "A cidade onde a busca deve ser feita" },
               },
               required: ["query", "location"]
@@ -348,10 +348,25 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       });
     }
 
+    // Se saiu do loop e ainda quer chamar ferramenta, force a geração final
+    if (!response.text && response.functionCalls) {
+       console.log("[Gemini Tool Return] Forcing final generation without tools.");
+       contents.push({ role: "user", parts: [{ text: "Não faça mais buscas. Por favor, crie e retorne o Roteiro Final completo estritamente em JSON de acordo com o JSON Schema agora." }] });
+       
+       const finalConfig = { ...requestConfig, tools: undefined };
+       response = await ai.models.generateContent({
+         model: modelId,
+         contents,
+         config: finalConfig as any,
+       });
+    }
+
     if (response.text) {
-      return JSON.parse(response.text);
+      // Clean potential markdown ticks
+      const cleanJson = response.text.replace(/```json\n?|```/g, '').trim();
+      return JSON.parse(cleanJson);
     } else {
-      throw new Error("Empty response from AI");
+      throw new Error("Empty response from AI after tools execution");
     }
   } catch (error) {
     console.error("Gemini AI Error:", error);
