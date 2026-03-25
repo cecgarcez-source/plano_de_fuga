@@ -259,7 +259,14 @@ const App: React.FC = () => {
       setStep(AppStep.RESULT);
     } catch (err) {
       console.error(err);
-      setError(`Erro: Ops! Ocorreu um erro ao planejar sua fuga. Detalhe: ${err instanceof Error ? err.message : 'Desconhecido'}`);
+      const msg = err instanceof Error ? err.message : 'Desconhecido';
+      
+      // Checa se é um erro comum de parsing (LLM cortou JSON)
+      if (msg.includes('JSON') || msg.includes('Unterminated') || msg.includes('Unexpected') || msg.includes('Ops! Ocorreu um erro')) {
+        setError('🤖 Nossa Inteligência Artificial se empolgou nos detalhes e a geração do roteiro foi interrompida antes do fim. Por favor, tente gerar novamente!');
+      } else {
+        setError(`Erro: Ocorreu um problema inesperado. Tente novamente.`);
+      }
       setStep(AppStep.PROFILES);
     }
   };
@@ -498,9 +505,16 @@ const App: React.FC = () => {
         <main className="pt-24 md:pt-40 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-4rem)]">
 
           {error && (
-            <div className="w-full max-w-2xl bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 shadow-lg">
-              <strong className="font-bold">Erro: </strong>
-              <span className="block sm:inline">{error}</span>
+            <div className={`w-full max-w-2xl px-6 py-4 rounded-xl relative mb-8 shadow-lg border ${error.includes('🤖') ? 'bg-amber-50 border-amber-300 text-amber-900' : 'bg-red-50 border-red-400 text-red-800'}`}>
+              <div className="flex items-start gap-4">
+                <div className="text-3xl mt-1">{error.includes('🤖') ? '⚠️' : '❌'}</div>
+                <div>
+                  <strong className="font-black block text-lg mb-1">
+                    {error.includes('🤖') ? 'Quase lá...' : 'Erro'}
+                  </strong>
+                  <span className="block text-sm leading-relaxed">{error.replace('🤖 ', '')}</span>
+                </div>
+              </div>
             </div>
           )}
 
