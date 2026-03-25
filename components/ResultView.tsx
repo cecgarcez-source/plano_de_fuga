@@ -50,6 +50,11 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
   // Ref for PDF capture
   const contentRef = useRef<HTMLDivElement>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
+
+  // Infographic Map Export
+  const infographicRef = useRef<HTMLDivElement>(null);
+  const [isExportingInfographic, setIsExportingInfographic] = useState(false);
 
   // Helper para calcular datas sem problemas de fuso horário
   const getTripDate = (startString: string, dayOffset: number) => {
@@ -239,6 +244,34 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
         }
       }, 800); // 800ms delay for safety
     });
+  };
+
+  const handleExportInfographic = async () => {
+    if (!infographicRef.current) return;
+    
+    if (user?.subscriptionTier !== 'premium') {
+      alert("🔒 Recurso Premium\n\nA exportação para 'Mapa da Fuga' é exclusiva para membros Premium.\nAtualize seu plano para desbloquear!");
+      return;
+    }
+
+    setIsExportingInfographic(true);
+    try {
+      const element = infographicRef.current;
+      const canvas = await html2canvas(element, {
+        useCORS: true,
+        scale: 2,
+        backgroundColor: '#fdfbf7',
+      });
+      const link = document.createElement('a');
+      link.download = `Mapa-da-Fuga-${itinerary.destinationTitle.replace(/\s+/g, '-')}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (err) {
+      console.error("Erro ao gerar Mapa da Fuga:", err);
+      alert("Ocorreu um erro ao gerar a imagem.");
+    } finally {
+      setIsExportingInfographic(false);
+    }
   };
 
   const handleExportPdf = async () => {
@@ -740,6 +773,89 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
         </div>
       )}
 
+      {/* --- HIDDEN CONTAINER: INFOGRAPHIC MAPA DA FUGA EXPORT --- */}
+      <div style={{ position: 'fixed', top: 0, left: '-9999px', width: '1920px', height: '1080px', zIndex: -9999, pointerEvents: 'none' }}>
+        <div ref={infographicRef} style={{ width: '1920px', height: '1080px', backgroundColor: '#fdfbf7', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: 'sans-serif' }}>
+          {/* Header */}
+          <div style={{ padding: '60px 80px 30px', textAlign: 'center' }}>
+            <h1 style={{ fontSize: '56px', fontWeight: '900', color: '#111827', textTransform: 'uppercase', letterSpacing: '2px' }}>
+               MISSÃO {itinerary.destinationTitle}: O PLANO DE FUGA PERFEITO
+            </h1>
+          </div>
+
+          {/* Timeline Nodes */}
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 80px', position: 'relative' }}>
+            {/* The Connecting Line */}
+            <div style={{ position: 'absolute', top: '40%', left: '140px', right: '140px', height: '16px', backgroundColor: '#0d9488', borderRadius: '10px', transform: 'translateY(-50%)', zIndex: 0 }}></div>
+            
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', zIndex: 10 }}>
+              {itinerary.days.slice(0, 5).map((day, idx) => (
+                <div key={day.day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '300px', textAlign: 'center' }}>
+                  {/* Circle */}
+                  <div style={{ width: '220px', height: '220px', borderRadius: '50%', backgroundColor: '#ffffff', border: '16px solid ' + (idx%2===0 ? '#f59e0b' : '#0d9488'), display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '90px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', marginBottom: '32px', position: 'relative', overflow: 'hidden', margin: '0 auto 32px' }}>
+                     <span style={{ position: 'relative', zIndex: 10 }}>{idx%3===0 ? '🏖️' : idx%3===1 ? '🌲' : '🏺'}</span>
+                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '40%', backgroundColor: (idx%2===0 ? '#fef3c7' : '#ccfbf1'), zIndex: 0 }}></div>
+                  </div>
+                  {/* Text */}
+                  <h3 style={{ fontSize: '28px', fontWeight: '900', color: '#1f2937', marginBottom: '12px', textTransform: 'uppercase' }}>DIA {day.day}: <br/><span style={{ fontSize: '22px', fontWeight: '800', color: '#0d9488' }}>{day.theme}</span></h3>
+                  <p style={{ fontSize: '18px', color: '#4b5563', lineHeight: '1.4', fontWeight: '500' }}>{day.activities.slice(0, 3).map(a => a.title).join(' | ')}.</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer Data Blocks */}
+          <div style={{ padding: '20px 80px 60px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+            {/* Left Block - Financial */}
+            <div style={{ display: 'flex', gap: '60px', alignItems: 'flex-end' }}>
+               <div>
+                  <h2 style={{ fontSize: '28px', fontWeight: '900', color: '#111827', marginBottom: '16px', textTransform: 'uppercase' }}>RELATÓRIO FINANCEIRO E LOGÍSTICA</h2>
+                  <div style={{ fontSize: '32px', fontWeight: '700', color: '#4b5563', textTransform: 'uppercase' }}>Investimento de</div>
+                  <div style={{ fontSize: '80px', fontWeight: '900', color: '#111827', lineHeight: '1', display: 'flex', alignItems: 'flex-end', gap: '16px' }}>
+                    {Math.round(itinerary.costBreakdown.total).toLocaleString()} <span style={{fontSize: '40px'}}>{itinerary.costBreakdown.currency}</span>
+                  </div>
+                  <div style={{ fontSize: '28px', fontWeight: '600', color: '#6b7280', marginTop: '8px' }}>por {preferences.travelers} viajantes</div>
+               </div>
+               
+               {/* Bar Chart Fake */}
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderLeft: '4px solid #e5e7eb', paddingLeft: '40px', paddingBottom: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                     <div style={{ width: '280px', height: '48px', backgroundColor: '#d97706', borderRadius: '6px' }}></div>
+                     <span style={{ fontSize: '24px', fontWeight: '800', color: '#1f2937' }}>Hospedagem<br/><span style={{ fontSize: '20px', fontWeight: '600', color: '#6b7280' }}>~{Math.round(itinerary.costBreakdown.accommodation).toLocaleString()} {itinerary.costBreakdown.currency}</span></span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                     <div style={{ width: '280px', height: '48px', backgroundColor: '#1e3a8a', borderRadius: '6px' }}></div>
+                     <span style={{ fontSize: '24px', fontWeight: '800', color: '#1f2937' }}>Alimentação<br/><span style={{ fontSize: '20px', fontWeight: '600', color: '#6b7280' }}>~{Math.round(itinerary.costBreakdown.food).toLocaleString()} {itinerary.costBreakdown.currency}</span></span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                     <div style={{ width: '280px', height: '48px', backgroundColor: '#166534', borderRadius: '6px' }}></div>
+                     <span style={{ fontSize: '24px', fontWeight: '800', color: '#1f2937' }}>Passeios & Outros<br/><span style={{ fontSize: '20px', fontWeight: '600', color: '#6b7280' }}>~{Math.round(itinerary.costBreakdown.activities).toLocaleString()} {itinerary.costBreakdown.currency}</span></span>
+                  </div>
+               </div>
+            </div>
+
+            {/* Right Blocks */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '550px' }}>
+               <div style={{ backgroundColor: '#f3f4f6', borderRadius: '20px', padding: '30px', border: '3px solid #e5e7eb' }}>
+                 <h4 style={{ fontSize: '24px', fontWeight: '900', color: '#111827', marginBottom: '12px', textTransform: 'uppercase' }}>DICAS DE INTELIGÊNCIA</h4>
+                 <ul style={{ fontSize: '20px', color: '#374151', listStyle: 'disc', paddingLeft: '24px', lineHeight: '1.4', fontWeight: '500' }}>
+                   <li>{itinerary.weatherAdvice || "Reserve atrações com antecedência para evitar longas filas."}</li>
+                   <li>Siga sempre as recomendações dos guias locais incluídos neste mapa exclusivo.</li>
+                 </ul>
+               </div>
+               <div style={{ backgroundColor: '#f3f4f6', borderRadius: '20px', padding: '30px', border: '3px solid #e5e7eb' }}>
+                 <h4 style={{ fontSize: '24px', fontWeight: '900', color: '#111827', marginBottom: '12px', textTransform: 'uppercase' }}>OPÇÕES DE HOSPEDAGEM</h4>
+                 <ul style={{ fontSize: '20px', color: '#374151', listStyle: 'none', paddingLeft: '0', lineHeight: '1.4', fontWeight: '500' }}>
+                   {itinerary.hotelSuggestions.slice(0, 2).map((h, i) => (
+                     <li key={i} style={{ marginBottom: '8px' }}>• {h.name} <span style={{color: '#9ca3af'}}>({h.category})</span></li>
+                   ))}
+                 </ul>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className={headerClass}>
         <div className={`p-6 md:p-8 relative ${isExportingPdf ? 'p-0' : ''}`}>
@@ -782,6 +898,13 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                 className="px-4 py-2 rounded-lg font-bold text-sm bg-[rgba(255,255,255,0.2)] hover:bg-[rgba(255,255,255,0.3)] text-white border border-[rgba(255,255,255,0.4)] backdrop-blur-md shadow-lg transition-all flex items-center gap-2"
               >
                 {isExportingPdf ? '📄 Gerando...' : '📄 PDF'}
+              </button>
+              <button
+                onClick={handleExportInfographic}
+                disabled={isExportingInfographic}
+                className="px-4 py-2 rounded-lg font-bold text-sm bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-2 border border-teal-400"
+              >
+                {isExportingInfographic ? 'Gerando...' : '🗺️ Mapa da Fuga'}
               </button>
               <button
                 onClick={handleExportExcel}
@@ -869,8 +992,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
       {/* Timeline Calendar / Tabs - HIDDEN ON PDF */}
       {!isExportingPdf && (
-        <div className="mb-8 w-full overflow-hidden">
-          <div className="flex overflow-x-auto gap-3 pb-4 snap-x hide-scrollbar px-1">
+        <div className="mb-8 w-full">
+          <div className="flex flex-wrap justify-between md:justify-start gap-2 md:gap-3 pb-2 px-1">
             {itinerary.days.map((day) => {
               const date = preferences.startDate ? getTripDate(preferences.startDate, day.day - 1) : null;
               const isActive = activeDay === day.day;
@@ -885,8 +1008,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                     setActiveDay(day.day);
                     document.getElementById(`day-${day.day}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
-                  className={`flex flex-col items-start justify-between p-2 md:p-3 min-w-[110px] md:min-w-[140px] h-20 md:h-24 rounded-xl border transition-all duration-300 flex-none snap-start text-left relative overflow-hidden ${isActive
-                    ? (trackMode ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105 z-10' : 'bg-teal-600 border-teal-600 text-white shadow-lg scale-105 z-10')
+                  className={`flex flex-col items-start justify-between p-2 md:p-3 w-[calc(50%-4px)] sm:w-[calc(33%-6px)] md:w-auto md:min-w-[140px] h-20 md:h-24 rounded-xl border transition-all duration-300 text-left relative overflow-hidden ${isActive
+                    ? (trackMode ? 'bg-orange-600 border-orange-600 text-white shadow-lg z-10' : 'bg-teal-600 border-teal-600 text-white shadow-lg z-10')
                     : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                     }`}
                 >
