@@ -159,7 +159,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - Estrutura da Atividade: Na 'description', inclua: 1) Duração. 2) Transporte da atividade anterior. 3) Dica prática de segurança.
     - Plano B (contingencyPlan): Para atividades ao ar livre ou sujeitas a imprevistos, forneça OBRIGATORIAMENTE uma alternativa excelente (ex: atração coberta).
     
-    CLIMA (weather): Estime o clima histórico/típico para a exata época do ano no destino e preencha { min, max, condition }. Use terms como "Ensolarado", "Chuvoso", "Nublado", "Frio", "Neve".
+    SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
 
     REGRAS CRÍTICAS DE CUSTOS:
     1. Nunca retorne custo 0 a menos que seja gratuito.
@@ -191,6 +191,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       "coordinates": { "lat": 0.0, "lng": 0.0 },
       "justification": "Por que este roteiro é perfeito",
       "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "total": 0, "currency": "BRL" },
+      "weatherAdvice": "Análise sazonal, indicando se a época escolhida é propícia e qual seria a melhor época para ir ao destino.",
       "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url" } ],
       "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem Obrigatório", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
       "days": [ 
@@ -199,7 +200,6 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
           "theme": "Chegada", 
           "locationBase": "Bairro/Região", 
           "accommodation": "Nome do Hotel", 
-          "weather": { "min": 15, "max": 25, "condition": "Ensolarado" },
           "energyScore": 3,
           "activities": [ 
             { "time": "10:00", "title": "...", "description": "...", "location": "Endereço exato", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 

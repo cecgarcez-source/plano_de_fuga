@@ -426,9 +426,9 @@ const App: React.FC = () => {
 
       <div className="relative z-10">
         {/* Navbar */}
-        <header className="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-white/20 h-auto py-2 flex items-center justify-between px-6 shadow-sm">
+        <header className="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-gray-100 h-auto py-1 md:py-2 flex items-center justify-between px-4 md:px-6 shadow-sm">
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => user ? setStep(AppStep.DASHBOARD) : setStep(AppStep.INTRO)}>
-            <img src="/logo.png" alt="Logo" className="w-32 h-32 object-contain" />
+            <img src="/logo.png" alt="Logo" className="w-16 h-16 md:w-32 md:h-32 object-contain transition-all" />
             <span className="font-bold text-xl tracking-tight text-gray-800 hidden md:block mt-2">Plano de Fuga</span>
           </div>
           <div className="flex items-center gap-4">
@@ -495,7 +495,7 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <main className="pt-40 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-4rem)]">
+        <main className="pt-24 md:pt-40 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-4rem)]">
 
           {error && (
             <div className="w-full max-w-2xl bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 shadow-lg">

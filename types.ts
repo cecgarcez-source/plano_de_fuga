@@ -47,11 +47,6 @@ export interface DayPlan {
   theme: string;
   locationBase: string;
   accommodation: string;
-  weather?: {
-    min: number;
-    max: number;
-    condition: string; // ex: Sunny, Rainy, Cloudy
-  };
   energyScore?: number; // 1 to 5 (1 = Relaxed, 5 = Intense)
   activities: Activity[];
   actualCosts?: {
@@ -77,6 +72,7 @@ export interface ItineraryResult {
   coordinates: { lat: number; lng: number };
   justification: string;
   costBreakdown: CostBreakdown;
+  weatherAdvice?: string; // Dica sazonal e sobre a estação ideal da viagem
   days: DayPlan[];
   hotelSuggestions: Array<{
     name: string;

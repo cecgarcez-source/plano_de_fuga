@@ -92,38 +92,91 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       <section id="features" className="py-32 mt-12 bg-white/90 backdrop-blur-sm relative z-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Por que usar o Plano de Fuga?</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Todas as ferramentas que você precisa para uma viagem inesquecível.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Mais que um roteiro. Uma curadoria de experiências.</h2>
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Descubra as vantagens exclusivas de usar o Plano de Fuga para estruturar sua próxima viagem.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-teal-400 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-teal-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
               <div className="w-14 h-14 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🚀</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Roteiros em 30s</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">De zero ao roteiro completo instantaneamente com nossa IA avançada.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Roteiros em Segundos</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">De zero ao roteiro completo instantaneamente. Nossa IA analisa milhares de pontos turísticos para montar o cenário ideal e sem estresse.</p>
             </div>
 
             {/* Feature 2 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-blue-400 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-blue-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
               <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Personalização Total</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">Orçamento, estilo e ritmo de viagem adaptados a você.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Totalmente Personalizado</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">Orçamento, estilo, e ritmo de viagem adaptados a você. De mochileiro aventureiro a viajante de extremo luxo.</p>
             </div>
 
-            {/* Feature 3 - MAP HIGHLIGHT */}
-            <div className="p-8 rounded-3xl bg-teal-50 border-2 border-teal-500 hover:shadow-2xl hover:scale-105 transition-all duration-300 group relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Novo</div>
-              <div className="w-14 h-14 rounded-2xl bg-teal-200 text-teal-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🗺️</div>
-              <h3 className="text-xl font-bold text-teal-900 mb-2">Seu Arquivo de Memórias</h3>
-              <p className="text-teal-800 text-sm leading-relaxed">Um mapa interativo para eternizar e reviver cada lugar incrível que você já visitou no mundo.</p>
+            {/* Feature 3 */}
+            <div className="p-8 rounded-3xl bg-teal-50 border-2 border-teal-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Geofencing & Qualidade</div>
+              <div className="w-14 h-14 rounded-2xl bg-teal-200 text-teal-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">⭐</div>
+              <h3 className="text-xl font-bold text-teal-900 mb-2">Curadoria de Alta Qualidade</h3>
+              <p className="text-teal-800 text-sm leading-relaxed">Garantimos que você só visitará os melhores restaurantes e atrações avaliados com notas acima de 4.5 estrelas pelos viajantes.</p>
             </div>
 
             {/* Feature 4 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-purple-400 hover:shadow-xl hover:scale-105 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">💎</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Clube Premium</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">PDFs profissionais, descontos exclusivos e comunidade VIP.</p>
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-orange-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🌤️</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Inteligência Climática</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">Tenha uma análise detalhada da melhor época para viajar com base na sazonalidade escolhida para não ter férias estragadas pela chuva.</p>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-purple-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🗺️</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Dashboard Geográfico</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">Mapeie os locais que já conquistou no mundo e organize todos os seus futuros planos de fuga de um só lugar.</p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="p-8 rounded-3xl bg-gray-900 text-white border border-gray-700 hover:border-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Premium</div>
+              <div className="w-14 h-14 rounded-2xl bg-gray-800 text-amber-400 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform text-shadow">📱</div>
+              <h3 className="text-xl font-bold mb-2">Dossiês em PDF Otimizados</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">Exporte seus roteiros para formato Dossiê que cabe perfeito na tela do seu celular para leitura offline sem distrações.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- COMO FUNCIONA --- */}
+      <section id="how-it-works" className="py-24 bg-gray-50 border-t border-gray-200 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-20">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Como a Mágica Acontece</h2>
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Em apenas 4 passos você transforma o estresse do planejamento em um roteiro profissional.</p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-8 relative">
+            <div className="hidden md:block absolute top-10 left-[10%] w-[80%] h-0.5 bg-gray-200 z-0"></div>
+
+            <div className="relative z-10 text-center flex flex-col items-center">
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">1</div>
+              <h3 className="font-bold text-xl text-gray-900 mb-2">Configure o Perfil</h3>
+              <p className="text-gray-600 text-sm">Diga quem você é. Gosta de luxo? É vegano? Gosta de cultura? Isso moldará a IA para sempre.</p>
+            </div>
+
+            <div className="relative z-10 text-center flex flex-col items-center mt-0 md:mt-8">
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">2</div>
+              <h3 className="font-bold text-xl text-gray-900 mb-2">Crie a Missão</h3>
+              <p className="text-gray-600 text-sm">Defina o destino (ou clique em Surpresa), o período, orçamento e quem vai com você.</p>
+            </div>
+
+            <div className="relative z-10 text-center flex flex-col items-center mt-0 md:mt-0">
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">3</div>
+              <h3 className="font-bold text-xl text-gray-900 mb-2">A IA Trabalha</h3>
+              <p className="text-gray-600 text-sm">O Gemini 2.0 compila milhares de avaliações, custos dinâmicos e regras logísticas pra criar a rota.</p>
+            </div>
+
+            <div className="relative z-10 text-center flex flex-col items-center mt-0 md:mt-8">
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">4</div>
+              <h3 className="font-bold text-xl text-gray-900 mb-2">Pronto para Voar!</h3>
+              <p className="text-gray-600 text-sm">Roteiro gerado. Navegue no app, rastreie gastos reais ou baixe o PDF para a viagem.</p>
             </div>
           </div>
         </div>

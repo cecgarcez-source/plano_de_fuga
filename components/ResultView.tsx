@@ -808,7 +808,13 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
         <div className={`p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 ${isExportingPdf ? 'p-0 mt-2' : ''}`}>
           <div>
             <h3 className={`text-lg font-bold ${isExportingPdf ? 'mb-1' : 'mb-2'} ${isExportingPdf ? 'text-black' : 'text-white'}`}>Por que este destino?</h3>
-            <p className={`${isExportingPdf ? 'text-gray-900' : 'text-white/90'} italic border-l-4 border-[#14b8a6] pl-4 text-sm md:text-base`}>{itinerary.justification}</p>
+            <p className={`${isExportingPdf ? 'text-gray-900' : 'text-white/90'} italic border-l-4 border-[#14b8a6] pl-4 text-sm md:text-base mb-4`}>{itinerary.justification}</p>
+            {itinerary.weatherAdvice && (
+              <div className="bg-blue-50/90 backdrop-blur-sm border border-blue-200 p-4 rounded-xl shadow-sm">
+                <h4 className="text-blue-800 font-bold text-sm mb-1 flex items-center gap-2">🌤️ Clima & Sazonalidade</h4>
+                <p className="text-blue-700 text-sm md:text-base leading-relaxed">{itinerary.weatherAdvice}</p>
+              </div>
+            )}
           </div>
 
           <div className="hidden md:flex gap-2" data-html2canvas-ignore>
@@ -875,8 +881,11 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
               return (
                 <button
                   key={day.day}
-                  onClick={() => setActiveDay(day.day)}
-                  className={`flex flex-col items-start justify-between p-3 min-w-[140px] md:min-w-[160px] h-28 md:h-32 rounded-xl border transition-all duration-300 flex-none snap-start text-left relative overflow-hidden ${isActive
+                  onClick={() => {
+                    setActiveDay(day.day);
+                    document.getElementById(`day-${day.day}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className={`flex flex-col items-start justify-between p-2 md:p-3 min-w-[110px] md:min-w-[140px] h-20 md:h-24 rounded-xl border transition-all duration-300 flex-none snap-start text-left relative overflow-hidden ${isActive
                     ? (trackMode ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105 z-10' : 'bg-teal-600 border-teal-600 text-white shadow-lg scale-105 z-10')
                     : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                     }`}
@@ -906,10 +915,10 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                     </div>
                   )}
 
-                  <div className={`mt-auto w-full pt-2 border-t ${isActive ? 'border-[rgba(255,255,255,0.3)]' : 'border-gray-100'}`}>
-                    <div className="text-[10px] flex justify-between items-center">
+                  <div className={`mt-auto w-full pt-1 md:pt-2 border-t ${isActive ? 'border-[rgba(255,255,255,0.3)]' : 'border-gray-100'}`}>
+                    <div className="text-[9px] md:text-[10px] flex justify-between items-center">
                       <span>Estimado:</span>
-                      <span className="font-bold">{Math.round(estimatedDayTotal).toLocaleString()} {itinerary.costBreakdown.currency}</span>
+                      <span className="font-bold">~{Math.round(estimatedDayTotal).toLocaleString()} {itinerary.costBreakdown.currency}</span>
                     </div>
                   </div>
                 </button>
@@ -926,24 +935,24 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             {trackMode ? '💸 Lançamentos do Dia' : '📅 Roteiro Dia a Dia Detalhado'}
           </h2>
 
-          <div className="space-y-3 md:space-y-4">
-            {itinerary.days.filter(d => isExportingPdf ? true : d.day === activeDay).map((day, dayIndex) => {
+          <div className="space-y-4 md:space-y-6 lg:space-y-8">
+            {itinerary.days.map((day, dayIndex) => {
               const date = preferences.startDate ? getTripDate(preferences.startDate, day.day - 1) : null;
-              const isExpanded = true; // Sempre expandido pois já foi filtrado pela aba
+              const isExpanded = true; 
               const isPremium = user?.subscriptionTier === 'premium';
               const isBlurred = !isPremium && day.day > 1 && !isExportingPdf;
               const mapUrl = getGoogleMapUrl(day);
 
               const dayCardClass = isExportingPdf
                 ? "border border-[#9ca3af] rounded-lg mb-4 bg-white break-inside-avoid shadow-none"
-                : `bg-[rgba(255,255,255,0.95)] backdrop-blur rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300`;
+                : `bg-[rgba(255,255,255,0.95)] backdrop-blur rounded-xl shadow-lg border border-gray-100 transition-all duration-300 overflow-hidden`;
 
               const dayHeaderClass = isExportingPdf
                 ? "w-full text-left p-4 flex justify-between items-center bg-[#f9fafb] border-b border-[#e5e7eb]"
                 : `w-full text-left p-4 md:p-5 flex justify-between items-center cursor-default ${trackMode ? 'bg-orange-50' : 'bg-teal-50'} border-b border-gray-100`;
 
               return (
-                <div key={day.day} className={dayCardClass}>
+                <div key={day.day} id={`day-${day.day}`} className={`${dayCardClass} scroll-mt-24`}>
                   <div className={dayHeaderClass}>
                     <div className="flex items-center gap-3 md:gap-4">
                       <div className={`${isExportingPdf ? 'bg-teal-800 text-white' : (trackMode ? 'bg-orange-100 text-orange-800' : 'bg-teal-100 text-teal-800')} font-bold px-2 py-1 md:px-3 rounded-lg text-sm text-center min-w-[50px] md:min-w-[60px]`}>
@@ -953,11 +962,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className={`font-bold ${isExportingPdf ? 'text-black' : (trackMode ? 'text-orange-600' : 'text-teal-600')} text-xs md:text-sm block`}>DIA {day.day}</span>
-                          {day.weather && (
-                            <span className="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold border border-blue-100 flex items-center gap-1" title={day.weather.condition}>
-                              {day.weather.condition.toLowerCase().includes('chuva') ? '🌧️' : day.weather.condition.toLowerCase().includes('nub') ? '☁️' : day.weather.condition.toLowerCase().includes('neve') ? '❄️' : '☀️'} {day.weather.min}° - {day.weather.max}°C
-                            </span>
-                          )}
                           {day.energyScore && (
                             <span className="text-[10px] bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded font-bold border border-orange-100 flex items-center gap-1" title="Nível de Esforço Físico">
                               {day.energyScore >= 4 ? '🔥' : day.energyScore <= 2 ? '🦥' : '🚶'} Nível {day.energyScore}/5

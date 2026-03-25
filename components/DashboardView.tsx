@@ -428,6 +428,9 @@ export const DashboardView: React.FC<Props> = ({
                   </div>
                   <div className="p-5">
                     <h3 className="font-bold text-xl text-gray-800 mb-1 truncate cursor-pointer hover:text-teal-600" onClick={() => onViewPlan(plan)}>{plan.destinationTitle}</h3>
+                    <p className="text-xs text-gray-400 font-medium mb-3">
+                      Criado em: {new Date(plan.createdAt).toLocaleDateString('pt-BR')}
+                    </p>
                     <p className="text-sm text-gray-500 mb-4 line-clamp-2">{plan.destinationDescription}</p>
 
                     <div className="flex justify-between items-center text-sm font-medium text-gray-600 mb-4">
