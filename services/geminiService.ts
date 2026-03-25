@@ -167,9 +167,12 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - souvenirs: Sugira qual lembrança/souvenir autêntico o viajante não deve deixar de comprar no local.
 
     REGRAS CRÍTICAS DE CUSTOS (FINANCEIRO REAL):
-    1. Baseado no grupo de ${preferences.travelers} viajante(s), calcule mentalmente todos os custos de hospedagem, refeição e passeios para O GRUPO INTEIRO (total projetado, não apenas o cálculo individual).
-    2. CÂMBIO MESTRE (BRL): Independentemente da moeda do país de destino (Ex: Euro, Dólar, Libra), VOCÊ DEVE REALIZAR A CONVERSÃO CAMBIAL PARA REAL BRASILEIRO e os valores de "estimatedCost" e "costBreakdown" DEVEM VIR ESTRITAMENTE EM REAIS (BRL) usando cotações atuais aproximadas.
-    3. Nunca retorne custo 0 a menos que a atividade seja gratuita. O campo 'currency' deve obrigatoriamente ser "BRL".
+    1. Baseado no grupo de ${preferences.travelers} viajante(s), calcule mentalmente todos os custos de hospedagem, refeição e passeios para O GRUPO INTEIRO (total projetado).
+    2. DIVISÃO DE TRANSPORTE: 
+       - 'transport': Custo APENAS de locomoção local na cidade (Ubers, táxis, metrô, ônibus de linha).
+       - 'flights': Custo do Deslocamento Principal (Passagens Aéreas ou Rodoviárias) da Origem (${preferences.origin}) para o Destino (${preferences.destination}) para todo o grupo. Simule o valor mais realista possível. Se Origem e Destino forem muito próximos a ponto de ir de próprio carro, retorne 0.
+    3. CÂMBIO MESTRE (BRL): Independentemente da moeda do país de destino, FAÇA A CONVERSÃO CAMBIAL PARA REAL BRASILEIRO e os valores DEVEM VIR ESTRITAMENTE EM REAIS (BRL) usando cotações atuais aproximadas.
+    4. Nunca retorne custo 0 a menos que a atividade seja gratuita. O campo 'currency' deve obrigatoriamente ser "BRL".
 
     REGRAS DE MONETIZAÇÃO E CURADORIA (CONTEXTUAL):
     Você deve agir como um consultor que sugere produtos/serviços que AGREGAM valor.
@@ -186,7 +189,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       "destinationDescription": "Breve descrição",
       "coordinates": { "lat": 0.0, "lng": 0.0 },
       "justification": "Por que é perfeito",
-      "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "total": 0, "currency": "BRL" },
+      "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "flights": 0, "total": 0, "currency": "BRL" },
       "weatherAdvice": "Análise sazonal e melhor época sugerida.",
       "practicalInfo": {
         "currency": "Dicas de moeda...",

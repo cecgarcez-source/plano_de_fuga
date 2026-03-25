@@ -61,7 +61,8 @@ export interface CostBreakdown {
   accommodation: number;
   food: number;
   activities: number;
-  transport: number;
+  transport: number; // Apenas locomoção local (Ubers, Metros, Onibus intra-city)
+  flights?: number; // Custo Passagens Aéreas ou Rodoviárias Intermunicipais (Origem -> Destino)
   total: number;
   currency: string;
 }

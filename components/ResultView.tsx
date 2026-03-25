@@ -499,7 +499,8 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     { name: 'Hospedagem', value: itinerary.costBreakdown.accommodation },
     { name: 'Alimentação', value: itinerary.costBreakdown.food },
     { name: 'Passeios', value: itinerary.costBreakdown.activities },
-    { name: 'Transporte', value: itinerary.costBreakdown.transport },
+    { name: 'Locomoção', value: itinerary.costBreakdown.transport },
+    ...(itinerary.costBreakdown.flights && itinerary.costBreakdown.flights > 0 ? [{ name: 'Passagens', value: itinerary.costBreakdown.flights }] : [])
   ];
 
   const renderTip = (tip: MarketingTip, context: 'logistics' | 'premium') => {
@@ -689,7 +690,10 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             <div className="space-y-4">
               <div className="flex justify-between border-b border-gray-200 pb-2"><span className="text-gray-600">Hospedagem</span><span className="font-bold">{itinerary.costBreakdown.accommodation}</span></div>
               <div className="flex justify-between border-b border-gray-200 pb-2"><span className="text-gray-600">Alimentação</span><span className="font-bold">{itinerary.costBreakdown.food}</span></div>
-              <div className="flex justify-between border-b border-gray-200 pb-2"><span className="text-gray-600">Transporte</span><span className="font-bold">{itinerary.costBreakdown.transport}</span></div>
+              <div className="flex justify-between border-b border-gray-200 pb-2"><span className="text-gray-600">Locomoção Local</span><span className="font-bold">{itinerary.costBreakdown.transport}</span></div>
+              {itinerary.costBreakdown.flights && itinerary.costBreakdown.flights > 0 ? (
+                <div className="flex justify-between border-b border-gray-200 pb-2"><span className="text-gray-600">Passagens (Origem-Destino)</span><span className="font-bold">{itinerary.costBreakdown.flights}</span></div>
+              ) : null}
               <div className="flex justify-between border-b border-gray-200 pb-2"><span className="text-gray-600">Passeios</span><span className="font-bold">{itinerary.costBreakdown.activities}</span></div>
             </div>
           </div>
@@ -826,8 +830,14 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                      <div style={{ width: '280px', height: '48px', backgroundColor: '#166534', borderRadius: '6px' }}></div>
-                     <span style={{ fontSize: '24px', fontWeight: '800', color: '#1f2937' }}>Passeios & Outros<br/><span style={{ fontSize: '20px', fontWeight: '600', color: '#6b7280' }}>~{Math.round(itinerary.costBreakdown.activities).toLocaleString()} {itinerary.costBreakdown.currency}</span></span>
+                     <span style={{ fontSize: '24px', fontWeight: '800', color: '#1f2937' }}>Passeios & Locomoção<br/><span style={{ fontSize: '20px', fontWeight: '600', color: '#6b7280' }}>~{Math.round(itinerary.costBreakdown.activities + itinerary.costBreakdown.transport).toLocaleString()} {itinerary.costBreakdown.currency}</span></span>
                   </div>
+                  {itinerary.costBreakdown.flights && itinerary.costBreakdown.flights > 0 && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                       <div style={{ width: '280px', height: '48px', backgroundColor: '#9333ea', borderRadius: '6px' }}></div>
+                       <span style={{ fontSize: '24px', fontWeight: '800', color: '#1f2937' }}>Passagens<br/><span style={{ fontSize: '20px', fontWeight: '600', color: '#6b7280' }}>~{Math.round(itinerary.costBreakdown.flights).toLocaleString()} {itinerary.costBreakdown.currency}</span></span>
+                    </div>
+                  )}
                </div>
             </div>
 
@@ -1379,12 +1389,19 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                         </td>
                       </tr>
                       <tr>
-                        <td className="py-2">Transporte</td>
+                        <td className="py-2">Locomoção Local</td>
                         <td className="text-right font-medium">{itinerary.costBreakdown.transport.toLocaleString()}</td>
                         <td className="text-right font-bold text-orange-600">
                           {itinerary.days.reduce((acc, d) => safeSum(acc, d.actualCosts?.transport), 0).toLocaleString()}
                         </td>
                       </tr>
+                      {(itinerary.costBreakdown.flights ?? 0) > 0 && (
+                        <tr>
+                          <td className="py-2">Passagens</td>
+                          <td className="text-right font-medium">{itinerary.costBreakdown.flights!.toLocaleString()}</td>
+                          <td className="text-right font-bold text-orange-600">0</td>
+                        </tr>
+                      )}
                     </tbody>
                     <tfoot>
                       <tr className="bg-gray-50 border-t-2 border-gray-200">
