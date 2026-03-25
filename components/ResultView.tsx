@@ -1005,7 +1005,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                     setActiveDay(day.day);
                     document.getElementById(`day-${day.day}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }}
-                  className={`flex flex-col items-start justify-between p-2 md:p-3 w-[calc(50%-4px)] sm:w-[calc(33%-6px)] md:w-auto md:min-w-[140px] h-20 md:h-24 rounded-xl border transition-all duration-300 text-left relative overflow-hidden ${isActive
+                  className={`flex flex-col items-start justify-between p-2 md:p-3 w-[calc(50%-4px)] sm:w-[calc(33%-6px)] md:w-auto md:min-w-[140px] h-auto min-h-[5.5rem] md:min-h-[6rem] rounded-xl border transition-all duration-300 text-left relative overflow-hidden ${isActive
                     ? (trackMode ? 'bg-orange-600 border-orange-600 text-white shadow-lg z-10' : 'bg-teal-600 border-teal-600 text-white shadow-lg z-10')
                     : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                     }`}
@@ -1036,9 +1036,9 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                   )}
 
                   <div className={`mt-auto w-full pt-1 md:pt-2 border-t ${isActive ? 'border-[rgba(255,255,255,0.3)]' : 'border-gray-100'}`}>
-                    <div className="text-[9px] md:text-[10px] flex justify-between items-center">
+                    <div className="text-[10px] md:text-xs flex justify-between items-center w-full mt-1">
                       <span>Estimado:</span>
-                      <span className="font-bold">~{Math.round(estimatedDayTotal).toLocaleString()} {itinerary.costBreakdown.currency}</span>
+                      <span className="font-bold">~{Math.round(estimatedDayTotal).toLocaleString()} BRL</span>
                     </div>
                   </div>
                 </button>
@@ -1303,7 +1303,12 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
           {/* Resumo Financeiro ao Final */}
           <div className={`${isExportingPdf ? 'border border-gray-400 rounded-lg p-4 mt-4 break-inside-avoid' : 'bg-[rgba(255,255,255,0.95)] backdrop-blur rounded-xl shadow-lg p-6 md:p-8 border-t-4 border-teal-500'}`}>
             <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-              <h2 className={`text-2xl font-bold text-center ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>📊 Resumo Financeiro Detalhado</h2>
+              <h2 className={`text-2xl font-bold text-center ${isExportingPdf ? 'text-black' : 'text-gray-800'}`}>
+                📊 Resumo Financeiro Detalhado 
+                <span className={`block text-sm font-medium mt-1 ${isExportingPdf ? 'text-gray-600' : 'text-teal-600'}`}>
+                  (Custo Mapeado para {preferences.travelers} viajante{preferences.travelers > 1 ? 's' : ''})
+                </span>
+              </h2>
               {!isExportingPdf && (
                 <button
                   onClick={handleExportExcel}
@@ -1358,10 +1363,10 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                       </tr>
                     </tbody>
                     <tfoot>
-                      <tr className="bg-gray-50">
-                        <td className="py-3 pl-2 font-bold">TOTAL GERAL</td>
-                        <td className="py-3 text-right font-bold">{totalPlanned.toLocaleString()}</td>
-                        <td className="py-3 text-right font-black text-orange-600 text-lg">{totalActual.toLocaleString()}</td>
+                      <tr className="bg-gray-50 border-t-2 border-gray-200">
+                        <td className="py-3 pl-2 font-black uppercase text-gray-800">CUSTO TOTAL (GRUPO)</td>
+                        <td className="py-3 text-right font-black text-gray-800 text-lg">{totalPlanned.toLocaleString()} BRL</td>
+                        <td className="py-3 text-right font-black text-orange-600 text-xl">{totalActual.toLocaleString()} BRL</td>
                       </tr>
                     </tfoot>
                   </table>

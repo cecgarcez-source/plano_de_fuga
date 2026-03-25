@@ -146,6 +146,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     Origem: ${preferences.origin}
     Duração: ${preferences.duration} dias (${preferences.startDate} a ${preferences.endDate})
     Orçamento: ${preferences.budget}
+    Viajantes Ativos: ${preferences.travelers} pessoa(s)
     Perfis: ${preferences.selectedProfiles.join(", ")}
     ${accommodationPrompt}
 
@@ -159,9 +160,10 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
 
-    REGRAS CRÍTICAS DE CUSTOS:
-    1. Nunca retorne custo 0 a menos que seja gratuito.
-    2. FORCE a moeda correta no campo 'currency' e nos valores. ${currencyInstruction}
+    REGRAS CRÍTICAS DE CUSTOS (FINANCEIRO REAL):
+    1. Baseado no grupo de ${preferences.travelers} viajante(s), calcule mentalmente todos os custos de hospedagem, refeição e passeios para O GRUPO INTEIRO (total projetado, não apenas o cálculo individual).
+    2. CÂMBIO MESTRE (BRL): Independentemente da moeda do país de destino (Ex: Euro, Dólar, Libra), VOCÊ DEVE REALIZAR A CONVERSÃO CAMBIAL PARA REAL BRASILEIRO e os valores de "estimatedCost" e "costBreakdown" DEVEM VIR ESTRITAMENTE EM REAIS (BRL) usando cotações atuais aproximadas.
+    3. Nunca retorne custo 0 a menos que a atividade seja gratuita. O campo 'currency' deve obrigatoriamente ser "BRL".
 
     REGRAS DE MONETIZAÇÃO E CURADORIA (CONTEXTUAL):
     Você deve agir como um consultor que sugere produtos/serviços que AGREGAM valor.
