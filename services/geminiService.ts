@@ -151,21 +151,24 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
 
     DIRETRIZES DE ROTEIRO (MUITO IMPORTANTE):
     - Lógica Geográfica: Agrupe atividades por proximidade. Nunca faça o viajante cruzar a cidade várias vezes no mesmo dia.
-    - Ritmo (Pacing): Respeite o perfil de energia do usuário, alternando entre atividades intensas e momentos de descanso. Considere o tempo de deslocamento.
-    - Segredos Locais: Para cada dia, inclua pelo menos uma recomendação que apenas um morador conheceria (ex: um café escondido, um mirante menos disputado, a melhor hora para visitar sem filas).
-    - Gastronomia Autêntica: Recomende restaurantes com base na culinária local autêntica, adequados ao orçamento selecionado pelo usuário, evitando redes de fast-food globais.
-    - Estrutura da Atividade ('description'): Na descrição de CADA atividade do JSON, além de explicar a atividade, INCLUA NO TEXTO DA DESCRIÇÃO: 1) O tempo estimado de duração. 2) O melhor meio de transporte para chegar da atividade anterior. 3) Uma dica prática sobre o local (ex: compre ingresso online, cuidado com batedores de carteira).
+    - Ritmo (Pacing): Respeite o perfil de energia do usuário. Avalie o esforço físico total do dia e defina o 'energyScore' (1 a 5, onde 1 é muito relaxante e 5 é fisicamente intenso).
+    - Segredos Locais: Para cada dia, inclua pelo menos uma recomendação que apenas um morador conheceria.
+    - Gastronomia Autêntica: Recomende restaurantes autênticos e adequados ao orçamento, evitando fast-food global.
+    - Estrutura da Atividade: Na 'description', inclua: 1) Duração. 2) Transporte da atividade anterior. 3) Dica prática de segurança.
+    - Plano B (contingencyPlan): Para atividades ao ar livre ou sujeitas a imprevistos, forneça OBRIGATORIAMENTE uma alternativa excelente (ex: atração coberta).
+    
+    CLIMA (weather): Estime o clima histórico/típico para a exata época do ano no destino e preencha { min, max, condition }. Use terms como "Ensolarado", "Chuvoso", "Nublado", "Frio", "Neve".
 
     REGRAS CRÍTICAS DE CUSTOS:
     1. Nunca retorne custo 0 a menos que seja gratuito.
-    3. FORCE a moeda correta no campo 'currency' e nos valores. ${currencyInstruction}
+    2. FORCE a moeda correta no campo 'currency' e nos valores. ${currencyInstruction}
 
     REGRAS DE MONETIZAÇÃO E CURADORIA (CONTEXTUAL):
     Você deve agir como um consultor que sugere produtos/serviços que AGREGAM valor.
     
-    1. **MarketingTip (Logística):** Nos dias onde a logística é complexa, sugira um hotel estratégico ou aluguel de carro. Use linguagem consultiva: "Para otimizar seu tempo...". O 'url' deve obrigatoriamente ser um link do Booking ou TripAdvisor do local/serviço sugerido. Se não encontrar o link exato, envie obrigatoriamente um link de pesquisa no Google (ex: "https://www.google.com/search?q=nome+do+local+ou+servico").
-    
-    2. **PremiumTips (Curadoria):** Baseado no perfil do usuário, sugira 1 a 2 guias externos reais ou recomendações de ferramentas essenciais para este destino. (O 'url' pode ser um link de busca/reserva).
+    0. **Seguro Viagem (OBRIGATÓRIO):** Gere sempre uma Premium Tip urgenciando a compra de Seguro Saúde/Viagem para evitar falência médica, usando format 'insurance_affiliate' com um link padrão de busca de seguros.
+    1. **MarketingTip (Logística):** Sugira hotéis ou aluguel de carro com call-to-action cativante. Direcione para links reais do Booking/TripAdvisor.
+    2. **PremiumTips (Curadoria):** Sugira guias pagos ou serviços essenciais.
 
     3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link'. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel. Em caso de não localização do link exato, informe obrigatoriamente um link para consulta no Google (ex: "https://www.google.com/search?q=nome+do+hotel+cidade").
 
@@ -187,15 +190,17 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       "justification": "Por que este roteiro é perfeito",
       "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "total": 0, "currency": "BRL" },
       "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url" } ],
-      "premiumTips": [ { "type": "hotel_affiliate", "title": "Dica Premium", "description": "...", "ctaText": "Comprar", "url": "url", "contextTrigger": "..." } ],
+      "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem Obrigatório", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
       "days": [ 
         { 
           "day": 1, 
           "theme": "Chegada", 
           "locationBase": "Bairro/Região", 
           "accommodation": "Nome do Hotel", 
+          "weather": { "min": 15, "max": 25, "condition": "Ensolarado" },
+          "energyScore": 3,
           "activities": [ 
-            { "time": "10:00", "title": "...", "description": "...", "location": "Endereço exato", "estimatedCost": 0 } 
+            { "time": "10:00", "title": "...", "description": "...", "location": "Endereço exato", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 
           ],
           "logisticsTip": { "type": "tour_affiliate", "title": "...", "description": "...", "ctaText": "...", "url": "...", "contextTrigger": "..." }
         } 

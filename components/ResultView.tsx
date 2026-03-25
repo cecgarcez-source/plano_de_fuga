@@ -950,8 +950,20 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                         <span className="block text-[10px] md:text-xs uppercase">{getWeekDay(date)}</span>
                         <span className="block text-base md:text-lg">{formatDate(date)}</span>
                       </div>
-                      <div>
-                        <span className={`font-bold ${isExportingPdf ? 'text-black' : (trackMode ? 'text-orange-600' : 'text-teal-600')} text-xs md:text-sm block`}>DIA {day.day}</span>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`font-bold ${isExportingPdf ? 'text-black' : (trackMode ? 'text-orange-600' : 'text-teal-600')} text-xs md:text-sm block`}>DIA {day.day}</span>
+                          {day.weather && (
+                            <span className="text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded font-bold border border-blue-100 flex items-center gap-1" title={day.weather.condition}>
+                              {day.weather.condition.toLowerCase().includes('chuva') ? '🌧️' : day.weather.condition.toLowerCase().includes('nub') ? '☁️' : day.weather.condition.toLowerCase().includes('neve') ? '❄️' : '☀️'} {day.weather.min}° - {day.weather.max}°C
+                            </span>
+                          )}
+                          {day.energyScore && (
+                            <span className="text-[10px] bg-orange-50 text-orange-700 px-1.5 py-0.5 rounded font-bold border border-orange-100 flex items-center gap-1" title="Nível de Esforço Físico">
+                              {day.energyScore >= 4 ? '🔥' : day.energyScore <= 2 ? '🦥' : '🚶'} Nível {day.energyScore}/5
+                            </span>
+                          )}
+                        </div>
                         <span className={`font-medium ${isExportingPdf ? 'text-black whitespace-normal leading-relaxed py-0.5 block' : 'text-gray-800 line-clamp-1'} text-base md:text-lg`}>{day.theme}</span>
                       </div>
                     </div>
@@ -1070,6 +1082,11 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                                     </span>
                                     <span>💰 Est: {act.estimatedCost} {itinerary.costBreakdown.currency}</span>
                                   </div>
+                                  {act.contingencyPlan && (
+                                    <div className={`mt-2 text-xs p-2 rounded border border-l-4 ${isExportingPdf ? 'bg-gray-100 text-black border-gray-300 border-l-gray-400' : 'bg-gray-50 text-gray-600 border-gray-200 border-l-gray-400'}`}>
+                                      <span className="font-bold">☔ Plano B:</span> {act.contingencyPlan}
+                                    </div>
+                                  )}
                                 </div>
 
                                 {trackMode && (

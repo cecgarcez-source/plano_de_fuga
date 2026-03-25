@@ -30,10 +30,11 @@ export interface Activity {
   location: string;
   estimatedCost: number;
   actualCost?: number;
+  contingencyPlan?: string;
 }
 
 export interface MarketingTip {
-  type: 'hotel_affiliate' | 'infoproduct' | 'tour_affiliate';
+  type: 'hotel_affiliate' | 'infoproduct' | 'tour_affiliate' | 'insurance_affiliate';
   title: string;
   description: string;
   ctaText: string;
@@ -46,6 +47,12 @@ export interface DayPlan {
   theme: string;
   locationBase: string;
   accommodation: string;
+  weather?: {
+    min: number;
+    max: number;
+    condition: string; // ex: Sunny, Rainy, Cloudy
+  };
+  energyScore?: number; // 1 to 5 (1 = Relaxed, 5 = Intense)
   activities: Activity[];
   actualCosts?: {
     accommodation?: number;
