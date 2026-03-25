@@ -861,12 +861,12 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
         </div>
       )}
 
-      {/* Timeline Calendar - HIDDEN ON PDF */}
-      {preferences.startDate && !isExportingPdf && (
-        <div className="mb-8 px-1">
-          <div className="flex flex-wrap gap-3 pb-4">
+      {/* Timeline Calendar / Tabs - HIDDEN ON PDF */}
+      {!isExportingPdf && (
+        <div className="mb-8 w-full overflow-hidden">
+          <div className="flex overflow-x-auto gap-3 pb-4 snap-x hide-scrollbar px-1">
             {itinerary.days.map((day) => {
-              const date = getTripDate(preferences.startDate, day.day - 1);
+              const date = preferences.startDate ? getTripDate(preferences.startDate, day.day - 1) : null;
               const isActive = activeDay === day.day;
 
               const activitySum = day.activities.reduce((sum, act) => sum + act.estimatedCost, 0);
@@ -876,31 +876,35 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                 <button
                   key={day.day}
                   onClick={() => setActiveDay(day.day)}
-                  className={`flex flex-col items-start justify-between p-3 min-w-[160px] h-32 rounded-xl border transition-all duration-300 flex-1 text-left relative overflow-hidden ${isActive
-                    ? (trackMode ? 'bg-orange-600 border-orange-600' : 'bg-teal-600 border-teal-600') + ' text-white shadow-lg scale-105 z-10'
-                    : 'bg-white/90 border-white text-gray-600 hover:bg-gray-50'
+                  className={`flex flex-col items-start justify-between p-3 min-w-[140px] md:min-w-[160px] h-28 md:h-32 rounded-xl border transition-all duration-300 flex-none snap-start text-left relative overflow-hidden ${isActive
+                    ? (trackMode ? 'bg-orange-600 border-orange-600 text-white shadow-lg scale-105 z-10' : 'bg-teal-600 border-teal-600 text-white shadow-lg scale-105 z-10')
+                    : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
                     }`}
                 >
                   <div className="w-full flex justify-between items-start">
                     <div>
-                      <span className={`text-[10px] uppercase font-bold block ${isActive ? 'text-white/80' : 'text-gray-400'}`}>
-                        {getWeekDay(date)}
-                      </span>
-                      <span className="text-xl font-black leading-none">{formatDate(date)}</span>
+                      {date ? (
+                        <>
+                          <span className={`text-[10px] uppercase font-bold block ${isActive ? 'text-white/80' : 'text-gray-400'}`}>
+                            {getWeekDay(date)}
+                          </span>
+                          <span className="text-xl font-black leading-none">{formatDate(date)}</span>
+                        </>
+                      ) : (
+                         <span className="text-lg font-black leading-tight line-clamp-2">{day.theme}</span>
+                      )}
                     </div>
-                    <span className="text-[10px] opacity-80 font-bold bg-[rgba(255,255,255,0.2)] px-1.5 py-0.5 rounded">Dia {day.day}</span>
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${isActive ? 'bg-[rgba(255,255,255,0.2)] text-white' : 'bg-gray-100 text-gray-500'}`}>Dia {day.day}</span>
                   </div>
 
-                  <div className="w-full mt-2">
-                    <div className="flex items-center gap-1 text-[10px] opacity-90 mb-1 truncate">
-                      <span>📍</span>
-                      <span className="font-bold truncate">{day.locationBase}</span>
+                  {date && (
+                     <div className="w-full mt-1">
+                      <div className="flex items-center gap-1 text-[10px] opacity-90 mb-0.5 truncate">
+                        <span>📍</span>
+                        <span className="font-bold truncate">{day.locationBase}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-[9px] opacity-80 truncate">
-                      <span>🏨</span>
-                      <span className="truncate max-w-[120px]">{day.accommodation}</span>
-                    </div>
-                  </div>
+                  )}
 
                   <div className={`mt-auto w-full pt-2 border-t ${isActive ? 'border-[rgba(255,255,255,0.3)]' : 'border-gray-100'}`}>
                     <div className="text-[10px] flex justify-between items-center">
@@ -923,28 +927,24 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
           </h2>
 
           <div className="space-y-3 md:space-y-4">
-            {itinerary.days.map((day, dayIndex) => {
-              const date = getTripDate(preferences.startDate, day.day - 1);
-              const isExpanded = isExportingPdf ? true : activeDay === day.day;
+            {itinerary.days.filter(d => isExportingPdf ? true : d.day === activeDay).map((day, dayIndex) => {
+              const date = preferences.startDate ? getTripDate(preferences.startDate, day.day - 1) : null;
+              const isExpanded = true; // Sempre expandido pois já foi filtrado pela aba
               const isPremium = user?.subscriptionTier === 'premium';
               const isBlurred = !isPremium && day.day > 1 && !isExportingPdf;
               const mapUrl = getGoogleMapUrl(day);
 
               const dayCardClass = isExportingPdf
                 ? "border border-[#9ca3af] rounded-lg mb-4 bg-white break-inside-avoid shadow-none"
-                : `bg-[rgba(255,255,255,0.95)] backdrop-blur rounded-xl shadow-md overflow-hidden border transition-all duration-300 ${isExpanded ? (trackMode ? 'border-orange-500 ring-1 ring-orange-500' : 'border-teal-500 ring-1 ring-teal-500') : 'border-gray-100'}`;
+                : `bg-[rgba(255,255,255,0.95)] backdrop-blur rounded-xl shadow-md overflow-hidden border border-gray-100 transition-all duration-300`;
 
               const dayHeaderClass = isExportingPdf
                 ? "w-full text-left p-4 flex justify-between items-center bg-[#f9fafb] border-b border-[#e5e7eb]"
-                : `w-full text-left p-4 md:p-5 flex justify-between items-center transition-colors ${isExpanded ? (trackMode ? 'bg-orange-50' : 'bg-teal-50') : 'bg-white hover:bg-gray-50'}`;
+                : `w-full text-left p-4 md:p-5 flex justify-between items-center cursor-default ${trackMode ? 'bg-orange-50' : 'bg-teal-50'} border-b border-gray-100`;
 
               return (
                 <div key={day.day} className={dayCardClass}>
-                  <button
-                    onClick={() => !isExportingPdf && setActiveDay(activeDay === day.day ? null : day.day)}
-                    className={dayHeaderClass}
-                    style={{ cursor: isExportingPdf ? 'default' : 'pointer' }}
-                  >
+                  <div className={dayHeaderClass}>
                     <div className="flex items-center gap-3 md:gap-4">
                       <div className={`${isExportingPdf ? 'bg-teal-800 text-white' : (trackMode ? 'bg-orange-100 text-orange-800' : 'bg-teal-100 text-teal-800')} font-bold px-2 py-1 md:px-3 rounded-lg text-sm text-center min-w-[50px] md:min-w-[60px]`}>
                         <span className="block text-[10px] md:text-xs uppercase">{getWeekDay(date)}</span>
@@ -967,15 +967,10 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                         <span className={`font-medium ${isExportingPdf ? 'text-black whitespace-normal leading-relaxed py-0.5 block' : 'text-gray-800 line-clamp-1'} text-base md:text-lg`}>{day.theme}</span>
                       </div>
                     </div>
-                    {!isExportingPdf && (
-                      <span className="text-gray-400 transform transition-transform duration-300" style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}>
-                        ▼
-                      </span>
-                    )}
-                  </button>
+                  </div>
 
                   {isExpanded && (
-                    <div className={`relative p-4 md:p-5 border-t border-gray-100 bg-white ${!isExportingPdf && 'animate-fade-in'}`}>
+                    <div className={`relative p-4 md:p-5 bg-white ${!isExportingPdf && 'animate-fade-in'}`}>
                       
                       <div className={`transition-all duration-300 ${isBlurred ? 'blur-[8px] opacity-60 select-none grayscale-[30%] pointer-events-none' : ''}`}>
                         {day.logisticsTip && renderTip(day.logisticsTip, 'logistics')}

@@ -140,6 +140,9 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
                             <span className="text-gray-300 text-xl">✕</span> Exportar PDF & Excel
                         </li>
                         <li className="flex items-center gap-3 text-gray-400">
+                            <span className="text-gray-300 text-xl">✕</span> IA Premium (Clima, Pacing, Plano B)
+                        </li>
+                        <li className="flex items-center gap-3 text-gray-400">
                             <span className="text-gray-300 text-xl">✕</span> Guias Personalizados
                         </li>
                     </ul>
@@ -174,8 +177,12 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
                             <span>Exportação em <strong>PDF e Excel</strong></span>
                         </li>
                         <li className="flex items-center gap-3 text-white">
-                            <span className="bg-teal-500 rounded-full p-0.5 text-white text-xs">✓</span>
+                            <span className="bg-teal-500 rounded-full w-4 h-4 flex items-center justify-center p-0.5 text-white text-xs">✓</span>
                             <span><strong>Guias Personalizados</strong> Automáticos</span>
+                        </li>
+                        <li className="flex items-center gap-3 text-white">
+                            <span className="bg-teal-500 rounded-full w-4 h-4 flex items-center justify-center p-0.5 text-white text-xs">✓</span>
+                            <span><strong>IA Premium</strong> (Clima, Pacing, Plano B)</span>
                         </li>
                         <li className="flex items-center gap-3 text-white">
                             <span className="bg-teal-500 rounded-full p-0.5 text-white text-xs">✓</span>
