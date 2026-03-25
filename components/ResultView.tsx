@@ -3,7 +3,6 @@ import { ItineraryResult, TripPreferences, SavedPlan, MarketingTip, User } from 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { PlacePhoto } from './PlacePhoto';
 
 interface Props {
   itinerary: ItineraryResult | SavedPlan;
@@ -1097,15 +1096,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                   {isExpanded && (
                     <div className={`relative p-4 md:p-5 bg-white ${!isExportingPdf && 'animate-fade-in'}`}>
                       
-                      {!isExportingPdf && day.locationBase && (
-                         <div className="mb-6 h-48 md:h-64 rounded-xl overflow-hidden shadow-sm border border-gray-100 relative group">
-                           <PlacePhoto 
-                             query={`${day.locationBase}, ${itinerary.destinationTitle.split(',')[0]}`} 
-                             className="w-full h-full" 
-                           />
-                         </div>
-                      )}
-
                       <div className={`transition-all duration-300 ${isBlurred ? 'blur-[8px] opacity-60 select-none grayscale-[30%] pointer-events-none' : ''}`}>
                         {day.logisticsTip && renderTip(day.logisticsTip, 'logistics')}
                       {/* Location & Hotel Section */}

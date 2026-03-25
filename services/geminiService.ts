@@ -175,26 +175,16 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
 
     3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link'. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel. Em caso de não localização do link exato, informe obrigatoriamente um link para consulta no Google (ex: "https://www.google.com/search?q=nome+do+hotel+cidade").
 
-    E-BOOK EXCLUSIVO (EMPOLGANTE E BEM ESTRUTURADO):
-    Crie o conteúdo de um "E-book Exclusivo" em texto limpo informacional formatado (campo 'personalizedGuideText') respondendo aos interesses do viajante. 
-    Este E-book deve ter em torno de 500 a 800 palavras (para garantir que a IA não corte a resposta), dividido em 5 grandes Capítulos curtos:
-    - 1. A Essência de [Destino] e o porquê de visitá-lo.
-    - 2. O Segredo dos Locais (Hacks, lugares escondidos).
-    - 3. Gastronomia Autêntica (Onde comer aquilo que só os locais comem, pratos exóticos).
-    - 4. Cultura, Lendas e História Oculta.
-    - 5. Dicas Práticas de Ouro (Segurança, transporte, melhor lado do avião/trem, golpes comuns).
-    Desenvolva CADA tópico como se fosse um livro. Não use markdown pesado, use formatação em texto limpo com tópicos textuais estruturados.
-
     Retorne APENAS JSON, estritamente no seguinte formato:
     {
       "destinationTitle": "Nome do destino",
-      "destinationDescription": "Descrição atrativa",
+      "destinationDescription": "Breve descrição",
       "coordinates": { "lat": 0.0, "lng": 0.0 },
-      "justification": "Por que este roteiro é perfeito",
+      "justification": "Por que é perfeito",
       "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "total": 0, "currency": "BRL" },
-      "weatherAdvice": "Análise sazonal, indicando se a época escolhida é propícia e qual seria a melhor época para ir ao destino.",
+      "weatherAdvice": "Análise sazonal e melhor época sugerida.",
       "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url" } ],
-      "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem Obrigatório", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
+      "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
       "days": [ 
         { 
           "day": 1, 
@@ -207,8 +197,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
           ],
           "logisticsTip": { "type": "tour_affiliate", "title": "...", "description": "...", "ctaText": "...", "url": "...", "contextTrigger": "..." }
         } 
-      ],
-      "personalizedGuideText": "Conteúdo do E-book de 5 capítulos textuais..."
+      ]
     }
   `;
 
