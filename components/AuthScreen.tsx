@@ -68,6 +68,15 @@ export const AuthScreen: React.FC = () => {
                 });
                 if (error) throw error;
                 setMessage('Conta criada! Verifique seu e-mail para confirmar.');
+                
+                // Dispara o evento de Conversão de Inscrição para o Google Ads
+                if (typeof window !== 'undefined' && (window as any).gtag) {
+                    (window as any).gtag('event', 'conversion', {
+                        'send_to': 'AW-17685599631/6eTDCJ_F2ZccEI-rk_fB',
+                        'value': 1.0,
+                        'currency': 'BRL'
+                    });
+                }
             }
         } catch (err: any) {
             console.error(err);
