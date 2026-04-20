@@ -6,8 +6,8 @@ interface Props {
     userId: string;
 }
 
-// TODO: SUBSTITUA PELO SEU PRICE ID REAL (O ID COMEÇA COM 'price_', NÃO 'prod_')
-const STRIPE_PRICE_CARDS = import.meta.env.VITE_STRIPE_CARDS_PRICE_ID || 'price_SEU_PRICE_ID_AQUI';
+// O Price ID foi fixado diretamente no código para evitar problemas de variável de ambiente no servidor
+const STRIPE_PRICE_CARDS = import.meta.env.VITE_STRIPE_CARDS_PRICE_ID || 'price_1TOQ3ACf6mAh0X4CTYgI6Qe4';
 
 export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -16,12 +16,7 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
         try {
             setIsLoading(true);
 
-            // Validation: Check for placeholder IDs
-            if (STRIPE_PRICE_CARDS.includes('price_SEU_PRICE_ID_AQUI')) {
-                alert('CONFIGURAÇÃO NECESSÁRIA: Crie um Price para o Produto prod_UNAN0ESf7hfDJU no Stripe e substitua o VITE_STRIPE_CARDS_PRICE_ID no seu arquivo .env.local (ou diretamente no PricingView.tsx).');
-                setIsLoading(false);
-                return;
-            }
+            // Inicia Checkout Session
 
             // Verify Auth Session & Token
             const { data: { session } } = await supabase.auth.getSession();
