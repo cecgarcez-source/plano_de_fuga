@@ -69,6 +69,8 @@ serve(async (req) => {
             customer_email: user.email,
         })
 
+        console.log("Stripe Session Created Successfully:", session.id);
+
         return new Response(
             JSON.stringify({ url: session.url }),
             {
@@ -76,9 +78,11 @@ serve(async (req) => {
                 status: 200,
             }
         )
-
     } catch (error) {
-        return new Response(JSON.stringify({ error: error.message }), {
+        console.error("STRIPE OR INTERNAL ERROR DETECTED:");
+        console.error(error.message);
+        console.error(error);
+        return new Response(JSON.stringify({ error: error.message, fullError: error }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 400,
         })

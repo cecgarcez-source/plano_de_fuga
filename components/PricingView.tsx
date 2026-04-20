@@ -48,7 +48,16 @@ export const PricingView: React.FC<Props> = ({ onBack, userId }) => {
                 }
             });
 
-            if (error) throw error;
+            if (error) {
+                let errorDetails = error.message;
+                if (error.context && typeof error.context.json === 'function') {
+                    try {
+                        const errJson = await error.context.json();
+                        errorDetails = JSON.stringify(errJson);
+                    } catch(e) {}
+                }
+                throw new Error(errorDetails);
+            }
             if (data?.url) {
                 window.location.href = data.url;
             }
