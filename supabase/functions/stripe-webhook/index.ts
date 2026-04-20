@@ -50,23 +50,37 @@ serve(async (req) => {
                 // Usar Service Role Key para ignorar RLS e ter permissão de escrita
                 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
-                // Pegar os créditos atuais
+                // Pegar os créditos atuais, usando maybeSingle para não quebrar se não existir
                 const { data: profile } = await supabase
                     .from("user_profiles")
-                    .select("plan_credits")
+                    .select("plan_credits, travel_style, interests")
                     .eq("id", userId)
-                    .single();
+                    .maybeSingle();
 
-                const currentCredits = (profile?.plan_credits !== undefined && profile?.plan_credits !== null) ? profile.plan_credits : 3;
+                // Verifica se tem plano_credits, ou recai para 3. Trata tbm erro de digitação do user
+                let currentCredits = 3;
+                if (profile) {
+                    if (profile.plan_credits !== undefined && profile.plan_credits !== null) {
+                        currentCredits = profile.plan_credits;
+                    } else if ('plam_credits' in profile && (profile as any).plam_credits !== undefined) {
+                        currentCredits = (profile as any).plam_credits;
+                    }
+                }
 
-                // Adicionar 30 cards
+                // UPSERT: Atualiza se existir, Cria se não existir!
+                const newCredits = currentCredits + 30;
+                
                 const { error } = await supabase
                     .from("user_profiles")
-                    .update({ plan_credits: currentCredits + 30 })
-                    .eq("id", userId);
+                    .upsert({ 
+                        id: userId, 
+                        plan_credits: newCredits,
+                        travel_style: profile?.travel_style || [],
+                        interests: profile?.interests || []
+                    }, { onConflict: 'id' });
 
                 if (error) {
-                    console.error("Supabase update error:", error);
+                    console.error("Supabase upsert error:", error);
                     return new Response("Database update failed", { status: 500 });
                 }
 
