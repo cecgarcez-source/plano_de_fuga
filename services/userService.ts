@@ -3,7 +3,7 @@ import { UserProfile } from '../types';
 
 export const userService = {
     async getProfile(userId: string): Promise<UserProfile | null> {
-        const { data, error } = await supabase
+        let { data, error } = await supabase
             .from('user_profiles')
             .select('*')
             .eq('id', userId)
@@ -13,6 +13,28 @@ export const userService = {
             console.error('Error fetching profile:', error);
             return null;
         }
+
+        // Se o registro do usuário não existia na tabela, force a criação com 3 créditos
+        if (!data) {
+            const newProfile: UserProfile = {
+                id: userId,
+                plan_credits: 3,
+                travel_style: [],
+                interests: []
+            };
+            const { error: insertError } = await supabase.from('user_profiles').insert(newProfile);
+            if (insertError) {
+                console.error("Failed to initialize user_profile", insertError);
+            } else {
+                return newProfile;
+            }
+        }
+        
+        // Verifica se o usuário criou a coluna com erro de digitação ("plam_credits" ao invés de "plan_credits")
+        if (data && 'plam_credits' in data && data.plan_credits === undefined) {
+             data.plan_credits = (data as any).plam_credits;
+        }
+
         return data;
     },
 
