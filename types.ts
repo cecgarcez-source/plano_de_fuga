@@ -112,7 +112,7 @@ export interface User {
   fullName: string; // Added Full Name
   email: string;
   avatarUrl?: string | null;
-  subscriptionTier?: 'free' | 'premium';
+  plan_credits?: number;
 }
 
 export interface UserProfile {
@@ -122,7 +122,7 @@ export interface UserProfile {
   travel_style: string[];
   interests: string[];
   dietary_restrictions?: string;
-  subscription_tier?: 'free' | 'premium';
+  plan_credits?: number;
   total_trips_created?: number;
   currency_preference?: string;
 }

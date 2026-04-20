@@ -44,7 +44,7 @@ const App: React.FC = () => {
   const { user: supabaseUser, loading, signOut } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [loadingData, setLoadingData] = useState(false); // Added loadingData
-  const [userProfileTier, setUserProfileTier] = useState<'free' | 'premium'>('free');
+  const [userPlanCredits, setUserPlanCredits] = useState<number | undefined>(undefined);
 
   const processedRef = React.useRef(false); // Ref to track if upgrade processed
   const sharedPlanRef = React.useRef(false);
@@ -87,32 +87,29 @@ const App: React.FC = () => {
       if (processedRef.current) return; // Skip if already processed
       processedRef.current = true;
 
-      // 1. Update Database
-      userService.setPremium(supabaseUser.id)
-        .then(() => {
-          // 2. Update Local State
-          setUserProfileTier('premium');
-          alert("Bem-vindo à Elite, Agente! 🕵️‍♂️\nSua conta Premium foi ativada.");
+      // 1. Atualizar state local (Banco de dados já foi via webhook)
+      // Recarregamos o profile para pegar os créditos novos
+      userService.getProfile(supabaseUser.id).then(profile => {
+          if (profile?.plan_credits !== undefined) {
+             setUserPlanCredits(profile.plan_credits);
+          }
+      });
+      alert("Pagamento Aprovado! 🕵️‍♂️\nSeus Cards foram adicionados ao seu perfil.");
 
-          // 3. Clear URL
-          window.history.replaceState({}, '', '/');
-        })
-        .catch(err => {
-          console.error("Erro ao ativar premium:", err);
-          // Only alert if we didn't succeed (check if verification shows success)
-        });
+      // Clear URL
+      window.history.replaceState({}, '', '/');
     }
 
     if (supabaseUser) {
       userService.getProfile(supabaseUser.id).then(profile => {
-        if (profile?.subscription_tier) {
-          setUserProfileTier(profile.subscription_tier);
+        if (profile?.plan_credits !== undefined && profile?.plan_credits !== null) {
+          setUserPlanCredits(profile.plan_credits);
         } else {
-          setUserProfileTier('free'); // Default if no profile or no tier
+          setUserPlanCredits(3); // Default if no profile
         }
       });
     } else {
-      setUserProfileTier('free'); // Reset on logout
+      setUserPlanCredits(undefined); // Reset on logout
     }
   }, [supabaseUser]);
 
@@ -122,9 +119,9 @@ const App: React.FC = () => {
       fullName: supabaseUser.user_metadata?.full_name || 'Agente',
       email: supabaseUser.email || '',
       avatarUrl: supabaseUser.user_metadata?.avatar_url || null,
-      subscriptionTier: userProfileTier,
+      plan_credits: userPlanCredits,
     } : null;
-  }, [supabaseUser, userProfileTier]);
+  }, [supabaseUser, userPlanCredits]);
 
   const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -227,18 +224,12 @@ const App: React.FC = () => {
   };
 
   const generatePlan = async () => {
-    // 1. Check Usage Limits (if logged in)
     if (supabaseUser) {
       const usageCheck = await userService.checkUsageAvailability(supabaseUser.id);
       if (!usageCheck.allowed) {
-        if (usageCheck.reason === 'free_limit_reached') {
-            alert("🚨 Limite Gratuito Atingido! 🚨\n\nVocê atingiu seu limite de 10 tentativas gratuitas de geração. Atualize para o plano PREMIUM para criar até 30 viagens por mês.");
-        } else if (usageCheck.reason === 'premium_limit_reached') {
-            alert("🚨 Limite Premium Mensal Atingido! 🚨\n\nVocê atingiu seu limite de 30 criações de planos neste mês. O limite será resetado no próximo mês.");
-        } else {
-             alert("🚨 Erro ao verificar limites de uso. Tente novamente mais tarde.");
-        }
-        return;
+          alert("🚨 Sem Cards Disponíveis! 🚨\n\nVocê utilizou todos os seus planos disponíveis. Por favor, compre um novo pacote de Cards para continuar gerando roteiros incríveis.");
+          setStep(AppStep.PRICING);
+          return;
       }
     }
 
@@ -250,8 +241,10 @@ const App: React.FC = () => {
       }
       const result = await generateTripItinerary(preferences);
 
-      // 2. Increment usage count
+      // Consume credit
       if (supabaseUser) {
+        await userService.consumeCredit(supabaseUser.id);
+        setUserPlanCredits(prev => (prev === undefined ? prev : Math.max(0, prev - 1)));
         await userService.incrementTripCount(supabaseUser.id);
       }
 
@@ -359,8 +352,10 @@ const App: React.FC = () => {
         .then(([plans, items, profile]) => {
           setSavedPlans(plans);
           setVisitedPlaces(items);
-          if (profile?.subscription_tier) {
-            setUserProfileTier(profile.subscription_tier);
+          if (profile?.plan_credits !== undefined && profile?.plan_credits !== null) {
+            setUserPlanCredits(profile.plan_credits);
+          } else {
+            setUserPlanCredits(3);
           }
         })
         .catch((err) => console.error("Error loading data:", err))
@@ -441,16 +436,14 @@ const App: React.FC = () => {
           <div className="flex items-center gap-4">
             {user && (
               <div className="flex items-center gap-3">
-                {user.subscriptionTier === 'premium' ? (
-                  <span className="bg-gradient-to-r from-amber-400 to-yellow-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase shadow-sm tracking-wider">
-                    PREMIUM
-                  </span>
-                ) : (
+                {user.plan_credits !== undefined && (
                   <button
                     onClick={() => setStep(AppStep.PRICING)}
-                    className="bg-gray-200 hover:bg-gradient-to-r hover:from-amber-400 hover:to-yellow-500 hover:text-white text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider transition-all"
+                    className="bg-gray-100 hover:bg-gradient-to-r hover:from-teal-400 hover:to-teal-500 hover:text-white text-gray-700 font-bold px-3 py-1 rounded-full uppercase tracking-widest transition-all flex items-center gap-1.5 shadow-sm border border-gray-200 hover:border-transparent cursor-pointer"
                   >
-                    FREE (UPGRADE)
+                    <span className="text-sm shadow-sm opacity-90">🗂️</span>
+                    <span className="text-[10px] sm:text-[11px]">{user.plan_credits} CARDS</span>
+                    {user.plan_credits === 0 && <span className="bg-red-500 text-white rounded-full px-1.5 py-0.5 text-[8px] ml-1 flex items-center justify-center animate-pulse">0</span>}
                   </button>
                 )}
 

@@ -135,10 +135,10 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
 
             {/* Feature 6 */}
             <div className="p-8 rounded-3xl bg-gray-900 text-white border border-gray-700 hover:border-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Premium</div>
+              <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Liberado</div>
               <div className="w-14 h-14 rounded-2xl bg-gray-800 text-amber-400 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform text-shadow">📱</div>
               <h3 className="text-xl font-bold mb-2">Dossiês em PDF Otimizados</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Exporte seus roteiros para formato Dossiê que cabe perfeito na tela do seu celular para leitura offline sem distrações.</p>
+              <p className="text-gray-300 text-sm leading-relaxed">Exporte seus roteiros para formato Dossiê e Excel desde o primeiro uso. Cabe perfeito na tela do celular para leitura offline.</p>
             </div>
           </div>
         </div>
@@ -232,9 +232,16 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             onClick={onStart}
             className="bg-white text-teal-800 font-bold text-xl px-10 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
           >
-            Começar Agora Grátis
+            Começar Agora Grátis 
           </button>
-          <p className="mt-4 text-teal-200 text-sm">Sem cartão de crédito necessário.</p>
+          <div className="mt-6 flex flex-col items-center justify-center">
+            <span className="bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-sm rotate-1 mb-2">
+               OFERTA DE LANÇAMENTO
+            </span>
+            <p className="text-white font-medium text-sm md:text-base max-w-lg bg-black/20 p-3 rounded-xl backdrop-blur-sm border border-white/10">
+               Crie sua conta agora e ganhe <strong>3 Cards gratuitos</strong> para gerar 3 roteiros incríveis com <strong>todos os recursos liberados</strong> (PDF, Excel e Smart Guides)! Sem amarras.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -267,7 +274,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
                 <a href="mailto:contato@planodefugai.com.br" className="hover:text-teal-600 text-teal-700 font-medium">contato@planodefugai.com.br</a>
               </li>
               <li className="text-xs text-gray-400 mt-2">
-                Atendimento exclusivo para membros Premium.
+                Qualquer dúvida, fale com a nossa equipe!
               </li>
             </ul>
           </div>

@@ -62,7 +62,7 @@ serve(async (req) => {
                     quantity: 1,
                 },
             ],
-            mode: 'subscription',
+            mode: 'payment',
             success_url: `${returnUrl}?upgrade=success`,
             cancel_url: returnUrl,
             client_reference_id: user.id,

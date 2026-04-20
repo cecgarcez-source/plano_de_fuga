@@ -45,14 +45,24 @@ serve(async (req) => {
             const userId = session.client_reference_id;
 
             if (userId) {
-                console.log(`Upgrading user ${userId} to premium...`);
+                console.log(`Adding 30 cards to user ${userId}...`);
 
                 // Usar Service Role Key para ignorar RLS e ter permissão de escrita
                 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
+                // Pegar os créditos atuais
+                const { data: profile } = await supabase
+                    .from("user_profiles")
+                    .select("plan_credits")
+                    .eq("id", userId)
+                    .single();
+
+                const currentCredits = (profile?.plan_credits !== undefined && profile?.plan_credits !== null) ? profile.plan_credits : 3;
+
+                // Adicionar 30 cards
                 const { error } = await supabase
                     .from("user_profiles")
-                    .update({ subscription_tier: "premium" })
+                    .update({ plan_credits: currentCredits + 30 })
                     .eq("id", userId);
 
                 if (error) {
@@ -60,7 +70,7 @@ serve(async (req) => {
                     return new Response("Database update failed", { status: 500 });
                 }
 
-                console.log("User upgraded successfully!");
+                console.log("30 Cards added successfully!");
             } else {
                 console.warn("No client_reference_id found in session");
             }

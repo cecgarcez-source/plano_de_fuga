@@ -22,7 +22,7 @@ export const DashboardView: React.FC<Props> = ({
   user, plans, visitedPlaces, onNewPlan, onViewPlan, onDeletePlan, onAddVisited, onDeleteVisited, onCompare, onLogout
 }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const visiblePlansForMap = user.subscriptionTier === 'premium' ? plans : plans.slice(0, 3);
+  const visiblePlansForMap = plans; // Todos os planos visíveis no mapa
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [activePlanId, setActivePlanId] = useState<string | null>(null);
   const [activeVisitedId, setActiveVisitedId] = useState<string | null>(null);
@@ -108,12 +108,6 @@ export const DashboardView: React.FC<Props> = ({
   // --- EXPORT SINGLE PLAN ---
   const handleExportClick = (plan: SavedPlan, e: React.MouseEvent) => {
     e.stopPropagation();
-
-    // PREMIUM CHECK
-    if (user.subscriptionTier !== 'premium' && !plan.isPaidExport) {
-      alert("🔒 Recurso Premium\n\nA exportação para PDF (Dossiê) é exclusiva para membros Premium.\n\n[Aqui seria o link do Stripe]");
-      return;
-    }
 
     setPlanToExport(plan);
     setTimeout(() => {

@@ -249,11 +249,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
   const handleExportInfographic = async () => {
     if (!infographicRef.current) return;
     
-    if (user?.subscriptionTier !== 'premium') {
-      alert("🔒 Recurso Premium\n\nA exportação para 'Mapa da Fuga' é exclusiva para membros Premium.\nAtualize seu plano para desbloquear!");
-      return;
-    }
-
     setIsExportingInfographic(true);
     try {
       const element = infographicRef.current;
@@ -275,10 +270,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
   };
 
   const handleExportPdf = async () => {
-    if (user?.subscriptionTier !== 'premium') {
-      alert("🔒 Recurso Premium\n\nA exportação para PDF é exclusiva para membros Premium.\nAtualize seu plano para desbloquear!");
-      return;
-    }
     try {
       const blob = await generatePdfBlob();
       if (blob) {
@@ -354,11 +345,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
   };
 
   const handleExportExcel = () => {
-    if (user?.subscriptionTier !== 'premium') {
-      alert("🔒 Recurso Premium\n\nA exportação para Excel é exclusiva para membros Premium.\nAtualize seu plano para desbloquear!");
-      return;
-    }
-
     try {
       // Create CSV content with semicolon delimiter (Portuguese standard format for Excel)
       const delimiter = ';';
@@ -407,11 +393,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
   };
 
   const sharePlan = async () => {
-    if (user?.subscriptionTier !== 'premium') {
-      alert("🔒 Recurso Premium\n\nCompartilhar o roteiro é exclusivo para membros Premium.\nAtualize seu plano para desbloquear!");
-      return;
-    }
-
     if (!isSaved || !itinerary['id']) {
       alert("Salve o roteiro primeiro para compartilhar!");
       return;
