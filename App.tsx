@@ -250,15 +250,15 @@ const App: React.FC = () => {
 
       setCurrentItinerary(result);
       setStep(AppStep.RESULT);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      const msg = err instanceof Error ? err.message : 'Desconhecido';
+      const msg = err instanceof Error ? err.message : String(err);
       
       // Checa se é um erro comum de parsing (LLM cortou JSON)
       if (msg.includes('JSON') || msg.includes('Unterminated') || msg.includes('Unexpected') || msg.includes('Ops! Ocorreu um erro')) {
         setError('🤖 Nossa Inteligência Artificial se empolgou nos detalhes e a geração do roteiro foi interrompida antes do fim. Por favor, tente gerar novamente!');
       } else {
-        setError(`Erro: Ocorreu um problema inesperado. Tente novamente.`);
+        setError(`Erro Técnico: ${msg}`);
       }
       setStep(AppStep.PROFILES);
     }
