@@ -35,7 +35,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
               <img
                 src="/logo.png"
                 alt="Plano de Fuga Logo"
-                className="w-96 h-96 md:w-[32rem] md:h-[32rem] object-contain drop-shadow-2xl"
+                className="w-96 h-96 md:w-[32rem] md:h-[32rem] object-contain drop-shadow-2xl mix-blend-multiply"
               />
             </div>
           </div>

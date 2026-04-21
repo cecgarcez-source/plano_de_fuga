@@ -89,7 +89,7 @@ const searchGooglePlaces = async (query: string, location: string): Promise<any>
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-2.5-flash-lite";
+  const modelId = "gemini-2.5-flash"; // Upgraded from lite to solve severe geographical hallucinations
 
   if (!ai) throw new Error("AI client not initialized");
 
