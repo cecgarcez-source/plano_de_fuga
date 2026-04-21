@@ -90,7 +90,7 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-2.0-flash"; // User has enabled Billing Tier 1! We can use 2.0-flash unrestricted.
+  const modelId = "gemini-2.5-flash"; // Using 2.5-flash which is vastly superior to lite and shouldn't have the 2.0-flash blockade.
 
   if (!ai) throw new Error("AI client not initialized");
 
