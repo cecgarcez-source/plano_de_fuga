@@ -1074,7 +1074,6 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             {itinerary.days.map((day, dayIndex) => {
               const date = preferences.startDate ? getTripDate(preferences.startDate, day.day - 1) : null;
               const isExpanded = true; 
-              const isPremium = user?.subscriptionTier === 'premium';
               const isBlurred = false; // Bloqueio removido (agora controlado por créditos em vez de premium view block)
               const mapUrl = getGoogleMapUrl(day);
 
