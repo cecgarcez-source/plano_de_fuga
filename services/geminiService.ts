@@ -89,7 +89,7 @@ const searchGooglePlaces = async (query: string, location: string): Promise<any>
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-2.5-flash"; // Upgraded from lite to solve severe geographical hallucinations
+  const modelId = "gemini-2.5-flash-lite"; // Reverted to lite due to 503 capacity issues on flash
 
   if (!ai) throw new Error("AI client not initialized");
 
@@ -173,7 +173,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - Duração Exata (CRÍTICO): Gere EXATAMENTE ${preferences.duration} objetos de dia no array 'days', numerados de 1 até ${preferences.duration}. Não encerre o roteiro antes do final do plano!
     - Volume Limitado (CRÍTICO PARA NÃO CORTAR O JSON): Para cada dia, gere NO MÁXIMO 3 a 4 atividades essenciais (ex: 1 manhã, 1 tarde, 1 noite). NUNCA gere mais que 4 atividades por dia.
     - Resumo Extremo nas Descrições: Na 'description' das atividades, seja super direto (máximo de 20 palavras). Não escreva textos longos!
-    - Limites Geográficos (CRÍTICO): TUDO (atrações, restaurantes e hotéis) DEVE FICAR ESTRITAMENTE dentro de ${preferences.destination}. NÃO cruze para outras cidades ou estados. A precisão geográfica é a sua regra NÚMERO UM.
+    - Limites Geográficos (CRÍTICO): TUDO (atrações, restaurantes e hotéis) DEVE FICAR ESTRITAMENTE dentro de ${preferences.destination}. NÃO cruze para outras cidades ou estados. A precisão geográfica é a sua regra NÚMERO UM. Se não conhecer atrações/restaurantes reais no destino, sugira 'Restaurante/Passeio Local no Centro de ${preferences.destination}', MAS NUNCA puxe um lugar real de outra cidade distante.
     - Qualidade Exigida: Priorize locais bem avaliados, mas NUNCA quebre a regra de localização para sugerir algo melhor em outra cidade.
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
