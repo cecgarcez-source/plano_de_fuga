@@ -255,8 +255,8 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     let responseText = null;
     let lastError = null;
     
-    // Fallback progression: Try best/newest models first, fall back to stable ones. 1.5 versions are deprecated under those literal names.
-    const models = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-pro-latest", "gemini-2.0-flash"];
+    // Fallback progression: Try stable models first to avoid long exponential backoff retries from 503 High Demand on 2.5 models.
+    const models = ["gemini-flash-latest", "gemini-2.5-flash", "gemini-pro-latest"];
 
     for (const modelId of models) {
       try {
