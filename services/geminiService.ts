@@ -12,7 +12,7 @@ if (!apiKey) {
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const getCityCoordinates = async (cityName: string): Promise<{ lat: number; lng: number }> => {
-  const modelId = "gemini-2.0-flash";
+  const modelId = "gemini-flash-latest";
   const prompt = `Retorne as coordenadas geográficas (latitude e longitude) centrais da seguinte cidade/local: "${cityName}". Retorne APENAS o JSON.`;
 
   if (!ai) throw new Error("AI client not initialized");
@@ -255,8 +255,8 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     let responseText = null;
     let lastError = null;
     
-    // Fallback progression: Try best/newest models first, fall back to ultra-stable 1.5-pro
-    const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+    // Fallback progression: Try best/newest models first, fall back to stable ones. 1.5 versions are deprecated under those literal names.
+    const models = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-pro-latest", "gemini-2.0-flash"];
 
     for (const modelId of models) {
       try {
