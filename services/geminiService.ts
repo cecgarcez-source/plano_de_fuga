@@ -221,90 +221,22 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     const requestConfig = {
       responseMimeType: "application/json",
       maxOutputTokens: 8192,
-      tools: [{
-        functionDeclarations: [
-          {
-            name: "searchGooglePlaces",
-            description: "Pesquisa locais reais, restaurantes, hotéis e atrações turísticas usando a API do Google Places. Só chame essa função se precisar validar ou encontrar locais específicos na cidade solicitada antes de montar o roteiro.",
-            parameters: {
-              type: Type.OBJECT,
-              properties: {
-                query: { type: Type.STRING, description: "Termo amplo (ex: 'pontos turísticos', 'restaurantes populares')" },
-                location: { type: Type.STRING, description: "A cidade onde a busca deve ser feita" },
-              },
-              required: ["query", "location"]
-            }
-          }
-        ]
-      }],
     };
 
     let contents: any[] = [{ role: "user", parts: [{ text: prompt }] }];
     let response = await ai.models.generateContent({
       model: modelId,
       contents,
-      // @ts-ignore - The types for genai might be slightly outdated globally but runtime supports this
+      // @ts-ignore
       config: requestConfig,
     });
-
-    // Handle Tool Calling Interception
-    const MAX_TOOL_LOOPS = 3;
-    let loops = 0;
-    
-    while (response.functionCalls && response.functionCalls.length > 0 && loops < MAX_TOOL_LOOPS) {
-      loops++;
-      const call = response.functionCalls[0];
-      console.log(`[Gemini Tool Call] Func: ${call.name} | Args:`, call.args);
-      
-      let apiResult: any = {};
-      if (call.name === "searchGooglePlaces") {
-         const args = call.args as { query: string, location: string };
-         apiResult = await searchGooglePlaces(args.query, args.location);
-      }
-      
-      // Append model's tool call response
-      contents.push(response.candidates?.[0]?.content);
-      
-      // Append the tool execution response back to user
-      contents.push({
-        role: "user",
-        parts: [{
-          functionResponse: {
-            name: call.name,
-            response: apiResult
-          }
-        }]
-      });
-      
-      console.log(`[Gemini Tool Return] Fed data back to AI.`);
-      // Run generation again
-      response = await ai.models.generateContent({
-        model: modelId,
-        contents,
-        // @ts-ignore
-        config: requestConfig,
-      });
-    }
-
-    // Se saiu do loop e ainda quer chamar ferramenta, force a geração final
-    if (!response.text && response.functionCalls) {
-       console.log("[Gemini Tool Return] Forcing final generation without tools.");
-       contents.push({ role: "user", parts: [{ text: "Não faça mais buscas. Por favor, crie e retorne o Roteiro Final completo estritamente em JSON de acordo com o JSON Schema agora." }] });
-       
-       const finalConfig = { ...requestConfig, tools: undefined };
-       response = await ai.models.generateContent({
-         model: modelId,
-         contents,
-         config: finalConfig as any,
-       });
-    }
 
     if (response.text) {
       // Clean potential markdown ticks
       const cleanJson = response.text.replace(/```json\n?|```/g, '').trim();
       return JSON.parse(cleanJson);
     } else {
-      throw new Error("Empty response from AI after tools execution");
+      throw new Error("Empty response from AI");
     }
   } catch (error) {
     console.error("Gemini AI Error:", error);
