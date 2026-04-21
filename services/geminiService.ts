@@ -12,7 +12,7 @@ if (!apiKey) {
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const getCityCoordinates = async (cityName: string): Promise<{ lat: number; lng: number }> => {
-  const modelId = "gemini-flash-lite-latest";
+  const modelId = "gemini-2.5-flash-lite";
   const prompt = `Retorne as coordenadas geográficas (latitude e longitude) centrais da seguinte cidade/local: "${cityName}". Retorne APENAS o JSON.`;
 
   if (!ai) throw new Error("AI client not initialized");
@@ -89,7 +89,7 @@ const searchGooglePlaces = async (query: string, location: string): Promise<any>
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-flash-lite-latest";
+  const modelId = "gemini-2.5-flash-lite";
 
   if (!ai) throw new Error("AI client not initialized");
 
