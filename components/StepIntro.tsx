@@ -17,20 +17,21 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-0 md:justify-center md:pt-0 text-center px-4 overflow-hidden">
-        {/* Ambient Background - Made much more transparent/removed to show beach */}
-        <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[2px]"></div>
+      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-0 md:justify-center md:pt-0 text-center px-4 overflow-hidden bg-stone-100">
+        {/* Ambient Background - Vintage Map Pattern */}
+        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] mix-blend-multiply"></div>
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-stone-100 to-transparent z-0"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-0">
           {/* Badge */}
-          <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50/80 border border-teal-100 text-teal-800 text-xs font-semibold uppercase tracking-wider shadow-sm animate-fade-in-up backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse"></span>
-            Novo: IA Gemini 2.0 Integrada
+          <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50/80 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-widest shadow-sm animate-fade-in-up backdrop-blur-md">
+            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+            ACESSO RESTRITO: IA TOP SECRET
           </div>
 
           {/* Logo / Brand - Doubled Size */}
           <div className="relative group cursor-default -mt-12 md:mt-0">
-            <div className="absolute -inset-8 bg-gradient-to-r from-teal-400/20 to-blue-500/20 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition duration-500"></div>
+            <div className="absolute -inset-8 bg-gradient-to-r from-amber-400/20 to-orange-500/20 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition duration-500"></div>
             <div className="relative transform hover:scale-105 transition-transform duration-500">
               <img
                 src="/logo.png"
@@ -42,17 +43,17 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
 
           {/* Headlines - Reduced Size and Negative Margin */}
           <div className="-mt-8 space-y-2 max-w-2xl bg-white/20 backdrop-blur-md p-4 rounded-3xl shadow-sm">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight">
-              Sua Próxima Aventura <br />
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight uppercase font-serif">
+              Missão Férias: <br />
               <span
                 onClick={onStart}
-                className="cursor-pointer text-transparent bg-clip-text bg-gradient-to-r from-teal-700 to-blue-700 hover:from-teal-600 hover:to-blue-600 underline decoration-teal-500/30 hover:decoration-teal-500/60 transition-all"
+                className="cursor-pointer text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-orange-700 hover:from-amber-600 hover:to-orange-600 underline decoration-amber-500/30 hover:decoration-amber-500/60 transition-all font-black tracking-widest"
               >
-                Começa Aqui.
+                ATIVADA.
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-800 font-medium leading-relaxed">
-              Fuja da rotina. Crie roteiros de viagem <span className="font-bold text-teal-900">perfeitos</span> e personalizados em segundos.
+            <p className="text-lg md:text-xl text-gray-800 font-medium leading-relaxed mt-2">
+              Sua Agência de Viagens <span className="font-bold text-amber-900 uppercase">Secreta</span> com IA. Planeje seu roteiro perfeito, descubra destinos e experiências personalizadas em segundos.
             </p>
           </div>
 
@@ -60,17 +61,17 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-2">
             <button
               onClick={onStart}
-              className="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-white transition-all duration-300 bg-gray-900/90 rounded-full hover:bg-teal-600 hover:shadow-2xl hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 overflow-hidden shadow-xl"
+              className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-amber-800 rounded-lg hover:bg-amber-700 hover:shadow-2xl hover:-translate-y-1 focus:outline-none border-b-4 border-amber-950 overflow-hidden shadow-xl uppercase tracking-wider font-serif"
             >
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
-              <span>Planejar Minha Fuga</span>
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
+              <span>INICIAR DOSSIÊ AGORA</span>
               <svg className="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
             </button>
             <button
               onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-gray-700 transition-all duration-200 bg-white/70 backdrop-blur-md border border-gray-200 rounded-full hover:bg-white hover:text-gray-900 hover:border-gray-300 focus:outline-none shadow-lg"
+              className="inline-flex items-center justify-center px-8 py-3 text-sm font-bold text-gray-700 transition-all duration-200 bg-stone-100/80 backdrop-blur-md border border-stone-300 rounded-lg hover:bg-white hover:text-gray-900 hover:border-stone-400 focus:outline-none shadow-md uppercase tracking-wider"
             >
-              Como funciona?
+              INVESTIGAR RECURSOS
             </button>
           </div>
 
@@ -89,26 +90,26 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- VALUE PROPOSITION (Features) --- */}
-      <section id="features" className="py-32 mt-12 bg-white/90 backdrop-blur-sm relative z-20">
+      <section id="features" className="py-32 mt-12 bg-stone-100 relative z-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Mais que um roteiro. Uma curadoria de experiências.</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Descubra as vantagens exclusivas de usar o Plano de Fuga para estruturar sua próxima viagem.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-serif uppercase">Mais que planejamento. Inteligência de Rota.</h2>
+            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Descubra as vantagens exclusivas de acionar sua Agência Secreta com IA para estruturar sua próxima missão.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-teal-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🚀</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Roteiros em Segundos</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">De zero ao roteiro completo instantaneamente. Nossa IA analisa milhares de pontos turísticos para montar o cenário ideal e sem estresse.</p>
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-amber-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🧭</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 uppercase font-serif">Dossiês em Segundos</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">De zero ao dossiê completo instantaneamente. Nossa IA analisa milhares de pontos turísticos para mapear o cenário ideal sem deixar rastros.</p>
             </div>
 
             {/* Feature 2 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-blue-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Totalmente Personalizado</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">Orçamento, estilo, e ritmo de viagem adaptados a você. De mochileiro aventureiro a viajante de extremo luxo.</p>
+            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-orange-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2 uppercase font-serif">Missões Personalizadas</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">Orçamento, estilo operante e ritmo adaptados ao seu perfil confidencial. De viajante low-profile a missões de extremo luxo.</p>
             </div>
 
             {/* Feature 3 */}
@@ -145,38 +146,39 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- COMO FUNCIONA --- */}
-      <section id="how-it-works" className="py-24 bg-gray-50 border-t border-gray-200 relative overflow-hidden">
+      <section id="how-it-works" className="py-24 bg-stone-200 border-t border-stone-300 relative overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">Como a Mágica Acontece</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Em apenas 4 passos você transforma o estresse do planejamento em um roteiro profissional.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-stone-900 mb-4 font-serif uppercase">Como a Operação Ocorre</h2>
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto">Em apenas 4 passos você aciona a agência e recebe seu dossiê confidencial de viagem.</p>
           </div>
 
           <div className="grid md:grid-cols-4 gap-8 relative">
-            <div className="hidden md:block absolute top-10 left-[10%] w-[80%] h-0.5 bg-gray-200 z-0"></div>
+            <div className="hidden md:block absolute top-10 left-[10%] w-[80%] h-0.5 bg-stone-300 z-0"></div>
 
             <div className="relative z-10 text-center flex flex-col items-center">
-              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">1</div>
-              <h3 className="font-bold text-xl text-gray-900 mb-2">Configure o Perfil</h3>
-              <p className="text-gray-600 text-sm">Diga quem você é. Gosta de luxo? É vegano? Gosta de cultura? Isso moldará a IA para sempre.</p>
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-amber-600 flex items-center justify-center text-2xl font-black text-amber-700 shadow-xl mb-6 font-serif">1</div>
+              <h3 className="font-bold text-xl text-stone-900 mb-2">Configure o Perfil</h3>
+              <p className="text-stone-600 text-sm">Diga quem você é. Gosta de luxo? É vegano? Gosta de cultura? Isso moldará a IA para sempre.</p>
             </div>
 
             <div className="relative z-10 text-center flex flex-col items-center mt-0 md:mt-8">
-              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">2</div>
-              <h3 className="font-bold text-xl text-gray-900 mb-2">Crie a Missão</h3>
-              <p className="text-gray-600 text-sm">Defina o destino (ou clique em Surpresa), o período, orçamento e quem vai com você.</p>
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-amber-600 flex items-center justify-center text-2xl font-black text-amber-700 shadow-xl mb-6 font-serif">2</div>
+              <h3 className="font-bold text-xl text-stone-900 mb-2">Crie a Missão</h3>
+              <p className="text-stone-600 text-sm">Defina o destino (ou clique em Surpresa), o período, orçamento e quem vai com você.</p>
             </div>
 
             <div className="relative z-10 text-center flex flex-col items-center mt-0 md:mt-0">
-              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">3</div>
-              <h3 className="font-bold text-xl text-gray-900 mb-2">A IA Trabalha</h3>
-              <p className="text-gray-600 text-sm">O Gemini 2.0 compila milhares de avaliações, custos dinâmicos e regras logísticas pra criar a rota.</p>
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-amber-600 flex items-center justify-center text-2xl font-black text-amber-700 shadow-xl mb-6 font-serif">3</div>
+              <h3 className="font-bold text-xl text-stone-900 mb-2">A Agência Trabalha</h3>
+              <p className="text-stone-600 text-sm">O Gemini cruza milhares de avaliações exclusivas, custos de transporte e regras logísticas pra criar a rota secreta.</p>
             </div>
 
             <div className="relative z-10 text-center flex flex-col items-center mt-0 md:mt-8">
-              <div className="w-20 h-20 rounded-full bg-white border-4 border-teal-500 flex items-center justify-center text-2xl font-black text-teal-600 shadow-xl mb-6">4</div>
-              <h3 className="font-bold text-xl text-gray-900 mb-2">Pronto para Voar!</h3>
-              <p className="text-gray-600 text-sm">Roteiro gerado. Navegue no app, rastreie gastos reais ou baixe o PDF para a viagem.</p>
+              <div className="w-20 h-20 rounded-full bg-white border-4 border-amber-600 flex items-center justify-center text-2xl font-black text-amber-700 shadow-xl mb-6 font-serif">4</div>
+              <h3 className="font-bold text-xl text-stone-900 mb-2">Missão Autorizada!</h3>
+              <p className="text-stone-600 text-sm">Dossiê gerado. Navegue na plataforma, rastreie gastos via satélite ou baixe o PDF para ler offline.</p>
             </div>
           </div>
         </div>
@@ -221,26 +223,26 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- PRE-FOOTER CTA --- */}
-      <section className="py-24 bg-teal-600/90 backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-teal-500 rounded-full blur-3xl opacity-50"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-50"></div>
+      <section className="py-24 bg-stone-900 backdrop-blur-sm relative overflow-hidden border-t-4 border-amber-600">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-600 rounded-full blur-[100px] opacity-20"></div>
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-orange-700 rounded-full blur-[100px] opacity-30"></div>
 
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-6">Pronto para sua próxima fuga?</h2>
-          <p className="text-teal-100 text-xl mb-10 max-w-2xl mx-auto">Não deixe para amanhã a viagem que você pode planejar hoje.</p>
+          <h2 className="text-4xl md:text-5xl font-black text-amber-50 mb-6 font-serif uppercase tracking-tight">Pronto para assumir a missão?</h2>
+          <p className="text-stone-300 text-xl mb-10 max-w-2xl mx-auto">Sua agência secreta aguarda instruções. Não deixe para amanhã a viagem que você pode mapear hoje.</p>
           <button
             onClick={onStart}
-            className="bg-white text-teal-800 font-bold text-xl px-10 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+            className="bg-gradient-to-r from-amber-600 to-orange-700 text-white font-black text-xl px-10 py-5 rounded-lg shadow-2xl shadow-orange-900/50 hover:shadow-orange-700 hover:scale-105 transition-all duration-300 uppercase tracking-widest"
           >
-            Começar Agora Grátis 
+            ACESSAR SUA FUGA AGORA
           </button>
-          <div className="mt-6 flex flex-col items-center justify-center">
-            <span className="bg-yellow-400 text-yellow-900 text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-sm rotate-1 mb-2">
-               OFERTA DE LANÇAMENTO
+          <div className="mt-8 flex flex-col items-center justify-center">
+            <span className="bg-red-600 text-white text-xs font-black px-4 py-1.5 rounded-sm uppercase tracking-widest shadow-md rotate-1 mb-3">
+               ALERTA DE STATUS: OFERTA LIBERADA
             </span>
-            <p className="text-white font-medium text-sm md:text-base max-w-lg bg-black/20 p-3 rounded-xl backdrop-blur-sm border border-white/10">
-               Crie sua conta agora e ganhe <strong>3 Cards gratuitos</strong> para gerar 3 roteiros incríveis com <strong>todos os recursos liberados</strong> (PDF, Excel e Smart Guides)! Sem amarras.
-            </p>
+            <div className="text-amber-50 font-medium text-sm md:text-base max-w-lg bg-black/40 p-5 rounded-xl backdrop-blur-md border border-amber-600/30 shadow-inner">
+               Faça seu cadastro agora e receba <strong className="text-amber-400 text-lg uppercase tracking-wide block my-1">3 CRÉDITOS GRATUITOS</strong> para acionar a IA e gerar 3 planejamentos de viagem 100% completos! Sem amarras.
+            </div>
           </div>
         </div>
       </section>

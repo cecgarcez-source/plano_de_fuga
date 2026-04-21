@@ -136,8 +136,27 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
 
   const currencyInstruction = userContext.includes("Moeda Preferencial") ? "" : "Use BRL como moeda padrão se não especificado.";
 
+  let realPlacesContext = "";
+  if (!preferences.isSurpriseDestination) {
+    try {
+      // Pré-busca real de hotéis para impedir alucinações (como solicitado no Plano de Ação)
+      const placesResult = await searchGooglePlaces("hotéis de excelência", preferences.destination);
+      if (placesResult && placesResult.results && placesResult.results.length > 0) {
+        realPlacesContext = `
+        [CONTEXTO DE DADOS REAIS - GOOGLE PLACES]
+        Para HOTEIS E ACOMODAÇÕES, você DEVE priorizar estas opções reais consultadas diretamente do Google e que TÊM NOTA ALTA comprovada:
+        ${placesResult.results.map((p: any) => `- Hotel: ${p.name} | Nota: ${p.rating} ⭐ (${p.reviews} avaliações) | Endereço formatado: ${p.address}`).join('\n        ')}
+        Ao gerar as 'hotelSuggestions', use esses dados que são 100% reais para provar qualidade ao usuário.
+        `;
+      }
+    } catch (e) {
+      console.error("Falha ao buscar places reais:", e);
+    }
+  }
+
   const prompt = `
     ${userContext}
+    ${realPlacesContext}
 
     Atue como um Concierge de Viagens de Elite e um Especialista Local (Local Insider) do destino escolhido E especialista em monetização de turismo.
     Seu objetivo é criar roteiros de viagem impecáveis para ${destinationPrompt}, fugindo de clichês e 'pegadinhas para turistas'.
