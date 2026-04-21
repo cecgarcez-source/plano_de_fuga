@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 async function testLLM() {
-  const apiKey = "AIzaSyC6_DxkLN9xSDnIayN4BBU6F_6IOklvcRY"; // from .env
+  const apiKey = "AIzaSyC3XMug62lrEQgHBwtrgR7So4D793p10F0"; // from .env
   const ai = new GoogleGenAI({ apiKey });
   
   const prompt = `
@@ -24,7 +24,7 @@ async function testLLM() {
   `;
   
   const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-2.5-flash-lite",
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       config: {
         responseMimeType: "application/json"

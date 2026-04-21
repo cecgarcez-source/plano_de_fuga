@@ -90,7 +90,7 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-2.0-flash"; // Strong reasoning capacity to adhere strictly to Google Places context
+  const modelId = "gemini-2.5-flash-lite"; // Must use lite because 2.0-flash diurnal quota reached max limit
 
   if (!ai) throw new Error("AI client not initialized");
 
