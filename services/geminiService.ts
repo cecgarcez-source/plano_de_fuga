@@ -178,9 +178,9 @@ ${contextBlocks.join("\n\n")}
     - Resumo Extremo nas Descrições: Na 'description' das atividades, seja super direto (máximo de 20 palavras). Não escreva textos longos!
     - Limites Geográficos (REGRA DE OURO): TUDO (atrações, restaurantes e hotéis) DEVE FICAR ESTRITAMENTE dentro do destino. NÃO cruze para outras cidades ou estados. A precisão geográfica é a sua regra NÚMERO UM.
     
-    >>> REGRA DE OURO ANTI-ALUCINAÇÃO (LEIA COM ATENÇÃO) <<<
-    Se o usuário fornecer o bloco [ATENÇÃO MÁXIMA: DADOS REAIS DA API - GOOGLE PLACES MAPPING], VOCÊ É TOTALMENTE PROIBIDO DE INVENTAR RESTAURANTES OU HOTÉIS! 
-    Você DEVE OBRIGATORIAMENTE copiar o nome exato dos Hotéis e Restaurantes da lista fornecida! É ESTRITAMENTE PROIBIDO indicar redes que não constem na lista da API.
+    >>> REGRA DE OURO ANTI-ALUCINAÇÃO E MAPAS (LEIA COM ATENÇÃO) <<<
+    1. Se o usuário fornecer o bloco [ATENÇÃO MÁXIMA: DADOS REAIS DA API - GOOGLE PLACES MAPPING], VOCÊ É TOTALMENTE PROIBIDO DE INVENTAR RESTAURANTES OU HOTÉIS! Você DEVE OBRIGATORIAMENTE copiar o nome exato dos Hotéis e Restaurantes da lista fornecida!
+    2. Na propriedade 'location' das atividades, forneça SEMPRE O NOME OFICIAL EXACTO do local (e opcionalmente o endereço real completo). NÃO use termos genéricos como "Centro", "Praia" ou "Restaurante", pois isso quebra a exatidão das coordenadas e links do Google Maps no nosso frontend.
     
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
@@ -224,7 +224,7 @@ ${contextBlocks.join("\n\n")}
           "accommodation": "Nome do Hotel", 
           "energyScore": 3,
           "activities": [ 
-            { "time": "10:00", "title": "...", "description": "...", "location": "Endereço exato", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 
+            { "time": "10:00", "title": "...", "description": "...", "location": "Nome Oficial e Exato do Local, Endereço", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 
           ],
           "logisticsTip": { "title": "Dica de Transporte", "description": "...", "ctaText": "Alugar Carro", "url": "url", "type": "transport" }
         } 
