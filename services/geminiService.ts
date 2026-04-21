@@ -90,7 +90,7 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-2.5-flash-lite"; // Reverted to lite due to 503 capacity issues on flash
+  const modelId = "gemini-2.0-flash"; // Strong reasoning capacity to adhere strictly to Google Places context
 
   if (!ai) throw new Error("AI client not initialized");
 
@@ -150,13 +150,13 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       let contextBlocks = [];
       
       if (hotels && hotels.results?.length > 0) {
-        contextBlocks.push(`[HOTÉIS REAIS]\n` + hotels.results.map((p:any) => `- ${p.name} | Endereço: ${p.address}`).join("\n"));
+        contextBlocks.push(`[HOTÉIS REAIS VÁLIDOS]\n` + hotels.results.map((p:any) => `- ${p.name} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address}`).join("\n"));
       }
       if (restaurants && restaurants.results?.length > 0) {
-        contextBlocks.push(`[RESTAURANTES REAIS]\n` + restaurants.results.map((p:any) => `- ${p.name} | Endereço: ${p.address}`).join("\n"));
+        contextBlocks.push(`[RESTAURANTES REAIS VÁLIDOS]\n` + restaurants.results.map((p:any) => `- ${p.name} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address}`).join("\n"));
       }
       if (attractions && attractions.results?.length > 0) {
-        contextBlocks.push(`[ATRAÇÕES E PASSEIOS REAIS]\n` + attractions.results.map((p:any) => `- ${p.name} | Endereço: ${p.address}`).join("\n"));
+        contextBlocks.push(`[ATRAÇÕES/PASSEIOS REAIS VÁLIDOS]\n` + attractions.results.map((p:any) => `- ${p.name} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address}`).join("\n"));
       }
 
       if (contextBlocks.length > 0) {
