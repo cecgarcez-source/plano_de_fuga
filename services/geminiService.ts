@@ -160,10 +160,6 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       }
 
       if (contextBlocks.length > 0) {
-        realPlacesContext = `
-        [CONTEXTO DE DADOS REAIS - GOOGLE PLACES API]
-        Sua memória para cidades menores costuma falhar. PORTANTO, VOCÊ DEVE OBRIGATORIAMENTE PRIORIZAR OS LOCAIS ABAIXO (OBTIDOS DIRETAMENTE DO GOOGLE MAPS EM TEMPO REAL) PARA MONTAR O ROTEIRO DE ${preferences.destination}:
-        
         realPlacesContext = `[DADOS REAIS DA API - GOOGLE PLACES]\n${contextBlocks.join("\n\n")}`;
       }
     } catch (e) {
