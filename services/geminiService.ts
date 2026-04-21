@@ -140,13 +140,13 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
   if (!preferences.isSurpriseDestination) {
     try {
       // Pré-busca real de hotéis para impedir alucinações (como solicitado no Plano de Ação)
-      const placesResult = await searchGooglePlaces("hotéis de excelência", preferences.destination);
+      const placesResult = await searchGooglePlaces("melhores hotéis", preferences.destination);
       if (placesResult && placesResult.results && placesResult.results.length > 0) {
         realPlacesContext = `
         [CONTEXTO DE DADOS REAIS - GOOGLE PLACES]
-        Para HOTEIS E ACOMODAÇÕES, você DEVE priorizar estas opções reais consultadas diretamente do Google e que TÊM NOTA ALTA comprovada:
-        ${placesResult.results.map((p: any) => `- Hotel: ${p.name} | Nota: ${p.rating} ⭐ (${p.reviews} avaliações) | Endereço formatado: ${p.address}`).join('\n        ')}
-        REQUISITO CRÍTICO DE LOCALIZAÇÃO OBRIGATÓRIA: Analise o Endereço formatado acima. O hotel sugerido M-A-N-D-A-T-O-R-I-A-M-E-N-T-E deve estar localizado EXATAMENTE em ou extremamente próximo a ${preferences.destination}. Se o endereço for de um município diferente e muito distante do destino final da viagem, REJEITE o hotel e procure/sugira um genuinamente localizado em ${preferences.destination}. Não envie os viajantes para longe do destino escolhido.
+        Para HOTEIS E ACOMODAÇÕES, você DEVE selecionar UMA destas opções reais consultadas diretamente do Google:
+        ${placesResult.results.map((p: any) => `- Hotel: ${p.name} | Nota: ${p.rating} ⭐ (${p.reviews} avaliações) | Município/Endereço: ${p.address}`).join('\n        ')}
+        REQUISITO CRÍTICO DE LOCALIZAÇÃO OBRIGATÓRIA: O hotel sugerido M-A-N-D-A-T-O-R-I-A-M-E-N-T-E deve ser no município de ${preferences.destination}. Sob NENHUMA hipótese sugira um hotel de outra cidade, estado ou país. A localização correta é infinitamente mais importante do que ter uma nota alta.
         `;
       }
     } catch (e) {
@@ -173,8 +173,8 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - Duração Exata (CRÍTICO): Gere EXATAMENTE ${preferences.duration} objetos de dia no array 'days', numerados de 1 até ${preferences.duration}. Não encerre o roteiro antes do final do plano!
     - Volume Limitado (CRÍTICO PARA NÃO CORTAR O JSON): Para cada dia, gere NO MÁXIMO 3 a 4 atividades essenciais (ex: 1 manhã, 1 tarde, 1 noite). NUNCA gere mais que 4 atividades por dia.
     - Resumo Extremo nas Descrições: Na 'description' das atividades, seja super direto (máximo de 20 palavras). Não escreva textos longos!
-    - Limites Geográficos: TODAS as atrações devem ficar ESTRITAMENTE dentro de ${preferences.destination}. NÃO cruze longas distâncias no mesmo dia.
-    - Qualidade Exigida: Priorize apenas locais altamente avaliados (acima de 4.5 estrelas).
+    - Limites Geográficos (CRÍTICO): TUDO (atrações, restaurantes e hotéis) DEVE FICAR ESTRITAMENTE dentro de ${preferences.destination}. NÃO cruze para outras cidades ou estados. A precisão geográfica é a sua regra NÚMERO UM.
+    - Qualidade Exigida: Priorize locais bem avaliados, mas NUNCA quebre a regra de localização para sugerir algo melhor em outra cidade.
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.

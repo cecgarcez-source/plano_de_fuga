@@ -31,7 +31,6 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
 
           {/* Logo / Brand - Doubled Size */}
           <div className="relative group cursor-default -mt-12 md:mt-0">
-            <div className="absolute -inset-8 bg-gradient-to-r from-amber-400/20 to-orange-500/20 rounded-full blur-2xl opacity-60 group-hover:opacity-80 transition duration-500"></div>
             <div className="relative transform hover:scale-105 transition-transform duration-500">
               <img
                 src="/logo.png"
@@ -41,19 +40,19 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             </div>
           </div>
 
-          {/* Headlines - Reduced Size and Negative Margin */}
-          <div className="-mt-8 space-y-2 max-w-2xl bg-white/20 backdrop-blur-md p-4 rounded-3xl shadow-sm">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-gray-900 leading-tight uppercase font-serif">
+          {/* Headlines - Background removed for full image transparency, text shadow added */}
+          <div className="-mt-8 space-y-2 max-w-2xl p-4 drop-shadow-lg">
+            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight uppercase font-serif drop-shadow-md">
               Missão Férias: <br />
               <span
                 onClick={onStart}
-                className="cursor-pointer text-transparent bg-clip-text bg-gradient-to-r from-amber-700 to-orange-700 hover:from-amber-600 hover:to-orange-600 underline decoration-amber-500/30 hover:decoration-amber-500/60 transition-all font-black tracking-widest"
+                className="cursor-pointer text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 underline decoration-amber-400/50 hover:decoration-amber-400/80 transition-all font-black tracking-widest"
               >
                 ATIVADA.
               </span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-800 font-medium leading-relaxed mt-2">
-              Sua Agência de Viagens <span className="font-bold text-amber-900 uppercase">Secreta</span> com IA. Planeje seu roteiro perfeito, descubra destinos e experiências personalizadas em segundos.
+            <p className="text-lg md:text-xl text-stone-100 font-medium leading-relaxed mt-2 drop-shadow-md">
+              Sua Agência de Viagens <span className="font-bold text-amber-400 uppercase">Secreta</span> com IA. Planeje seu roteiro perfeito, descubra destinos e experiências personalizadas em segundos.
             </p>
           </div>
 
