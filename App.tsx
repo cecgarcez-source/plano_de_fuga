@@ -253,9 +253,17 @@ const App: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       const msg = err instanceof Error ? err.message : String(err);
-      // Temporário: ignorando todos os filtros e mostrando apenas o erro real
-      setError(`Erro real capturado: ${msg}`);
       
+      let errorMessage = "Ocorreu um erro inesperado ao gerar seu plano. Tente novamente.";
+      if (msg.includes("503") || msg.includes("429") || msg.includes("high demand") || msg.includes("quota") || msg.includes("UNAVAILABLE")) {
+        errorMessage = "A inteligência artificial do Google está enfrentando uma demanda altíssima em todo o mundo neste exato momento. Por favor, aguarde de 1 a 2 minutos e clique em gerar novamente! ⏳ (Alta Demanda)";
+      } else if (msg.includes("404") || msg.includes("NOT_FOUND")) {
+        errorMessage = "Erro de conexão com o modelo de IA. Nossos engenheiros já estão atualizando o sistema. Tente novamente em breve.";
+      } else {
+        errorMessage = msg; // Mostra a mensagem crua para outros erros, se não for JSON feio
+      }
+
+      setError(errorMessage);
       setStep(AppStep.PROFILES);
     }
   };

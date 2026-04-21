@@ -263,9 +263,8 @@ ${contextBlocks.join("\n\n")}
     let lastError = null;
     // Fallback progression with robust retries per model for 503 High Demand
     const models = [
-      "gemini-1.5-flash", 
       "gemini-2.0-flash",
-      "gemini-1.5-pro"
+      "gemini-1.5-flash"
     ];
 
     for (const modelId of models) {
