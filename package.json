@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/genai": "^1.38.0",
     "@supabase/supabase-js": "^2.93.2",
+    "dotenv": "^17.4.2",
     "html2canvas": "^1.4.1",
     "jspdf": "2.5.1",
     "pigeon-maps": "^0.21.3",
