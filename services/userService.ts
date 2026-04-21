@@ -63,50 +63,71 @@ export const userService = {
     },
 
     async incrementTripCount(userId: string): Promise<void> {
-        const { data } = await supabase
-            .from('user_profiles')
-            .select('total_trips_created')
-            .eq('id', userId)
-            .single();
+        try {
+            const { data, error } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('id', userId)
+                .maybeSingle();
 
-        if (data) {
-            await supabase.from('user_profiles').update({
-                total_trips_created: (data.total_trips_created || 0) + 1
-            }).eq('id', userId);
+            if (!error && data) {
+                await supabase.from('user_profiles').update({
+                    total_trips_created: (data.total_trips_created || 0) + 1
+                }).eq('id', userId);
+            }
+        } catch (err) {
+            console.error("Non-critical error incrementing trips:", err);
         }
     },
 
     async checkUsageAvailability(userId: string): Promise<{ allowed: boolean; reason?: string; credits?: number }> {
-        const { data: profile } = await supabase
-            .from('user_profiles')
-            .select('plan_credits')
-            .eq('id', userId)
-            .single();
+        try {
+            const { data: profile, error } = await supabase
+                .from('user_profiles')
+                .select('plan_credits')
+                .eq('id', userId)
+                .maybeSingle();
 
-        // Se o usuário não tem a coluna ou é nulo, consideramos que ele tem 3 de brinde (caso a DB não tenha setado o default)
-        const credits = (profile?.plan_credits !== undefined && profile?.plan_credits !== null) ? profile.plan_credits : 3;
+            if (error) {
+                console.error("Error reading credits:", error);
+                // Assume 3 credits if database is misconfigured so they don't get blocked completely
+                return { allowed: true, credits: 3 };
+            }
 
-        if (credits > 0) {
-            return { allowed: true, credits };
+            const credits = (profile?.plan_credits !== undefined && profile?.plan_credits !== null) ? profile.plan_credits : 3;
+
+            if (credits > 0) {
+                return { allowed: true, credits };
+            }
+
+            return { allowed: false, reason: "no_credits" };
+        } catch (err) {
+             return { allowed: true, credits: 3 };
         }
-
-        return { allowed: false, reason: "no_credits" };
     },
 
     async consumeCredit(userId: string): Promise<void> {
-        // Lê os créditos atuais
-        const { data: profile } = await supabase
-            .from('user_profiles')
-            .select('plan_credits')
-            .eq('id', userId)
-            .single();
+        try {
+            const { data: profile, error } = await supabase
+                .from('user_profiles')
+                .select('*')
+                .eq('id', userId)
+                .maybeSingle();
+                
+            if (error) {
+                console.error("Error fetching credits to consume:", error);
+                return;
+            }
+
+            const currentCredits = (profile?.plan_credits !== undefined && profile?.plan_credits !== null) ? profile.plan_credits : 3;
             
-        const currentCredits = (profile?.plan_credits !== undefined && profile?.plan_credits !== null) ? profile.plan_credits : 3;
-        
-        if (currentCredits > 0) {
-            await supabase.from('user_profiles').update({
-                plan_credits: currentCredits - 1
-            }).eq('id', userId);
+            if (currentCredits > 0) {
+                await supabase.from('user_profiles').update({
+                    plan_credits: currentCredits - 1
+                }).eq('id', userId);
+            }
+        } catch (err) {
+            console.error("Failed to consume credit:", err);
         }
     },
 
