@@ -262,28 +262,53 @@ ${contextBlocks.join("\n\n")}
     let responseText = null;
     let lastError = null;
     
-    // Fallback progression: Try stable models first to avoid long exponential backoff retries from 503 High Demand on 2.5 models.
-    const models = ["gemini-flash-latest", "gemini-2.5-flash", "gemini-pro-latest"];
+    // Fallback progression with robust retries per model for 503 High Demand
+    const models = [
+      "gemini-1.5-flash", 
+      "gemini-2.5-flash",
+      "gemini-1.5-pro",
+      "gemini-1.5-flash-8b"
+    ];
 
     for (const modelId of models) {
-      try {
-        console.log(`Tentando gerar roteiro com o modelo: ${modelId}...`);
-        let response = await ai.models.generateContent({
-          model: modelId,
-          contents,
-          // @ts-ignore
-          config: requestConfig,
-        });
+      let attempts = 0;
+      let success = false;
 
-        if (response.text) {
-          responseText = response.text;
-          console.log(`Sucesso com o modelo: ${modelId}`);
-          break; // Sucesso, sai do loop
+      while (attempts < 2 && !success) {
+        attempts++;
+        try {
+          console.log(`Tentando gerar roteiro com o modelo: ${modelId} (Tentativa ${attempts})...`);
+          let response = await ai.models.generateContent({
+            model: modelId,
+            contents,
+            // @ts-ignore
+            config: requestConfig,
+          });
+
+          if (response.text) {
+            responseText = response.text;
+            console.log(`Sucesso com o modelo: ${modelId}`);
+            success = true;
+            break; 
+          }
+        } catch (err: any) {
+          console.warn(`Falha no modelo ${modelId} (Tent. ${attempts}):`, err.message || err);
+          lastError = err;
+          
+          const errMsg = String(err.message || err).toLowerCase();
+          const isRetryable = errMsg.includes("503") || errMsg.includes("429") || errMsg.includes("high demand") || errMsg.includes("quota") || errMsg.includes("unavailable");
+          
+          if (isRetryable && attempts < 2) {
+            console.log(`Ocupado/503. Aguardando 5 segundos antes de re-tentar o modelo...`);
+            await new Promise(r => setTimeout(r, 5000));
+          } else {
+             break; // Erro fatal ou limite de tentativas excedido, parte pro próximo modelo
+          }
         }
-      } catch (err: any) {
-        console.warn(`Falha no modelo ${modelId}:`, err.message);
-        lastError = err;
-        // Continua para o próximo modelo no array
+      }
+      
+      if (responseText) {
+        break; // Sai do loop de modelos se teve sucesso
       }
     }
 
