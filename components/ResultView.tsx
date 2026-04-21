@@ -1075,7 +1075,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
               const date = preferences.startDate ? getTripDate(preferences.startDate, day.day - 1) : null;
               const isExpanded = true; 
               const isPremium = user?.subscriptionTier === 'premium';
-              const isBlurred = !isPremium && day.day > 1 && !isExportingPdf;
+              const isBlurred = false; // Bloqueio removido (agora controlado por créditos em vez de premium view block)
               const mapUrl = getGoogleMapUrl(day);
 
               const dayCardClass = isExportingPdf

@@ -181,7 +181,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     1. **MarketingTip (Logística):** Sugira hotéis ou aluguel de carro com call-to-action cativante. Direcione para links reais do Booking/TripAdvisor.
     2. **PremiumTips (Curadoria):** Sugira guias pagos ou serviços essenciais.
 
-    3. **HotelSuggestions**: Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link'. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel. Em caso de não localização do link exato, informe obrigatoriamente um link para consulta no Google (ex: "https://www.google.com/search?q=nome+do+hotel+cidade").
+    3. **HotelSuggestions**: SEMPRE sugira APENAS HOTÉIS REAIS E EXISTENTES. É expressamente proibido inventar ou alucinar nomes de hotéis. Priorize redes hoteleiras internacionais famosas (ex: Ibis, Mercure, Novotel, Hilton) se não tiver certeza de locais boutique. Sempre forneça um link de busca ou reserva real e útil para o hotel sugerido no campo 'link'. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel. Em caso de não localização do link exato, informe obrigatoriamente um link para consulta no Google (ex: "https://www.google.com/search?q=nome+do+hotel+cidade").
 
     Retorne APENAS JSON, estritamente no seguinte formato:
     {
