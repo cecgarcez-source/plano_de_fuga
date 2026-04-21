@@ -45,8 +45,9 @@ export const getCityCoordinates = async (cityName: string): Promise<{ lat: numbe
   }
 };
 
-const searchGooglePlaces = async (query: string, location: string): Promise<any> => {
+export const searchGooglePlaces = async (query: string, location: string, limit: number = 5): Promise<any> => {
   const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+  
   if (!apiKey) {
     console.warn("VITE_GOOGLE_PLACES_API_KEY missing! Returning mock data for query:", query);
     return { error: "Google Places API key is not configured. Please proceed without finding exact real local places data, use your best knowledge instead." };
@@ -72,7 +73,7 @@ const searchGooglePlaces = async (query: string, location: string): Promise<any>
     }
     
     const data = await response.json();
-    const topPlaces = (data.places || []).slice(0, 5).map((p: any) => ({
+    const topPlaces = (data.places || []).slice(0, limit).map((p: any) => ({
       name: p.displayName?.text,
       address: p.formattedAddress,
       rating: p.rating,
@@ -139,14 +140,33 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
   let realPlacesContext = "";
   if (!preferences.isSurpriseDestination) {
     try {
-      // Pré-busca real de hotéis para impedir alucinações (como solicitado no Plano de Ação)
-      const placesResult = await searchGooglePlaces("melhores hotéis", preferences.destination);
-      if (placesResult && placesResult.results && placesResult.results.length > 0) {
+      // Fetch hotels, restaurants, and attractions in parallel from Google Places to ground the AI and prevent hallucinations
+      const [hotels, restaurants, attractions] = await Promise.all([
+        searchGooglePlaces("melhores hotéis", preferences.destination, 5),
+        searchGooglePlaces("restaurantes bem avaliados", preferences.destination, 8),
+        searchGooglePlaces("principais atrações turísticas", preferences.destination, 8)
+      ]);
+      
+      let contextBlocks = [];
+      
+      if (hotels && hotels.results?.length > 0) {
+        contextBlocks.push(`[HOTÉIS REAIS]\n` + hotels.results.map((p:any) => `- ${p.name} | Endereço: ${p.address}`).join("\n"));
+      }
+      if (restaurants && restaurants.results?.length > 0) {
+        contextBlocks.push(`[RESTAURANTES REAIS]\n` + restaurants.results.map((p:any) => `- ${p.name} | Endereço: ${p.address}`).join("\n"));
+      }
+      if (attractions && attractions.results?.length > 0) {
+        contextBlocks.push(`[ATRAÇÕES E PASSEIOS REAIS]\n` + attractions.results.map((p:any) => `- ${p.name} | Endereço: ${p.address}`).join("\n"));
+      }
+
+      if (contextBlocks.length > 0) {
         realPlacesContext = `
-        [CONTEXTO DE DADOS REAIS - GOOGLE PLACES]
-        Para HOTEIS E ACOMODAÇÕES, você DEVE selecionar UMA destas opções reais consultadas diretamente do Google:
-        ${placesResult.results.map((p: any) => `- Hotel: ${p.name} | Nota: ${p.rating} ⭐ (${p.reviews} avaliações) | Município/Endereço: ${p.address}`).join('\n        ')}
-        REQUISITO CRÍTICO DE LOCALIZAÇÃO OBRIGATÓRIA: O hotel sugerido M-A-N-D-A-T-O-R-I-A-M-E-N-T-E deve ser no município de ${preferences.destination}. Sob NENHUMA hipótese sugira um hotel de outra cidade, estado ou país. A localização correta é infinitamente mais importante do que ter uma nota alta.
+        [CONTEXTO DE DADOS REAIS - GOOGLE PLACES API]
+        Sua memória para cidades menores costuma falhar. PORTANTO, VOCÊ DEVE OBRIGATORIAMENTE PRIORIZAR OS LOCAIS ABAIXO (OBTIDOS DIRETAMENTE DO GOOGLE MAPS EM TEMPO REAL) PARA MONTAR O ROTEIRO DE ${preferences.destination}:
+        
+        ${contextBlocks.join("\n\n")}
+        
+        REQUISITO CRÍTICO DE LOCALIZAÇÃO OBRIGATÓRIA: Em absolutamente nenhuma hipótese sugira um hotel, restaurante ou atração turística de outro município ou distante. A precisão geográfica baseada na lista acima é a prioridade absoluta.
         `;
       }
     } catch (e) {
