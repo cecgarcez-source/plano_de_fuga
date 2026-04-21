@@ -159,7 +159,10 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       }
 
       if (contextBlocks.length > 0) {
-        realPlacesContext = `[DADOS REAIS DA API - GOOGLE PLACES]\n${contextBlocks.join("\n\n")}`;
+        realPlacesContext = `
+[ATENÇÃO MÁXIMA: DADOS REAIS DA API - GOOGLE PLACES MAPPING]
+${contextBlocks.join("\n\n")}
+[FIM DOS DADOS REAIS DA API]`;
       }
     } catch (e) {
       console.error("Falha ao buscar places reais:", e);
@@ -174,7 +177,11 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     - Volume Limitado (CRÍTICO PARA NÃO CORTAR O JSON): Para cada dia, gere NO MÁXIMO 3 a 4 atividades essenciais (ex: 1 manhã, 1 tarde, 1 noite). NUNCA gere mais que 4 atividades por dia.
     - Resumo Extremo nas Descrições: Na 'description' das atividades, seja super direto (máximo de 20 palavras). Não escreva textos longos!
     - Limites Geográficos (REGRA DE OURO): TUDO (atrações, restaurantes e hotéis) DEVE FICAR ESTRITAMENTE dentro do destino. NÃO cruze para outras cidades ou estados. A precisão geográfica é a sua regra NÚMERO UM.
-    - Se o usuário fornecer um [CONTEXTO DE DADOS REAIS - GOOGLE PLACES API], VOCÊ É OBRIGADO A USAR EXCLUSIVAMENTE OS LOCAIS DAQUELA LISTA PARA HOTÉIS E RESTAURANTES. NÃO CRIE LUGARES INEXISTENTES.
+    
+    >>> REGRA DE OURO ANTI-ALUCINAÇÃO (LEIA COM ATENÇÃO) <<<
+    Se o usuário fornecer o bloco [ATENÇÃO MÁXIMA: DADOS REAIS DA API - GOOGLE PLACES MAPPING], VOCÊ É TOTALMENTE PROIBIDO DE INVENTAR RESTAURANTES OU HOTÉIS! 
+    Você DEVE OBRIGATORIAMENTE copiar o nome exato dos Hotéis e Restaurantes da lista fornecida! É ESTRITAMENTE PROIBIDO indicar redes que não constem na lista da API.
+    
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
