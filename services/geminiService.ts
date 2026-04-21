@@ -90,7 +90,6 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
-  const modelId = "gemini-2.5-flash"; // Using 2.5-flash which is vastly superior to lite and shouldn't have the 2.0-flash blockade.
 
   if (!ai) throw new Error("AI client not initialized");
 
@@ -253,18 +252,39 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
     };
 
     let contents: any[] = [{ role: "user", parts: [{ text: userPrompt }] }];
-    let response = await ai.models.generateContent({
-      model: modelId,
-      contents,
-      // @ts-ignore
-      config: requestConfig,
-    });
+    let responseText = null;
+    let lastError = null;
+    
+    // Fallback progression: Try best/newest models first, fall back to ultra-stable 1.5-pro
+    const models = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
 
-    if (response.text) {
-      const cleanJson = response.text.replace(/```json\n?|```/g, '').trim();
+    for (const modelId of models) {
+      try {
+        console.log(`Tentando gerar roteiro com o modelo: ${modelId}...`);
+        let response = await ai.models.generateContent({
+          model: modelId,
+          contents,
+          // @ts-ignore
+          config: requestConfig,
+        });
+
+        if (response.text) {
+          responseText = response.text;
+          console.log(`Sucesso com o modelo: ${modelId}`);
+          break; // Sucesso, sai do loop
+        }
+      } catch (err: any) {
+        console.warn(`Falha no modelo ${modelId}:`, err.message);
+        lastError = err;
+        // Continua para o próximo modelo no array
+      }
+    }
+
+    if (responseText) {
+      const cleanJson = responseText.replace(/```json\n?|```/g, '').trim();
       return JSON.parse(cleanJson);
     } else {
-      throw new Error("Empty response from AI");
+      throw lastError || new Error("Todos os modelos falharam na tentativa de geração.");
     }
   } catch (error) {
     console.error("Gemini AI Error:", error);
