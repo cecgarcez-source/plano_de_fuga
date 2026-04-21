@@ -17,74 +17,60 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-0 md:justify-center md:pt-0 text-center px-4 overflow-hidden bg-center bg-cover bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.jpg')" }}>
-        {/* Ambient Overlay - Dark vintage to make text readable but let image shine */}
-        <div className="absolute inset-0 z-0 bg-stone-900/30 mix-blend-multiply"></div>
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-stone-100 to-transparent z-0"></div>
+      <section className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-end text-left px-6 pb-24 pt-32 overflow-hidden bg-center bg-cover bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.jpg')" }}>
+        {/* Sleek gradient overlays for readability while preserving the image's beauty */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-t from-gray-950 via-gray-900/50 to-transparent"></div>
+        <div className="absolute inset-0 z-0 bg-gradient-to-r from-gray-950/80 via-gray-900/40 to-transparent hidden md:block"></div>
         
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-0 pt-8">
-          {/* Badge */}
-          <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50/80 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-widest shadow-sm animate-fade-in-up backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
-            ACESSO RESTRITO: IA TOP SECRET
-          </div>
+        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-8 mt-auto">
+           <div className="max-w-2xl animate-fade-in-up">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-widest backdrop-blur-md mb-6 shadow-lg">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                ACESSO RESTRITO: IA TOP SECRET
+              </div>
 
-          {/* Logo / Brand - Doubled Size */}
-          <div className="relative group cursor-default -mt-12 md:mt-0">
-            <div className="relative transform hover:scale-105 transition-transform duration-500">
-              <img
-                src="/logo.png"
-                alt="Plano de Fuga Logo"
-                className="w-96 h-96 md:w-[32rem] md:h-[32rem] object-contain drop-shadow-2xl mix-blend-multiply"
-              />
-            </div>
-          </div>
+              {/* Headline */}
+              <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white leading-[1.05] uppercase font-serif drop-shadow-2xl mb-6">
+                Missão Férias: <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 drop-shadow-md">
+                  ATIVADA.
+                </span>
+              </h1>
+              
+              <p className="text-lg md:text-2xl text-gray-200 font-medium leading-relaxed mb-10 drop-shadow-md max-w-xl">
+                Sua Agência de Viagens <span className="font-bold text-amber-400 uppercase">Secreta</span> com IA. Planeje seu roteiro perfeito e descubra experiências exclusivas em segundos.
+              </p>
 
-          {/* Headlines - Background removed for full image transparency, text shadow added */}
-          <div className="-mt-8 space-y-2 max-w-2xl p-4 drop-shadow-lg">
-            <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white leading-tight uppercase font-serif drop-shadow-md">
-              Missão Férias: <br />
-              <span
-                onClick={onStart}
-                className="cursor-pointer text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 underline decoration-amber-400/50 hover:decoration-amber-400/80 transition-all font-black tracking-widest"
-              >
-                ATIVADA.
-              </span>
-            </h1>
-            <p className="text-lg md:text-xl text-stone-100 font-medium leading-relaxed mt-2 drop-shadow-md">
-              Sua Agência de Viagens <span className="font-bold text-amber-400 uppercase">Secreta</span> com IA. Planeje seu roteiro perfeito, descubra destinos e experiências personalizadas em segundos.
-            </p>
-          </div>
+              <div className="flex flex-col sm:flex-row gap-5">
+                <button
+                  onClick={onStart}
+                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-amber-700 rounded-xl hover:bg-amber-600 hover:shadow-[0_0_40px_rgba(217,119,6,0.5)] hover:-translate-y-1 overflow-hidden font-serif tracking-widest uppercase border border-amber-500/50 shadow-2xl"
+                >
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
+                  <span>INICIAR DOSSIÊ AGORA</span>
+                  <svg className="w-6 h-6 ml-3 -mr-1 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                </button>
+                <button
+                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="inline-flex items-center justify-center px-8 py-4 text-sm font-bold text-white transition-all duration-200 bg-black/40 backdrop-blur-md border border-white/20 rounded-xl hover:bg-black/60 hover:border-white/40 shadow-lg uppercase tracking-wider"
+                >
+                  INVESTIGAR RECURSOS
+                </button>
+              </div>
+           </div>
 
-          {/* CTA Buttons - Compact spacing */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center pt-2">
-            <button
-              onClick={onStart}
-              className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-amber-800 rounded-lg hover:bg-amber-700 hover:shadow-2xl hover:-translate-y-1 focus:outline-none border-b-4 border-amber-950 overflow-hidden shadow-xl uppercase tracking-wider font-serif"
-            >
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
-              <span>INICIAR DOSSIÊ AGORA</span>
-              <svg className="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-            </button>
-            <button
-              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-              className="inline-flex items-center justify-center px-8 py-3 text-sm font-bold text-gray-700 transition-all duration-200 bg-stone-100/80 backdrop-blur-md border border-stone-300 rounded-lg hover:bg-white hover:text-gray-900 hover:border-stone-400 focus:outline-none shadow-md uppercase tracking-wider"
-            >
-              INVESTIGAR RECURSOS
-            </button>
-          </div>
-
-          {/* Social Proof (Micro) */}
-          <div className="pt-4 flex items-center gap-4 text-sm text-gray-500">
-            <div className="flex -space-x-2">
-              {[1, 2, 3, 4].map(i => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500 overflow-hidden">
-                  <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i * 13}`} alt="User" />
-                </div>
-              ))}
-            </div>
-            <p>Junte-se a <span className="font-bold text-gray-800">+1.500</span> viajantes inteligentes.</p>
-          </div>
+           {/* Stats / Social Proof snippet */}
+           <div className="hidden md:flex flex-col items-end text-right text-white/90 animate-fade-in pb-4">
+              <div className="flex -space-x-3 mb-4 drop-shadow-md">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="w-12 h-12 rounded-full border-2 border-gray-800 bg-gray-200 flex items-center justify-center overflow-hidden shadow-xl">
+                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i * 13}`} alt="User" />
+                  </div>
+                ))}
+              </div>
+              <p className="font-bold text-base tracking-wide">+1.500 viajantes <br/><span className="text-amber-400 font-medium">já acionaram a agência</span></p>
+           </div>
         </div>
       </section>
 
