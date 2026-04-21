@@ -261,20 +261,19 @@ ${contextBlocks.join("\n\n")}
     let contents: any[] = [{ role: "user", parts: [{ text: userPrompt }] }];
     let responseText = null;
     let lastError = null;
-    
     // Fallback progression with robust retries per model for 503 High Demand
     const models = [
       "gemini-1.5-flash", 
-      "gemini-2.5-flash",
-      "gemini-1.5-pro",
-      "gemini-1.5-flash-8b"
+      "gemini-2.0-flash",
+      "gemini-1.5-pro"
     ];
 
     for (const modelId of models) {
       let attempts = 0;
       let success = false;
+      const maxAttempts = 3;
 
-      while (attempts < 2 && !success) {
+      while (attempts < maxAttempts && !success) {
         attempts++;
         try {
           console.log(`Tentando gerar roteiro com o modelo: ${modelId} (Tentativa ${attempts})...`);
@@ -293,16 +292,18 @@ ${contextBlocks.join("\n\n")}
           }
         } catch (err: any) {
           console.warn(`Falha no modelo ${modelId} (Tent. ${attempts}):`, err.message || err);
+          
+          // Se for o último modelo, salva o erro para reportar no final
           lastError = err;
           
           const errMsg = String(err.message || err).toLowerCase();
           const isRetryable = errMsg.includes("503") || errMsg.includes("429") || errMsg.includes("high demand") || errMsg.includes("quota") || errMsg.includes("unavailable");
           
-          if (isRetryable && attempts < 2) {
-            console.log(`Ocupado/503. Aguardando 5 segundos antes de re-tentar o modelo...`);
-            await new Promise(r => setTimeout(r, 5000));
+          if (isRetryable && attempts < maxAttempts) {
+            console.log(`Ocupado/503. Aguardando 6 segundos antes de re-tentar o modelo...`);
+            await new Promise(r => setTimeout(r, 6000));
           } else {
-             break; // Erro fatal ou limite de tentativas excedido, parte pro próximo modelo
+             break; // Erro fatal (tipo 404) ou limite de tentativas excedido, parte pro próximo modelo
           }
         }
       }
