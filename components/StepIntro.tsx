@@ -17,12 +17,12 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-0 md:justify-center md:pt-0 text-center px-4 overflow-hidden bg-stone-100">
-        {/* Ambient Background - Vintage Map Pattern */}
-        <div className="absolute inset-0 z-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/old-map.png')] mix-blend-multiply"></div>
+      <section className="relative min-h-[90vh] md:h-[90vh] flex flex-col items-center justify-start pt-0 md:justify-center md:pt-0 text-center px-4 overflow-hidden bg-center bg-cover bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.jpg')" }}>
+        {/* Ambient Overlay - Dark vintage to make text readable but let image shine */}
+        <div className="absolute inset-0 z-0 bg-stone-900/30 mix-blend-multiply"></div>
         <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-stone-100 to-transparent z-0"></div>
-
-        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-0">
+        
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center space-y-0 pt-8">
           {/* Badge */}
           <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50/80 border border-amber-200 text-amber-900 text-xs font-bold uppercase tracking-widest shadow-sm animate-fade-in-up backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>

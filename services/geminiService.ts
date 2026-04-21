@@ -146,7 +146,7 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
         [CONTEXTO DE DADOS REAIS - GOOGLE PLACES]
         Para HOTEIS E ACOMODAÇÕES, você DEVE priorizar estas opções reais consultadas diretamente do Google e que TÊM NOTA ALTA comprovada:
         ${placesResult.results.map((p: any) => `- Hotel: ${p.name} | Nota: ${p.rating} ⭐ (${p.reviews} avaliações) | Endereço formatado: ${p.address}`).join('\n        ')}
-        Ao gerar as 'hotelSuggestions', use esses dados que são 100% reais para provar qualidade ao usuário.
+        REQUISITO CRÍTICO DE LOCALIZAÇÃO OBRIGATÓRIA: Analise o Endereço formatado acima. O hotel sugerido M-A-N-D-A-T-O-R-I-A-M-E-N-T-E deve estar localizado EXATAMENTE em ou extremamente próximo a ${preferences.destination}. Se o endereço for de um município diferente e muito distante do destino final da viagem, REJEITE o hotel e procure/sugira um genuinamente localizado em ${preferences.destination}. Não envie os viajantes para longe do destino escolhido.
         `;
       }
     } catch (e) {
