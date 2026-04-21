@@ -253,15 +253,9 @@ const App: React.FC = () => {
     } catch (err: any) {
       console.error(err);
       const msg = err instanceof Error ? err.message : String(err);
+      // Temporário: ignorando todos os filtros e mostrando apenas o erro real
+      setError(`Erro real capturado: ${msg}`);
       
-      // Checa se é um erro comum de parsing (LLM cortou JSON)
-      if (msg.includes('JSON') || msg.includes('Unterminated') || msg.includes('Unexpected') || msg.includes('Ops! Ocorreu um erro')) {
-        setError('🤖 Nossa Inteligência Artificial se empolgou nos detalhes e a geração do roteiro foi interrompida antes do fim. Por favor, tente gerar novamente!');
-      } else if (msg.includes('429') || msg.includes('Resource exhausted') || msg.includes('RESOURCE_EXHAUSTED')) {
-        setError('⏳ O limite de uso da Inteligência Artificial foi atingido temporariamente (Muitos acessos simultâneos). Aguarde cerca de 1 minuto e tente gerar novamente. (Se persistir, verifique a cota da sua API Key do Gemini nas configurações do Google Cloud).');
-      } else {
-        setError(`Erro Técnico: ${msg}`);
-      }
       setStep(AppStep.PROFILES);
     }
   };
