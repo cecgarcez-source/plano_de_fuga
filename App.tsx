@@ -422,13 +422,13 @@ const App: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen font-sans selection:bg-teal-200 bg-cover bg-center bg-fixed bg-no-repeat relative"
-      style={{
+      className={`min-h-screen font-sans selection:bg-teal-200 bg-cover bg-center bg-fixed bg-no-repeat relative ${step === AppStep.INTRO ? 'bg-white' : ''}`}
+      style={step !== AppStep.INTRO ? {
         backgroundImage: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop')"
-      }}
+      } : {}}
     >
       {/* Overlay to ensure readability */}
-      <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>
+      {step !== AppStep.INTRO && <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>}
 
       <div className="relative z-10">
         {/* Navbar */}
@@ -499,7 +499,7 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <main className="pt-24 md:pt-40 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-[calc(100vh-4rem)]">
+        <main className={`flex flex-col items-center min-h-[calc(100vh-4rem)] ${step === AppStep.INTRO ? 'w-full' : 'pt-24 md:pt-40 px-4 md:px-8 max-w-7xl mx-auto'}`}>
 
           {error && (
             <div className={`w-full max-w-2xl px-6 py-4 rounded-xl relative mb-8 shadow-lg border ${error.includes('🤖') ? 'bg-amber-50 border-amber-300 text-amber-900' : 'bg-red-50 border-red-400 text-red-800'}`}>
