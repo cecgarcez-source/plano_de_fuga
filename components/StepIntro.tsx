@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Compass, Coins, Send, FileText, Search } from 'lucide-react';
 
 interface Props {
   onStart: () => void;
@@ -17,60 +18,114 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-[90vh] md:min-h-screen flex flex-col justify-end text-left px-6 pb-24 pt-32 overflow-hidden bg-center bg-cover bg-no-repeat" style={{ backgroundImage: "url('/hero-bg.jpg')" }}>
-        {/* Sleek gradient overlays for readability while preserving the image's beauty */}
-        <div className="absolute inset-0 z-0 bg-gradient-to-t from-gray-950 via-gray-900/50 to-transparent"></div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-r from-gray-950/80 via-gray-900/40 to-transparent hidden md:block"></div>
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-left pt-20 pb-20 overflow-hidden bg-gradient-to-b from-slate-900 via-[#0A1128] to-black">
+        {/* Cosmic Background & Stars */}
+        <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+        {/* Blurred World Map Placeholder via SVG Paths */}
+        <div className="absolute inset-0 z-0 opacity-15 blur-sm flex items-center justify-center pointer-events-none">
+          <svg viewBox="0 0 1000 500" className="w-[120%] max-w-none opacity-50 text-white" fill="currentColor">
+            <path d="M100,200 Q200,100 300,200 T500,200 T700,200 T900,200" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" className="opacity-20" />
+            <path d="M0,150 Q150,300 300,150 T600,150 T900,150" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" className="opacity-10" />
+          </svg>
+        </div>
         
-        <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-end justify-between gap-8 mt-auto">
-           <div className="max-w-2xl animate-fade-in-up">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-widest backdrop-blur-md mb-6 shadow-lg">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
-                ACESSO RESTRITO: IA TOP SECRET
-              </div>
+        {/* Dotted Lines Organic Curves */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <path d="M -100 300 C 200 400, 400 100, 700 200 S 1100 400, 1500 200" fill="transparent" stroke="rgba(255,255,255,0.1)" strokeWidth="2" strokeDasharray="6 6" />
+            <path d="M 1500 600 C 1200 500, 900 800, 600 700 S 200 500, -100 600" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 8" />
+          </svg>
+        </div>
 
-              {/* Headline */}
-              <h1 className="text-5xl md:text-7xl font-black tracking-tight text-white leading-[1.05] uppercase font-serif drop-shadow-2xl mb-6">
-                Missão Férias: <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 drop-shadow-md">
-                  ATIVADA.
-                </span>
-              </h1>
+        {/* Dedicated Navbar Floating */}
+        <nav className="absolute top-0 w-full flex justify-between items-center px-8 md:px-16 py-6 z-50">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-xl tracking-widest text-[#fdfbf7] uppercase">Plano de Fuga</span>
+          </div>
+          <div className="hidden md:flex gap-8 text-sm font-medium text-white/70">
+            <a href="#" className="hover:text-white transition-colors">Início</a>
+            <a href="#features" className="hover:text-white transition-colors">Destinos</a>
+            <a href="#how-it-works" className="hover:text-white transition-colors">Planos</a>
+            <a href="#" className="hover:text-white transition-colors">Sobre Nós</a>
+            <a href="#" className="hover:text-white transition-colors">Contato</a>
+          </div>
+          <div>
+            <button onClick={onStart} className="text-sm font-bold text-[#fdfbf7] border border-white/20 px-5 py-2 rounded-full hover:bg-white/10 transition-colors">
+              Acessar
+            </button>
+          </div>
+        </nav>
+
+        {/* Main Content Grid */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
+          
+          {/* Left Side: Floating Suitcase & Orbiting Elements */}
+          <div className="relative flex items-center justify-center h-[400px] md:h-[600px] w-full mt-10 md:mt-0">
+            <div className="relative z-20 animate-float w-full max-w-md">
+              <img src="/mala-flutuante.png" alt="Mala de Viagem Plano de Fuga" className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]" />
+            </div>
+            
+            {/* Orbiting Element 1: Documents */}
+            <div className="absolute top-1/2 left-1/2 -mt-6 -ml-6 animate-orbit z-10">
+              <div className="bg-sky-200/90 backdrop-blur-sm p-3 rounded-xl border border-sky-300 shadow-[0_0_15px_rgba(125,211,252,0.3)] text-sky-800 rotate-12 animate-float-delayed">
+                <FileText size={28} />
+              </div>
+            </div>
+
+            {/* Orbiting Element 2: Magnifying Glass */}
+            <div className="absolute top-1/2 left-1/2 -mt-6 -ml-6 animate-orbit z-30" style={{ animationDelay: '-10s' }}>
+              <div className="bg-[#cdb08a]/90 backdrop-blur-sm p-3 rounded-full border border-[#b2936a] shadow-[0_0_15px_rgba(205,176,138,0.3)] text-amber-900 -rotate-12 animate-float">
+                <Search size={28} />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side: Typography & CTA */}
+          <div className="flex flex-col justify-center animate-fade-in-up mt-8 md:mt-0">
+            <h1 className="text-5xl lg:text-7xl font-sans font-black text-[#fdfbf7] mb-6 leading-tight drop-shadow-lg tracking-tight">
+              Trace o Seu <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-orange-300 to-amber-500">Plano de Fuga</span> Agora
+            </h1>
+            
+            <p className="text-xl text-gray-300 mb-10 leading-relaxed max-w-lg font-light">
+              Descubra destinos remotos e experiências autênticas, planejados para você.
+            </p>
+
+            {/* Highlight Cards */}
+            <div className="flex flex-col gap-4 mb-10">
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center gap-4 w-max pr-8 shadow-xl animate-float" style={{ animationDelay: '0s' }}>
+                <div className="bg-[#b2936a]/20 p-2 rounded-lg text-[#cdb08a]">
+                  <Compass size={24} />
+                </div>
+                <span className="text-white font-medium">Roteiros Exclusivos</span>
+              </div>
               
-              <p className="text-lg md:text-2xl text-gray-200 font-medium leading-relaxed mb-10 drop-shadow-md max-w-xl">
-                Sua Agência de Viagens <span className="font-bold text-amber-400 uppercase">Secreta</span> com IA. Planeje seu roteiro perfeito e descubra experiências exclusivas em segundos.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-5">
-                <button
-                  onClick={onStart}
-                  className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-amber-700 rounded-xl hover:bg-amber-600 hover:shadow-[0_0_40px_rgba(217,119,6,0.5)] hover:-translate-y-1 overflow-hidden font-serif tracking-widest uppercase border border-amber-500/50 shadow-2xl"
-                >
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
-                  <span>INICIAR DOSSIÊ AGORA</span>
-                  <svg className="w-6 h-6 ml-3 -mr-1 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-                </button>
-                <button
-                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="inline-flex items-center justify-center px-8 py-4 text-sm font-bold text-white transition-all duration-200 bg-black/40 backdrop-blur-md border border-white/20 rounded-xl hover:bg-black/60 hover:border-white/40 shadow-lg uppercase tracking-wider"
-                >
-                  INVESTIGAR RECURSOS
-                </button>
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center gap-4 w-max pr-8 shadow-xl animate-float-delayed" style={{ animationDelay: '1s' }}>
+                <div className="bg-emerald-500/20 p-2 rounded-lg text-emerald-400">
+                  <Coins size={24} />
+                </div>
+                <span className="text-white font-medium">Custos Transparentes</span>
               </div>
-           </div>
-
-           {/* Stats / Social Proof snippet */}
-           <div className="hidden md:flex flex-col items-end text-right text-white/90 animate-fade-in pb-4">
-              <div className="flex -space-x-3 mb-4 drop-shadow-md">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="w-12 h-12 rounded-full border-2 border-gray-800 bg-gray-200 flex items-center justify-center overflow-hidden shadow-xl">
-                    <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i * 13}`} alt="User" />
-                  </div>
-                ))}
+              
+              <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex items-center gap-4 w-max pr-8 shadow-xl animate-float" style={{ animationDelay: '2s' }}>
+                <div className="bg-sky-500/20 p-2 rounded-lg text-sky-400">
+                  <Send size={24} />
+                </div>
+                <span className="text-white font-medium">Suporte 24/7</span>
               </div>
-              <p className="font-bold text-base tracking-wide">+1.500 viajantes <br/><span className="text-amber-400 font-medium">já acionaram a agência</span></p>
-           </div>
+            </div>
+
+            {/* CTA */}
+            <div>
+              <button
+                onClick={onStart}
+                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 bg-gradient-to-r from-[#8a5d3b] to-[#6a4325] rounded-xl hover:scale-105 overflow-hidden shadow-[0_0_30px_rgba(138,93,59,0.4)] hover:shadow-[0_0_50px_rgba(138,93,59,0.6)] tracking-wide border border-[#b2936a]/30"
+              >
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer"></span>
+                <span>Começar Minha Jornada</span>
+              </button>
+            </div>
+
+          </div>
         </div>
       </section>
 
