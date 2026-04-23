@@ -18,19 +18,22 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
     <div className="flex flex-col w-full min-h-screen animate-fade-in font-sans text-gray-800">
 
       {/* --- HERO SECTION --- */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center text-left pt-20 pb-20 overflow-hidden bg-gradient-to-b from-slate-900 via-[#0A1128] to-black">
-        {/* Cosmic Background & Stars */}
-        <div className="absolute inset-0 z-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
-        {/* Blurred World Map Placeholder via SVG Paths */}
-        <div className="absolute inset-0 z-0 opacity-15 blur-sm flex items-center justify-center pointer-events-none">
-          <svg viewBox="0 0 1000 500" className="w-[120%] max-w-none opacity-50 text-white" fill="currentColor">
-            <path d="M100,200 Q200,100 300,200 T500,200 T700,200 T900,200" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="5,5" className="opacity-20" />
-            <path d="M0,150 Q150,300 300,150 T600,150 T900,150" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" className="opacity-10" />
-          </svg>
-        </div>
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-left pt-20 pb-20 overflow-hidden">
+        {/* Blurred Image Background */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: "url('/machu-picchu-bg.jpg.png')",
+            filter: "blur(12px)",
+            transform: "scale(1.1)" // Previne bordas brancas do desfoque
+          }}
+        ></div>
+        
+        {/* Overlay for Readability */}
+        <div className="absolute inset-0 z-0 bg-black/40 bg-gradient-to-b from-slate-900/50 via-[#0A1128]/70 to-black/95"></div>
         
         {/* Dotted Lines Organic Curves */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden hidden md:block">
           <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <path d="M -100 300 C 200 400, 400 100, 700 200 S 1100 400, 1500 200" fill="transparent" stroke="rgba(255,255,255,0.1)" strokeWidth="2" strokeDasharray="6 6" />
             <path d="M 1500 600 C 1200 500, 900 800, 600 700 S 200 500, -100 600" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 8" />
