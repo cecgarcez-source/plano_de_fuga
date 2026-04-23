@@ -137,7 +137,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         {/* Background Praia */}
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/praia.jpg')" }}
+          style={{ backgroundImage: "url('/praia.jpg.png')" }}
         ></div>
         {/* Overlay para legibilidade */}
         <div className="absolute inset-0 z-0 bg-stone-100/40 backdrop-blur-sm"></div>
