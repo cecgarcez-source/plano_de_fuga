@@ -63,8 +63,8 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
           
           {/* Left Side: Floating Suitcase & Orbiting Elements */}
-          <div className="relative flex items-center justify-center h-[280px] md:h-[600px] w-full mt-4 mb-0 md:mt-0">
-            <div className="relative z-20 animate-float w-full max-w-md">
+          <div className="relative flex items-center justify-center h-[220px] md:h-[600px] w-full mt-2 mb-0 md:mt-0">
+            <div className="relative z-20 animate-float w-full max-w-md md:scale-[1.2] origin-center">
               <img src="/mala-flutuante.png" alt="Mala de Viagem Plano de Fuga" className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]" />
             </div>
             
