@@ -24,13 +24,13 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: "url('/machu-picchu-bg.jpg.png')",
-            filter: "blur(10px)",
+            filter: "blur(8px)",
             transform: "scale(1.1)" // Previne bordas brancas do desfoque
           }}
         ></div>
         
         {/* Overlay for Readability */}
-        <div className="absolute inset-0 z-0 bg-black/20 bg-gradient-to-b from-slate-900/30 via-[#0A1128]/50 to-black/80"></div>
+        <div className="absolute inset-0 z-0 bg-black/10 bg-gradient-to-b from-slate-900/20 via-[#0A1128]/40 to-black/70"></div>
         
         {/* Dotted Lines Organic Curves */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden hidden md:block">
@@ -43,9 +43,9 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         {/* Dedicated Navbar Floating */}
         <nav className="absolute top-0 w-full flex justify-between items-center px-8 md:px-16 py-6 z-50">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Logo Plano de Fuga" className="h-10 md:h-12 w-auto object-contain brightness-0 invert" />
+            <img src="/logo.png" alt="Logo Plano de Fuga" className="h-16 md:h-20 w-auto object-contain" />
           </div>
-          <div className="hidden md:flex gap-8 text-sm font-medium text-white/70">
+          <div className="hidden md:flex gap-8 text-base font-bold text-white/90">
             <a href="#" className="hover:text-white transition-colors">Início</a>
             <a href="#features" className="hover:text-white transition-colors">Destinos</a>
             <a href="#how-it-works" className="hover:text-white transition-colors">Planos</a>
@@ -53,7 +53,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
             <a href="#" className="hover:text-white transition-colors">Contato</a>
           </div>
           <div>
-            <button onClick={onStart} className="text-sm font-bold text-[#fdfbf7] border border-white/20 px-5 py-2 rounded-full hover:bg-white/10 transition-colors">
+            <button onClick={onStart} className="text-base font-bold text-[#fdfbf7] border-2 border-white/30 px-6 py-2.5 rounded-full hover:bg-white/20 transition-colors">
               Acessar
             </button>
           </div>
@@ -63,7 +63,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
           
           {/* Left Side: Floating Suitcase & Orbiting Elements */}
-          <div className="relative flex items-center justify-center h-[280px] md:h-[600px] w-full mt-4 mb-4 md:mt-0 md:mb-0">
+          <div className="relative flex items-center justify-center h-[280px] md:h-[600px] w-full mt-4 mb-0 md:mt-0">
             <div className="relative z-20 animate-float w-full max-w-md">
               <img src="/mala-flutuante.png" alt="Mala de Viagem Plano de Fuga" className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]" />
             </div>
@@ -140,57 +140,57 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           style={{ backgroundImage: "url('/praia.jpg')" }}
         ></div>
         {/* Overlay para legibilidade */}
-        <div className="absolute inset-0 z-0 bg-stone-100/85 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0 z-0 bg-stone-100/40 backdrop-blur-sm"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-serif uppercase">Mais que planejamento. Inteligência de Rota.</h2>
-            <p className="text-xl text-gray-500 max-w-2xl mx-auto">Descubra as vantagens exclusivas de acionar sua Agência Secreta com IA para estruturar sua próxima missão.</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-serif uppercase drop-shadow-sm">Mais que planejamento. Inteligência de Rota.</h2>
+            <p className="text-xl text-gray-900 font-medium max-w-2xl mx-auto drop-shadow-sm">Descubra as vantagens exclusivas de acionar sua Agência Secreta com IA para estruturar sua próxima missão.</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-amber-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🧭</div>
+            <div className="p-8 rounded-3xl bg-white/70 backdrop-blur-md border border-white/50 hover:border-amber-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-amber-100/90 text-amber-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-sm">🧭</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2 uppercase font-serif">Dossiês em Segundos</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">De zero ao dossiê completo instantaneamente. Nossa IA analisa milhares de pontos turísticos para mapear o cenário ideal sem deixar rastros.</p>
+              <p className="text-gray-800 text-sm leading-relaxed font-medium">De zero ao dossiê completo instantaneamente. Nossa IA analisa milhares de pontos turísticos para mapear o cenário ideal sem deixar rastros.</p>
             </div>
 
             {/* Feature 2 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-orange-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🎯</div>
+            <div className="p-8 rounded-3xl bg-white/70 backdrop-blur-md border border-white/50 hover:border-orange-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-orange-100/90 text-orange-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-sm">🎯</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2 uppercase font-serif">Missões Personalizadas</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">Orçamento, estilo operante e ritmo adaptados ao seu perfil confidencial. De viajante low-profile a missões de extremo luxo.</p>
+              <p className="text-gray-800 text-sm leading-relaxed font-medium">Orçamento, estilo operante e ritmo adaptados ao seu perfil confidencial. De viajante low-profile a missões de extremo luxo.</p>
             </div>
 
             {/* Feature 3 */}
-            <div className="p-8 rounded-3xl bg-teal-50 border-2 border-teal-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Geofencing & Qualidade</div>
-              <div className="w-14 h-14 rounded-2xl bg-teal-200 text-teal-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">⭐</div>
+            <div className="p-8 rounded-3xl bg-teal-50/80 backdrop-blur-md border-2 border-teal-500/50 hover:border-teal-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-teal-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg shadow-sm">Geofencing & Qualidade</div>
+              <div className="w-14 h-14 rounded-2xl bg-teal-200/90 text-teal-700 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-sm">⭐</div>
               <h3 className="text-xl font-bold text-teal-900 mb-2">Curadoria de Alta Qualidade</h3>
-              <p className="text-teal-800 text-sm leading-relaxed">Garantimos que você só visitará os melhores restaurantes e atrações avaliados com notas acima de 4.5 estrelas pelos viajantes.</p>
+              <p className="text-teal-900 text-sm leading-relaxed font-medium">Garantimos que você só visitará os melhores restaurantes e atrações avaliados com notas acima de 4.5 estrelas pelos viajantes.</p>
             </div>
 
             {/* Feature 4 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-orange-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🌤️</div>
+            <div className="p-8 rounded-3xl bg-white/70 backdrop-blur-md border border-white/50 hover:border-orange-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-orange-100/90 text-orange-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-sm">🌤️</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Inteligência Climática</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">Tenha uma análise detalhada da melhor época para viajar com base na sazonalidade escolhida para não ter férias estragadas pela chuva.</p>
+              <p className="text-gray-800 text-sm leading-relaxed font-medium">Tenha uma análise detalhada da melhor época para viajar com base na sazonalidade escolhida para não ter férias estragadas pela chuva.</p>
             </div>
 
             {/* Feature 5 */}
-            <div className="p-8 rounded-3xl bg-gray-50 border border-gray-100 hover:border-purple-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
-              <div className="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform">🗺️</div>
+            <div className="p-8 rounded-3xl bg-white/70 backdrop-blur-md border border-white/50 hover:border-purple-400 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group">
+              <div className="w-14 h-14 rounded-2xl bg-purple-100/90 text-purple-600 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-sm">🗺️</div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Dashboard Geográfico</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">Mapeie os locais que já conquistou no mundo e organize todos os seus futuros planos de fuga de um só lugar.</p>
+              <p className="text-gray-800 text-sm leading-relaxed font-medium">Mapeie os locais que já conquistou no mundo e organize todos os seus futuros planos de fuga de um só lugar.</p>
             </div>
 
             {/* Feature 6 */}
-            <div className="p-8 rounded-3xl bg-gray-900 text-white border border-gray-700 hover:border-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg">Liberado</div>
-              <div className="w-14 h-14 rounded-2xl bg-gray-800 text-amber-400 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform text-shadow">📱</div>
+            <div className="p-8 rounded-3xl bg-gray-900/85 backdrop-blur-md text-white border border-gray-700/50 hover:border-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-amber-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded-bl-lg shadow-sm">Liberado</div>
+              <div className="w-14 h-14 rounded-2xl bg-gray-800/90 text-amber-400 flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform shadow-sm">📱</div>
               <h3 className="text-xl font-bold mb-2">Dossiês em PDF Otimizados</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">Exporte seus roteiros para formato Dossiê e Excel desde o primeiro uso. Cabe perfeito na tela do celular para leitura offline.</p>
+              <p className="text-gray-200 text-sm leading-relaxed font-medium">Exporte seus roteiros para formato Dossiê e Excel desde o primeiro uso. Cabe perfeito na tela do celular para leitura offline.</p>
             </div>
           </div>
         </div>
