@@ -24,13 +24,13 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: "url('/machu-picchu-bg.jpg.png')",
-            filter: "blur(12px)",
+            filter: "blur(10px)",
             transform: "scale(1.1)" // Previne bordas brancas do desfoque
           }}
         ></div>
         
         {/* Overlay for Readability */}
-        <div className="absolute inset-0 z-0 bg-black/40 bg-gradient-to-b from-slate-900/50 via-[#0A1128]/70 to-black/95"></div>
+        <div className="absolute inset-0 z-0 bg-black/20 bg-gradient-to-b from-slate-900/30 via-[#0A1128]/50 to-black/80"></div>
         
         {/* Dotted Lines Organic Curves */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden hidden md:block">
@@ -43,7 +43,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         {/* Dedicated Navbar Floating */}
         <nav className="absolute top-0 w-full flex justify-between items-center px-8 md:px-16 py-6 z-50">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-xl tracking-widest text-[#fdfbf7] uppercase">Plano de Fuga</span>
+            <img src="/logo.png" alt="Logo Plano de Fuga" className="h-10 md:h-12 w-auto object-contain brightness-0 invert" />
           </div>
           <div className="hidden md:flex gap-8 text-sm font-medium text-white/70">
             <a href="#" className="hover:text-white transition-colors">Início</a>
@@ -63,7 +63,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
           
           {/* Left Side: Floating Suitcase & Orbiting Elements */}
-          <div className="relative flex items-center justify-center h-[400px] md:h-[600px] w-full mt-10 md:mt-0">
+          <div className="relative flex items-center justify-center h-[280px] md:h-[600px] w-full mt-4 mb-4 md:mt-0 md:mb-0">
             <div className="relative z-20 animate-float w-full max-w-md">
               <img src="/mala-flutuante.png" alt="Mala de Viagem Plano de Fuga" className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]" />
             </div>
@@ -133,8 +133,16 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
       </section>
 
       {/* --- VALUE PROPOSITION (Features) --- */}
-      <section id="features" className="py-32 mt-12 bg-stone-100 relative z-20">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="features" className="py-32 mt-12 relative z-20 overflow-hidden">
+        {/* Background Praia */}
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/praia.jpg')" }}
+        ></div>
+        {/* Overlay para legibilidade */}
+        <div className="absolute inset-0 z-0 bg-stone-100/85 backdrop-blur-[2px]"></div>
+
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 font-serif uppercase">Mais que planejamento. Inteligência de Rota.</h2>
             <p className="text-xl text-gray-500 max-w-2xl mx-auto">Descubra as vantagens exclusivas de acionar sua Agência Secreta com IA para estruturar sua próxima missão.</p>
