@@ -24,7 +24,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: "url('/machu-picchu-bg.jpg.png')",
-            filter: "blur(8px)",
+            filter: "blur(6px) contrast(1.15)",
             transform: "scale(1.1)" // Previne bordas brancas do desfoque
           }}
         ></div>
@@ -137,7 +137,10 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         {/* Background Praia */}
         <div 
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/praia.jpg.png')" }}
+          style={{ 
+            backgroundImage: "url('/praia.jpg.png')",
+            filter: "contrast(1.15)"
+          }}
         ></div>
         {/* Overlay para legibilidade */}
         <div className="absolute inset-0 z-0 bg-stone-100/40 backdrop-blur-sm"></div>
