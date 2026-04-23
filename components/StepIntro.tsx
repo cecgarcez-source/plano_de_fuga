@@ -24,7 +24,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: "url('/machu-picchu-bg.jpg.png')",
-            filter: "blur(2px) contrast(1.25) saturate(1.1)",
+            filter: "blur(4px) contrast(1.15) saturate(1.1)",
             transform: "scale(1.1)" // Previne bordas brancas do desfoque
           }}
         ></div>
@@ -63,7 +63,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
         <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
           
           {/* Left Side: Floating Suitcase & Orbiting Elements */}
-          <div className="relative flex items-center justify-center h-[220px] md:h-[600px] w-full mt-2 mb-0 md:mt-0">
+          <div className="relative flex items-center justify-center h-[220px] md:h-[600px] w-full mt-4 mb-0 md:mt-0">
             <div className="relative z-20 animate-float w-full max-w-md md:scale-[1.2] origin-center">
               <img src="/mala-flutuante.png" alt="Mala de Viagem Plano de Fuga" className="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]" />
             </div>
@@ -143,7 +143,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           }}
         ></div>
         {/* Overlay para legibilidade */}
-        <div className="absolute inset-0 z-0 bg-stone-100/40 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 z-0 bg-stone-100/40 backdrop-blur-[2px]"></div>
 
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
