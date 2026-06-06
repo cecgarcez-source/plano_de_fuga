@@ -24,7 +24,7 @@ export const StepIntro: React.FC<Props> = ({ onStart }) => {
           className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
           style={{ 
             backgroundImage: "url('/machu-picchu-bg.jpg.png')",
-            filter: "blur(4px) contrast(1.15) saturate(1.1)",
+            filter: "blur(1.5px) contrast(1.1) saturate(1.15) brightness(0.95)",
             transform: "scale(1.1)" // Previne bordas brancas do desfoque
           }}
         ></div>

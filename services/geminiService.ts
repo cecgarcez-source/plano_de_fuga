@@ -78,7 +78,7 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.types,places.googleMapsLinks"
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.types,places.googleMapsLinks,places.businessStatus"
       },
       body: JSON.stringify({
         textQuery: `${query} em ${location}`,
@@ -93,16 +93,20 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
     }
     
     const data = await response.json();
-    const topPlaces = (data.places || []).slice(0, limit).map((p: any) => ({
-      name: p.displayName?.text,
-      address: p.formattedAddress,
-      rating: p.rating,
-      reviews: p.userRatingCount,
-      priceLevel: p.priceLevel,
-      types: p.types?.slice(0, 3),
-      placeId: p.id, // Unique Google Place ID for exact Maps linking
-      googleMapsUri: p.googleMapsLinks?.placeUri // Direct canonical Maps URL
-    }));
+    const topPlaces = (data.places || [])
+      // Filter out permanently closed places before passing to AI
+      .filter((p: any) => p.businessStatus !== 'CLOSED_PERMANENTLY' && p.businessStatus !== 'CLOSED_TEMPORARILY')
+      .slice(0, limit)
+      .map((p: any) => ({
+        name: p.displayName?.text,
+        address: p.formattedAddress,
+        rating: p.rating,
+        reviews: p.userRatingCount,
+        priceLevel: p.priceLevel,
+        types: p.types?.slice(0, 3),
+        placeId: p.id, // Unique Google Place ID for exact Maps linking
+        googleMapsUri: p.googleMapsLinks?.placeUri // Direct canonical Maps URL
+      }));
     
     return { results: topPlaces };
   } catch (err) {
@@ -206,6 +210,7 @@ ${contextBlocks.join("\n\n")}
     2. Na propriedade 'location' das atividades, forneça SEMPRE O NOME OFICIAL EXACTO do local e o endereço completo real (ex: "Cristo Redentor, Estrada do Corcovado, 1, Rio de Janeiro"). NÃO use termos genéricos como "Centro", "Praia" ou "Restaurante", pois isso quebra a exatidão das coordenadas e links do Google Maps no nosso frontend.
     3. REGRA DO PLACEID (CRÍTICO PARA LINKS PRECISOS NO GOOGLE MAPS): Se nos dados da API for fornecido um 'placeId' para um local, VOCÊ DEVE OBRIGATORIAMENTE incluí-lo no campo 'placeId' da atividade correspondente. Copie o placeId EXATAMENTE como fornecido (começa com 'ChIJ'). Isso é fundamental para que os links levem ao local correto e bem avaliado no Google Maps.
     4. Para os HOTÉIS em 'hotelSuggestions': se o placeId for fornecido, preencha o campo 'placeId' do hotel suggestion correspondente. Se 'mapsUri' for fornecido, use-o no campo 'googleMapsUri'. O campo 'link' do hotel deve ser preferencialmente o mapsUri oficial do Google Maps.
+    5. REGRA ANTI-ESTABELECIMENTOS FECHADOS (CRÍTICO): É ESTRITAMENTE PROIBIDO sugerir restaurantes, hotéis, atrações ou qualquer estabelecimento que esteja PERMANENTEMENTE FECHADO (encerrado, falido ou demolido). Use EXCLUSIVAMENTE os locais fornecidos nos dados reais da API (que já foram filtrados para excluir fechados). Caso não haja dados da API, use seu conhecimento e escolha APENAS lugares que você tem certeza que ainda estão em funcionamento regular. NUNCA invente ou sugira um local sobre o qual você tem dúvida se ainda está aberto.
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
