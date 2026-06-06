@@ -236,7 +236,7 @@ const App: React.FC = () => {
     }
 
     if (!hasValidApiKey()) {
-      setError("⚠️ A chave de API do Gemini está suspensa ou não configurada. Por favor, clique no botão de chave 🔑 no topo da página ou insira uma chave válida.");
+      setError("⚠️ A inteligência artificial está temporariamente inativa (Chave de API suspensa ou não configurada). Por favor, tente novamente mais tarde.");
       setStep(AppStep.PROFILES);
       return;
     }
@@ -260,7 +260,7 @@ const App: React.FC = () => {
       
       let errorMessage = "Ocorreu um erro inesperado ao gerar seu plano. Tente novamente.";
       if (msg.includes("403") || msg.includes("suspended") || msg.includes("Permission denied") || msg.includes("api_key") || msg.includes("API_KEY") || msg.includes("API client not initialized")) {
-        errorMessage = "⚠️ A chave de API do Gemini está suspensa ou inválida. Por favor, clique no botão de chave 🔑 no topo da página para configurar uma chave de API Gemini válida.";
+        errorMessage = "⚠️ A inteligência artificial está temporariamente inativa (Chave de API suspensa ou inválida). Por favor, tente novamente mais tarde.";
       } else if (msg.includes("503") || msg.includes("429") || msg.includes("high demand") || msg.includes("quota") || msg.includes("UNAVAILABLE")) {
         errorMessage = "A inteligência artificial do Google está enfrentando uma demanda altíssima em todo o mundo neste exato momento. Por favor, aguarde de 1 a 2 minutos e clique em gerar novamente! ⏳ (Alta Demanda)";
       } else if (msg.includes("404") || msg.includes("NOT_FOUND")) {
@@ -437,15 +437,6 @@ const App: React.FC = () => {
       {!hasValidApiKey() && (
         <div className="bg-amber-500 text-white px-4 py-2 text-center text-xs md:text-sm font-bold shadow-md relative z-[9999] flex items-center justify-center gap-2">
           <span>⚠️ A inteligência artificial está inativa (Chave de API suspensa ou não configurada).</span>
-          <button 
-            onClick={() => {
-              setCustomApiKey(localStorage.getItem('VITE_GEMINI_API_KEY') || '');
-              setShowApiModal(true);
-            }}
-            className="bg-white hover:bg-amber-50 text-amber-700 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider transition-all cursor-pointer border-none"
-          >
-            Configurar Chave
-          </button>
         </div>
       )}
 
@@ -507,17 +498,6 @@ const App: React.FC = () => {
                   disabled={uploading}
                 />
 
-                <button
-                  onClick={() => {
-                    setCustomApiKey(localStorage.getItem('VITE_GEMINI_API_KEY') || '');
-                    setShowApiModal(true);
-                  }}
-                  className="flex items-center gap-1 md:gap-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-full font-bold text-xs md:text-sm shadow-sm border border-gray-200 transition-all cursor-pointer"
-                  title="Configurar Chave API"
-                >
-                  <span>🔑</span>
-                  <span className="hidden sm:inline">API</span>
-                </button>
 
                 <button
                   onClick={() => setStep(AppStep.USER_PROFILE)}
@@ -645,62 +625,6 @@ const App: React.FC = () => {
           )}
         </main>
 
-        {/* Modal de Configuração da API */}
-        {showApiModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-200 text-gray-800">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                  <span>🔑</span> Configuração da API Gemini
-                </h3>
-                <button 
-                  onClick={() => setShowApiModal(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl font-bold border-none bg-transparent cursor-pointer"
-                >
-                  &times;
-                </button>
-              </div>
-              <p className="text-sm text-gray-650 leading-relaxed mb-4">
-                Para que os roteiros com Inteligência Artificial funcionem corretamente, insira sua chave de API do Google Gemini. A chave é salva com segurança apenas no seu navegador.
-              </p>
-              <div className="mb-4">
-                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Chave de API Gemini</label>
-                <input 
-                  type="password" 
-                  placeholder="AIzaSy..."
-                  value={customApiKey}
-                  onChange={(e) => setCustomApiKey(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 focus:border-teal-500 focus:ring-2 focus:ring-teal-100 outline-none transition-all font-mono text-sm text-gray-800 bg-white"
-                />
-              </div>
-              <div className="flex gap-3 justify-end mt-6">
-                <button 
-                  onClick={() => {
-                    localStorage.removeItem('VITE_GEMINI_API_KEY');
-                    setCustomApiKey('');
-                    alert('Configurações redefinidas para o padrão.');
-                    setShowApiModal(false);
-                    window.location.reload();
-                  }}
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-gray-550 hover:bg-gray-50 transition-colors border-none bg-transparent cursor-pointer"
-                >
-                  Usar Padrão
-                </button>
-                <button 
-                  onClick={() => {
-                    localStorage.setItem('VITE_GEMINI_API_KEY', customApiKey.trim());
-                    alert('Chave de API salva com sucesso!');
-                    setShowApiModal(false);
-                    window.location.reload();
-                  }}
-                  className="px-5 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md hover:shadow-lg transition-all border-none cursor-pointer"
-                >
-                  Salvar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <footer className="w-full py-6 text-center text-gray-700 text-sm font-medium relative z-20">
           <p className="bg-white/40 inline-block px-4 py-1 rounded-full mb-2">&copy; {new Date().getFullYear()} Plano de Fuga. Feito com 💙 e IA.</p>
