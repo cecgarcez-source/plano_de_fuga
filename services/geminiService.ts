@@ -3,18 +3,37 @@ import { TripPreferences, ItineraryResult } from "../types";
 import { userService } from "./userService";
 import { supabase } from "./supabase";
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
+export const getAiClient = () => {
+  const localKey = typeof localStorage !== 'undefined' ? localStorage.getItem("VITE_GEMINI_API_KEY") : null;
+  if (localKey && localKey !== "INSIRA_SUA_NOVA_CHAVE_AQUI" && localKey !== "AIzaSyCkhIrSAE5U0574bqKb8Cnij9DMulJjM-s" && localKey.trim()) {
+    return new GoogleGenAI({ apiKey: localKey.trim() });
+  }
 
-if (!apiKey) {
-  console.warn("Google Gemini API Key is missing. AI features will not work.");
-}
+  const envKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
+  if (envKey && envKey !== "INSIRA_SUA_NOVA_CHAVE_AQUI" && envKey !== "AIzaSyCkhIrSAE5U0574bqKb8Cnij9DMulJjM-s" && envKey.trim()) {
+    return new GoogleGenAI({ apiKey: envKey.trim() });
+  }
 
-const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
+  return null;
+};
+
+export const hasValidApiKey = (): boolean => {
+  const localKey = typeof localStorage !== 'undefined' ? localStorage.getItem("VITE_GEMINI_API_KEY") : null;
+  if (localKey && localKey !== "INSIRA_SUA_NOVA_CHAVE_AQUI" && localKey !== "AIzaSyCkhIrSAE5U0574bqKb8Cnij9DMulJjM-s" && localKey.trim()) {
+    return true;
+  }
+  const envKey = import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.GEMINI_API_KEY;
+  if (envKey && envKey !== "INSIRA_SUA_NOVA_CHAVE_AQUI" && envKey !== "AIzaSyCkhIrSAE5U0574bqKb8Cnij9DMulJjM-s" && envKey.trim()) {
+    return true;
+  }
+  return false;
+};
 
 export const getCityCoordinates = async (cityName: string): Promise<{ lat: number; lng: number }> => {
   const modelId = "gemini-flash-latest";
   const prompt = `Retorne as coordenadas geográficas (latitude e longitude) centrais da seguinte cidade/local: "${cityName}". Retorne APENAS o JSON.`;
 
+  const ai = getAiClient();
   if (!ai) throw new Error("AI client not initialized");
 
   try {
@@ -91,6 +110,7 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
 
+  const ai = getAiClient();
   if (!ai) throw new Error("AI client not initialized");
 
   // 1. Fetch User Context
