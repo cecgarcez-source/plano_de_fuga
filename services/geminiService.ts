@@ -78,11 +78,12 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.types"
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.rating,places.userRatingCount,places.priceLevel,places.types,places.googleMapsLinks"
       },
       body: JSON.stringify({
         textQuery: `${query} em ${location}`,
-        languageCode: "pt-BR"
+        languageCode: "pt-BR",
+        rankPreference: "RELEVANCE"
       })
     });
     
@@ -98,7 +99,9 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
       rating: p.rating,
       reviews: p.userRatingCount,
       priceLevel: p.priceLevel,
-      types: p.types?.slice(0, 3)
+      types: p.types?.slice(0, 3),
+      placeId: p.id, // Unique Google Place ID for exact Maps linking
+      googleMapsUri: p.googleMapsLinks?.placeUri // Direct canonical Maps URL
     }));
     
     return { results: topPlaces };
@@ -169,13 +172,13 @@ export const generateTripItinerary = async (preferences: TripPreferences): Promi
       let contextBlocks = [];
       
       if (hotels && hotels.results?.length > 0) {
-        contextBlocks.push(`[HOTÉIS REAIS VÁLIDOS]\n` + hotels.results.map((p:any) => `- ${p.name} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address}`).join("\n"));
+        contextBlocks.push(`[HOTÉIS REAIS VÁLIDOS]\n` + hotels.results.map((p:any) => `- ${p.name} | placeId: ${p.placeId || 'N/A'} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address} | mapsUri: ${p.googleMapsUri || 'N/A'}`).join("\n"));
       }
       if (restaurants && restaurants.results?.length > 0) {
-        contextBlocks.push(`[RESTAURANTES REAIS VÁLIDOS]\n` + restaurants.results.map((p:any) => `- ${p.name} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address}`).join("\n"));
+        contextBlocks.push(`[RESTAURANTES REAIS VÁLIDOS]\n` + restaurants.results.map((p:any) => `- ${p.name} | placeId: ${p.placeId || 'N/A'} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address} | mapsUri: ${p.googleMapsUri || 'N/A'}`).join("\n"));
       }
       if (attractions && attractions.results?.length > 0) {
-        contextBlocks.push(`[ATRAÇÕES/PASSEIOS REAIS VÁLIDOS]\n` + attractions.results.map((p:any) => `- ${p.name} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address}`).join("\n"));
+        contextBlocks.push(`[ATRAÇÕES/PASSEIOS REAIS VÁLIDOS]\n` + attractions.results.map((p:any) => `- ${p.name} | placeId: ${p.placeId || 'N/A'} | Nota: ${p.rating}⭐ (${p.reviews || 0} revs) | Endereço: ${p.address} | mapsUri: ${p.googleMapsUri || 'N/A'}`).join("\n"));
       }
 
       if (contextBlocks.length > 0) {
@@ -200,8 +203,9 @@ ${contextBlocks.join("\n\n")}
     
     >>> REGRA DE OURO ANTI-ALUCINAÇÃO E MAPAS (LEIA COM ATENÇÃO) <<<
     1. Se o usuário fornecer o bloco [ATENÇÃO MÁXIMA: DADOS REAIS DA API - GOOGLE PLACES MAPPING], VOCÊ É TOTALMENTE PROIBIDO DE INVENTAR RESTAURANTES OU HOTÉIS! Você DEVE OBRIGATORIAMENTE copiar o nome exato dos Hotéis e Restaurantes da lista fornecida!
-    2. Na propriedade 'location' das atividades, forneça SEMPRE O NOME OFICIAL EXACTO do local (e opcionalmente o endereço real completo). NÃO use termos genéricos como "Centro", "Praia" ou "Restaurante", pois isso quebra a exatidão das coordenadas e links do Google Maps no nosso frontend.
-    
+    2. Na propriedade 'location' das atividades, forneça SEMPRE O NOME OFICIAL EXACTO do local e o endereço completo real (ex: "Cristo Redentor, Estrada do Corcovado, 1, Rio de Janeiro"). NÃO use termos genéricos como "Centro", "Praia" ou "Restaurante", pois isso quebra a exatidão das coordenadas e links do Google Maps no nosso frontend.
+    3. REGRA DO PLACEID (CRÍTICO PARA LINKS PRECISOS NO GOOGLE MAPS): Se nos dados da API for fornecido um 'placeId' para um local, VOCÊ DEVE OBRIGATORIAMENTE incluí-lo no campo 'placeId' da atividade correspondente. Copie o placeId EXATAMENTE como fornecido (começa com 'ChIJ'). Isso é fundamental para que os links levem ao local correto e bem avaliado no Google Maps.
+    4. Para os HOTÉIS em 'hotelSuggestions': se o placeId for fornecido, preencha o campo 'placeId' do hotel suggestion correspondente. Se 'mapsUri' for fornecido, use-o no campo 'googleMapsUri'. O campo 'link' do hotel deve ser preferencialmente o mapsUri oficial do Google Maps.
     - Plano B (contingencyPlan): Apenas 1 frase curta com uma alternativa (ex: "Ir ao Museu X").
     
     SAZONALIDADE E CLIMA GERAL (weatherAdvice): Analise a estação do ano referente ao período escolhido e explique brevemente: 1) Como é o clima geralmente (chuva, sol, neve, calor, etc). 2) Se o período escolhido é adequado ou qual seria a melhor época para essa viagem.
@@ -234,7 +238,7 @@ ${contextBlocks.join("\n\n")}
       "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "flights": 0, "total": 0, "currency": "BRL" },
       "weatherAdvice": "Análise sazonal e melhor época sugerida.",
       "practicalInfo": { "currency": "...", "documentation": "...", "insurance": "...", "souvenirs": "..." },
-      "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url" } ],
+      "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url", "placeId": "ChIJ...", "googleMapsUri": "https://maps.google.com/?cid=..." } ],
       "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
       "days": [ 
         { 
@@ -244,7 +248,7 @@ ${contextBlocks.join("\n\n")}
           "accommodation": "Nome do Hotel", 
           "energyScore": 3,
           "activities": [ 
-            { "time": "10:00", "title": "...", "description": "...", "location": "Nome Oficial e Exato do Local, Endereço", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 
+            { "time": "10:00", "title": "...", "description": "...", "location": "Nome Oficial e Exato do Local, Endereço Completo", "placeId": "ChIJ... (copie do placeId fornecido nos dados reais, se disponível)", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 
           ],
           "logisticsTip": { "title": "Dica de Transporte", "description": "...", "ctaText": "Alugar Carro", "url": "url", "type": "transport" }
         } 

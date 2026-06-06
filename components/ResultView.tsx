@@ -32,7 +32,12 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     }
     
     if (day.activities.length === 1) {
-      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(day.activities[0].location + ' ' + itinerary.destinationTitle)}`;
+      const act = day.activities[0];
+      const q = encodeURIComponent(act.location + ' ' + itinerary.destinationTitle);
+      if (act.placeId && act.placeId.startsWith('ChIJ')) {
+        return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${q}&place_id=${act.placeId}`;
+      }
+      return `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${q}`;
     }
 
     const origin = encodeURIComponent(day.activities[0].location + ' ' + itinerary.destinationTitle);
@@ -46,6 +51,27 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     }
     
     return url;
+  };
+
+  /**
+   * Builds a precise Google Maps search URL.
+   * When a placeId is available, uses query_place_id param to anchor to exact place.
+   * Falls back to a text-based search with the destination name for disambiguation.
+   */
+  const buildMapsLink = (locationName: string, destinationCtx: string, placeId?: string, directUri?: string): string => {
+    // Best: use the direct canonical URI from Google Places API (most reliable)
+    if (directUri && directUri.startsWith('http')) {
+      return directUri;
+    }
+    // Second best: use query_place_id to anchor the search to the exact place
+    if (placeId && placeId.startsWith('ChIJ')) {
+      const q = encodeURIComponent(locationName);
+      return `https://www.google.com/maps/search/?api=1&query=${q}&query_place_id=${placeId}`;
+    }
+    // Fallback: include the destination city in the query for disambiguation
+    const cleanLocation = locationName.trim();
+    const q = encodeURIComponent(cleanLocation + ', ' + destinationCtx);
+    return `https://www.google.com/maps/search/?api=1&query=${q}`;
   };
 
   // Ref for PDF capture
@@ -1205,7 +1231,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                                     <span className="flex items-center gap-1">
                                       <span className="text-sm">📍</span>
                                       <a
-                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.location + " " + itinerary.destinationTitle)}`}
+                                        href={buildMapsLink(act.location, itinerary.destinationTitle, act.placeId, act.googleMapsUri)}
                                         target="_blank"
                                         rel="noreferrer"
                                         className={`underline ${isExportingPdf ? 'whitespace-normal' : 'truncate max-w-[220px]'} leading-relaxed ${isExportingPdf ? 'text-black' : 'hover:text-teal-600'}`}
@@ -1298,16 +1324,24 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
                   </div>
                   <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-100">
                     <span className={`text-sm font-medium ${isExportingPdf ? 'text-black' : 'text-teal-600'}`}>{hotel.priceRange}</span>
-                    {hotel.link && !isExportingPdf && (
-                      <a href={hotel.link} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 px-3 py-1.5 rounded transition-colors inline-block text-center">
-                        Ver Oferta
-                      </a>
-                    )}
-                    {hotel.link && isExportingPdf && (
-                      <a href={hotel.link} target="_blank" rel="noopener noreferrer" className="text-xs text-teal-700 underline">
-                        Acessar Link
-                      </a>
-                    )}
+                     <a
+                       href={hotel.googleMapsUri || buildMapsLink(hotel.name, itinerary.destinationTitle, hotel.placeId)}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       className={`text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 px-3 py-1.5 rounded transition-colors inline-block text-center ${isExportingPdf ? 'hidden' : ''}`}
+                     >
+                       Ver no Maps
+                     </a>
+                     {isExportingPdf && (
+                       <a
+                         href={hotel.googleMapsUri || buildMapsLink(hotel.name, itinerary.destinationTitle, hotel.placeId)}
+                         target="_blank"
+                         rel="noopener noreferrer"
+                         className="text-xs text-teal-700 underline"
+                       >
+                         Ver no Maps
+                       </a>
+                     )}
                   </div>
                 </div>
               ))}

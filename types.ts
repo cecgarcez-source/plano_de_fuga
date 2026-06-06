@@ -28,6 +28,8 @@ export interface Activity {
   title: string;
   description: string;
   location: string;
+  placeId?: string; // Google Places ID for exact Maps linking
+  googleMapsUri?: string; // Direct Google Maps URI from Places API
   estimatedCost: number;
   actualCost?: number;
   contingencyPlan?: string;
@@ -87,6 +89,8 @@ export interface ItineraryResult {
     priceRange: string;
     description: string;
     link?: string;
+    placeId?: string; // Google Places ID for exact Maps linking
+    googleMapsUri?: string; // Direct Google Maps URI from Places API
   }>;
   premiumTips: MarketingTip[]; // High-level monetization tips (E-books, etc)
   personalizedGuideText?: string;
