@@ -45,8 +45,6 @@ const App: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [loadingData, setLoadingData] = useState(false); // Added loadingData
   const [userPlanCredits, setUserPlanCredits] = useState<number | undefined>(undefined);
-  const [showApiModal, setShowApiModal] = useState(false);
-  const [customApiKey, setCustomApiKey] = useState(typeof localStorage !== 'undefined' ? (localStorage.getItem('VITE_GEMINI_API_KEY') || '') : '');
 
   const processedRef = React.useRef(false); // Ref to track if upgrade processed
   const sharedPlanRef = React.useRef(false);
@@ -433,12 +431,6 @@ const App: React.FC = () => {
         backgroundImage: "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop')"
       } : {}}
     >
-      {/* Aviso de Chave de API Ausente/Suspensa */}
-      {!hasValidApiKey() && (
-        <div className="bg-amber-500 text-white px-4 py-2 text-center text-xs md:text-sm font-bold shadow-md relative z-[9999] flex items-center justify-center gap-2">
-          <span>⚠️ A inteligência artificial está inativa (Chave de API suspensa ou não configurada).</span>
-        </div>
-      )}
 
       {/* Overlay to ensure readability */}
       {step !== AppStep.INTRO && <div className="absolute inset-0 bg-white/30 backdrop-blur-[2px]"></div>}
