@@ -43,7 +43,7 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
     const origin = encodeURIComponent(day.activities[0].location + ' ' + itinerary.destinationTitle);
     const destination = encodeURIComponent(day.activities[day.activities.length - 1].location + ' ' + itinerary.destinationTitle);
     
-    let url = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}`;
+    let url = `https://www.google.com/maps/embed/v1/directions?key=${apiKey}&origin=${origin}&destination=${destination}&mode=walking`;
     
     if (day.activities.length > 2) {
       const waypoints = day.activities.slice(1, -1).map(act => encodeURIComponent(act.location + ' ' + itinerary.destinationTitle)).join('|');
@@ -512,10 +512,34 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
 
   const renderTip = (tip: MarketingTip, context: 'logistics' | 'premium') => {
     const isPremium = context === 'premium';
+
+    // Build a reliable link for logistics tips:
+    // The AI-generated tip.url is frequently hallucinated/broken.
+    // For logistics tips, we generate a Google Maps search link instead.
+    const buildTipLink = (): string => {
+      if (isPremium) {
+        // For premium/insurance tips, keep the original URL if it looks valid
+        if (tip.url && tip.url.startsWith('http') && !tip.url.includes('placeholder')) return tip.url;
+        return `https://www.google.com/search?q=${encodeURIComponent(tip.title + ' ' + itinerary.destinationTitle)}`;
+      }
+      // For logistics tips: generate Google Maps direction/search based on tip type
+      const dest = encodeURIComponent(itinerary.destinationTitle);
+      if (tip.type === 'hotel_affiliate') {
+        // Link to hotel search on Maps
+        return `https://www.google.com/maps/search/?api=1&query=hoteis+${dest}`;
+      }
+      if (tip.type === 'tour_affiliate') {
+        // Link to tourist attractions on Maps
+        return `https://www.google.com/maps/search/?api=1&query=atracoes+turisticas+${dest}`;
+      }
+      // Generic: search for the tip title + destination on Maps
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(tip.title + ', ' + itinerary.destinationTitle)}`;
+    };
+
     return (
       <div className={`mt-4 mb-2 p-4 rounded-lg border-l-4 shadow-sm ${!isExportingPdf && 'animate-fade-in'} ${isPremium ? 'bg-indigo-50 border-indigo-500' : 'bg-amber-50 border-amber-500'}`}>
         <div className="flex items-start gap-3">
-          <span className="text-2xl">{isPremium ? '💎' : '💡'}</span>
+          <span className="text-2xl">{isPremium ? '💎' : '🗺️'}</span>
           <div>
             <h4 className={`font-bold text-sm uppercase mb-1 ${isPremium ? 'text-indigo-800' : 'text-amber-800'}`}>
               {isPremium ? 'Dica Premium / Guia Exclusivo' : 'Dica de Logística'}
@@ -523,12 +547,12 @@ export const ResultView: React.FC<Props> = ({ itinerary: initialItinerary, prefe
             <p className="text-sm text-gray-700 font-medium mb-1">{tip.title}</p>
             <p className="text-sm text-gray-600 mb-3">{tip.description}</p>
             <a
-              href={tip.url}
+              href={buildTipLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className={`inline-block px-4 py-2 rounded text-xs font-bold text-white transition-colors ${isPremium ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-600 hover:bg-amber-700'}`}
+              className={`inline-flex items-center gap-1 px-4 py-2 rounded text-xs font-bold text-white transition-colors ${isPremium ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-amber-600 hover:bg-amber-700'}`}
             >
-              {tip.ctaText} &rarr;
+              {isPremium ? tip.ctaText : '📍 Ver no Google Maps'} &rarr;
             </a>
             <p className="text-[10px] text-gray-400 mt-2 italic">Sugerido pois: {tip.contextTrigger}</p>
           </div>
