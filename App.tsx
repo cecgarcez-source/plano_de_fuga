@@ -263,8 +263,10 @@ const App: React.FC = () => {
         errorMessage = "A inteligência artificial do Google está enfrentando uma demanda altíssima em todo o mundo neste exato momento. Por favor, aguarde de 1 a 2 minutos e clique em gerar novamente! ⏳ (Alta Demanda)";
       } else if (msg.includes("404") || msg.includes("NOT_FOUND")) {
         errorMessage = "Erro de conexão com o modelo de IA. Nossos engenheiros já estão atualizando o sistema. Tente novamente em breve.";
+      } else if (msg.includes("Falha ao interpretar o JSON") || msg.includes("Expected") || msg.includes("JSON") || msg.includes("position") || msg.includes("SyntaxError")) {
+        errorMessage = "🔄 A IA retornou uma resposta em formato inválido. Isso é temporário! Por favor, clique em gerar novamente. Se o erro persistir, tente com um destino diferente.";
       } else {
-        errorMessage = msg; // Mostra a mensagem crua para outros erros, se não for JSON feio
+        errorMessage = msg; // Mostra a mensagem crua para outros erros
       }
 
       setError(errorMessage);

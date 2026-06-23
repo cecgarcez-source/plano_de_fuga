@@ -115,6 +115,75 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
   }
 };
 
+/**
+ * Sanitizes and parses JSON text that may contain:
+ * - JS-style comments (// and /* *\/)
+ * - Trailing commas before } or ]
+ * - Markdown code fences (```json ... ```)
+ * - Surrounding non-JSON text
+ */
+const robustJsonParse = (raw: string): any => {
+  // 1. Strip markdown fences (```json ... ``` or ``` ... ```)
+  let text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/i, '').trim();
+
+  // 2. Extract the outermost JSON object if surrounded by extra text
+  const firstBrace = text.indexOf('{');
+  const lastBrace = text.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    text = text.slice(firstBrace, lastBrace + 1);
+  }
+
+  // 3. Remove JS block comments (/* ... */) - careful not to touch strings
+  text = text.replace(/\/\*[\s\S]*?\*\//g, '');
+
+  // 4. Remove JS line comments (// ...) - only outside of strings
+  // Uses a state machine to avoid stripping URLs like "https://..."
+  let result = '';
+  let inString = false;
+  let escaped = false;
+  let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (escaped) {
+      result += ch;
+      escaped = false;
+      i++;
+      continue;
+    }
+    if (ch === '\\' && inString) {
+      result += ch;
+      escaped = true;
+      i++;
+      continue;
+    }
+    if (ch === '"') {
+      inString = !inString;
+      result += ch;
+      i++;
+      continue;
+    }
+    if (!inString && ch === '/' && text[i + 1] === '/') {
+      // Skip until end of line
+      while (i < text.length && text[i] !== '\n') i++;
+      continue;
+    }
+    result += ch;
+    i++;
+  }
+  text = result;
+
+  // 5. Remove trailing commas before } or ] (JSON does not allow them)
+  text = text.replace(/,(\s*[}\]])/g, '$1');
+
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    // Last resort: log the problematic text for debugging
+    console.error('robustJsonParse failed. Raw text snippet (pos 14000-14500):', text.slice(14000, 14500));
+    throw new Error(`Falha ao interpretar o JSON retornado pela IA: ${(err as Error).message}`);
+  }
+};
+
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
 
   const ai = getAiClient();
@@ -234,26 +303,26 @@ ${contextBlocks.join("\n\n")}
     1. **MarketingTip (Logística):** Sugira hotéis ou aluguel de carro com call-to-action cativante. Direcione para links reais do Booking/TripAdvisor.
     2. **HotelSuggestions**: SEMPRE sugira APENAS HOTÉIS REAIS E EXISTENTES. É expressamente proibido inventar ou alucinar nomes de hotéis. Prioritariamente direcione para links reais do Booking ou TripAdvisor do hotel.
 
-    Retorne APENAS JSON, estritamente no seguinte formato:
+    Retorne APENAS JSON válido e puro, estritamente no seguinte formato:
     {
       "destinationTitle": "Nome do destino",
-      "destinationDescription": "Breve descrição",
+      "destinationDescription": "Breve descricao",
       "coordinates": { "lat": 0.0, "lng": 0.0 },
-      "justification": "Por que é perfeito",
+      "justification": "Por que e perfeito",
       "costBreakdown": { "accommodation": 0, "food": 0, "activities": 0, "transport": 0, "flights": 0, "total": 0, "currency": "BRL" },
-      "weatherAdvice": "Análise sazonal e melhor época sugerida.",
+      "weatherAdvice": "Analise sazonal e melhor epoca sugerida.",
       "practicalInfo": { "currency": "...", "documentation": "...", "insurance": "...", "souvenirs": "..." },
-      "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url", "placeId": "ChIJ...", "googleMapsUri": "https://maps.google.com/?cid=..." } ],
+      "hotelSuggestions": [ { "name": "Hotel", "category": "Luxo", "priceRange": "$$$", "description": "...", "link": "url", "placeId": "ChIJxxxxxxxx", "googleMapsUri": "https://maps.google.com/?cid=xxx" } ],
       "premiumTips": [ { "type": "insurance_affiliate", "title": "Seguro Viagem", "description": "...", "ctaText": "Cotar", "url": "url", "contextTrigger": "..." } ],
       "days": [ 
         { 
           "day": 1, 
           "theme": "Chegada", 
-          "locationBase": "Bairro/Região", 
+          "locationBase": "Bairro/Regiao", 
           "accommodation": "Nome do Hotel", 
           "energyScore": 3,
           "activities": [ 
-            { "time": "10:00", "title": "...", "description": "...", "location": "Nome Oficial e Exato do Local, Endereço Completo", "placeId": "ChIJ... (copie do placeId fornecido nos dados reais, se disponível)", "estimatedCost": 0, "contingencyPlan": "Plano B caso chova..." } 
+            { "time": "10:00", "title": "...", "description": "...", "location": "Nome Oficial e Exato do Local, Endereco Completo", "placeId": "ChIJxxxxxxxx", "estimatedCost": 0, "contingencyPlan": "Plano B curto." } 
           ],
           "logisticsTip": { "title": "Dica de Transporte", "description": "...", "ctaText": "Alugar Carro", "url": "url", "type": "transport" }
         } 
@@ -261,7 +330,13 @@ ${contextBlocks.join("\n\n")}
     }
     ===
     [FIM DAS REGRAS]
-    ATENÇÃO: Não engula aspas, não adicione marcações Markdown ao redor do JSON (como \`\`\`json). APENAS o JSON puro.
+    REGRAS ABSOLUTAS DE FORMATACAO JSON (VIOLACAO CAUSA ERRO FATAL):
+    1. PROIBIDO usar comentarios JavaScript (// ou /* */) dentro do JSON.
+    2. PROIBIDO usar virgula apos o ultimo elemento de um objeto ou array (trailing comma).
+    3. PROIBIDO envolver o JSON com marcadores Markdown como \`\`\`json ou \`\`\`.
+    4. Se o placeId nao estiver disponivel, use uma string vazia "" ou omita o campo. NUNCA escreva texto explicativo dentro de valores JSON.
+    5. O JSON gerado deve ser parseavel diretamente por JSON.parse() sem qualquer pre-processamento.
+    APENAS o JSON puro e valido.
   `;
 
   const userPrompt = `
@@ -343,8 +418,8 @@ ${contextBlocks.join("\n\n")}
     }
 
     if (responseText) {
-      const cleanJson = responseText.replace(/```json\n?|```/g, '').trim();
-      return JSON.parse(cleanJson);
+      const parsed = robustJsonParse(responseText);
+      return parsed;
     } else {
       throw lastError || new Error("Todos os modelos falharam na tentativa de geração.");
     }
