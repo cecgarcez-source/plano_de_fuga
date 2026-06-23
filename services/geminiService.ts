@@ -121,6 +121,7 @@ export const searchGooglePlaces = async (query: string, location: string, limit:
  * - Trailing commas before } or ]
  * - Markdown code fences (```json ... ```)
  * - Surrounding non-JSON text
+ * - Truncated output (unclosed brackets due to token limit)
  */
 const robustJsonParse = (raw: string): any => {
   // 1. Strip markdown fences (```json ... ``` or ``` ... ```)
@@ -175,13 +176,65 @@ const robustJsonParse = (raw: string): any => {
   // 5. Remove trailing commas before } or ] (JSON does not allow them)
   text = text.replace(/,(\s*[}\]])/g, '$1');
 
+  // 6. First parse attempt (clean JSON)
   try {
     return JSON.parse(text);
-  } catch (err) {
-    // Last resort: log the problematic text for debugging
-    console.error('robustJsonParse failed. Raw text snippet (pos 14000-14500):', text.slice(14000, 14500));
-    throw new Error(`Falha ao interpretar o JSON retornado pela IA: ${(err as Error).message}`);
+  } catch (firstErr) {
+    // JSON still invalid — may be truncated by token limit. Attempt repair.
+    console.warn('robustJsonParse: first parse failed, attempting truncation repair...', (firstErr as Error).message);
   }
+
+  // 7. Truncation Repair: close unclosed strings and brackets
+  try {
+    const repaired = repairTruncatedJson(text);
+    if (repaired !== text) {
+      console.warn('robustJsonParse: repaired truncated JSON, retrying parse...');
+      return JSON.parse(repaired);
+    }
+  } catch (repairErr) {
+    console.warn('robustJsonParse: repair attempt also failed:', (repairErr as Error).message);
+  }
+
+  // 8. Last resort: log and throw
+  console.error('robustJsonParse failed. Raw text length:', text.length, '| Snippet near end:', text.slice(-300));
+  throw new Error(`Falha ao interpretar o JSON retornado pela IA: JSON inválido ou truncado. Por favor, tente novamente.`);
+};
+
+/**
+ * Attempts to close unclosed strings and brackets in a truncated JSON string.
+ * Useful when AI output is cut short due to token limits.
+ */
+const repairTruncatedJson = (text: string): string => {
+  const stack: string[] = [];
+  let inString = false;
+  let escaped = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (escaped) { escaped = false; continue; }
+    if (ch === '\\' && inString) { escaped = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === '{') stack.push('}');
+    else if (ch === '[') stack.push(']');
+    else if ((ch === '}' || ch === ']') && stack.length > 0) stack.pop();
+  }
+
+  if (stack.length === 0 && !inString) return text; // Not truncated
+
+  let repaired = text;
+
+  // Close any unclosed string first
+  if (inString) repaired += '"';
+
+  // Trim trailing incomplete token (partial key/value after last comma)
+  // Remove any trailing comma before we close brackets
+  repaired = repaired.replace(/,\s*$/, '');
+
+  // Close all open brackets in reverse order
+  repaired += stack.reverse().join('');
+
+  return repaired;
 };
 
 export const generateTripItinerary = async (preferences: TripPreferences): Promise<ItineraryResult> => {
@@ -359,7 +412,7 @@ ${contextBlocks.join("\n\n")}
     const requestConfig = {
       responseMimeType: "application/json",
       systemInstruction: { parts: [{ text: systemPrompt }] },
-      maxOutputTokens: 8192,
+      maxOutputTokens: 32768, // gemini-2.5-flash suporta até 65536; 8192 era insuficiente e causava truncamento do JSON
     };
 
     let contents: any[] = [{ role: "user", parts: [{ text: userPrompt }] }];
